@@ -12,6 +12,16 @@ If we choose the name **helloworld** for this application, then a suitable folde
             **/public/index.html**  
             **index.js**  
             **package.json**  
+            .
+       ├── index.js
+       ├── package.json
+       ├── public
+       │   ├── assets
+       │   │   └── icon.jpg
+       │   └── index.html
+       ├── README.md
+       └── tree.here
+
      
 # Essential Components
 Essential components in the SignalK web app are:
