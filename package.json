@@ -8,7 +8,7 @@
   "author": "Author Name",
   "main": "index.js",
   "signalk": {
-    "displayName": "helloworld",
+    "displayName": "HYC HelloWorld",
     "appIcon": "./assets/icons/HYCLogo-7272.png"
   }
 }
