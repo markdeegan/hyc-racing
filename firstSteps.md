@@ -6,12 +6,9 @@ This repo and documentation was put together to help developers to build some of
 
 # Essential Components
 Essential components in the SignalK web app are:
-1. Frontend  
+1. Frontend: **index.html**  
    This is the initial web page that users will see when they launch your web app from within SignalK. Essentially this is a HTML web page.
-   **index.html**
-3. Backend  
+3. Backend: **index.js**
    This is any server-side logic that provdes support to your web page.  
-   **index.js**
-5. Manifest  
+5. Manifest: **package.json**
    This is a configuration file that tells SignalK how to handle your web app.  
-   **package.json**
