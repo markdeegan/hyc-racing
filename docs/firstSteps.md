@@ -28,11 +28,11 @@ Essential files needed to create a SignalK web app are:
 5. Manifest: **package.json**  
    This is a configuration file that tells SignalK how to handle your web app.
 
-**`     helloworld`**    
-`       ├── index.js`  
-`       ├── package.json`    
-**`       ├── public`**  
-**`           └── assets`**    
-`       │   │   └── icon.jpg`    
-`       │   └── index.html`  
-`       └── README.md`  
+`     helloworld`    
+**`       ├── index.js`**      
+**`       ├── package.json`**        
+`       ├── public`  
+`           └── assets`    
+**`       │   │   └── icon.jpg`**        
+**`       │   └── index.html`**      
+**`       └── README.md`**      
