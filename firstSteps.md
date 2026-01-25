@@ -5,6 +5,17 @@ This repo and documentation was put together to help developers to build some of
 ***I also beg your patience if this example, or parts of this example are overly simple from your own oerspective, or if I make mistakes relating to the purpose and phisophy of SignalK.***    
 
 
+
+# Essential Components
+Essential components in the SignalK web app are:
+1. Frontend: **index.html**  
+   This is the initial web page that users will see when they launch your web app from within SignalK. Essentially this is a HTML web page.
+3. Backend: **index.js**  
+   This is any server-side logic that provdes support to your web page.  
+5. Manifest: **package.json**  
+   This is a configuration file that tells SignalK how to handle your web app.  
+
+
 # Directory Structure
 One of the first things you will need to do is to set up a directory structure that will contain the minimum set of files to get you started.  
 If we choose the name **helloworld** for this application, then a suitable folder structure would be as follows:  
@@ -18,11 +29,3 @@ If we choose the name **helloworld** for this application, then a suitable folde
 `       │   └── index.html`  
 `       └── README.md`  
      
-# Essential Components
-Essential components in the SignalK web app are:
-1. Frontend: **index.html**  
-   This is the initial web page that users will see when they launch your web app from within SignalK. Essentially this is a HTML web page.
-3. Backend: **index.js**  
-   This is any server-side logic that provdes support to your web page.  
-5. Manifest: **package.json**  
-   This is a configuration file that tells SignalK how to handle your web app.  
