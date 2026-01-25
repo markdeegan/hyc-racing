@@ -12,8 +12,8 @@ If we choose the name **helloworld** for this application, then a suitable folde
 **`     helloworld`**    
 `       ├── index.js`  
 `       ├── package.json`    
-`       ├── public`  
-`       │   ├── assets`    
+**`       ├── public`**  
+**`       │   ├── assets`**    
 `       │   │   └── icon.jpg`    
 `       │   └── index.html`  
 `       └── README.md`  
