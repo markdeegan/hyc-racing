@@ -15,6 +15,9 @@ If we choose the name **helloworld** for this application, then a suitable folde
 **`       └── public`**  
 **`           └── assets`**   
 
+
+# Initialise NPM project 
+
      
 # Essential Components
 Essential files needed to create a SignalK web app are:
