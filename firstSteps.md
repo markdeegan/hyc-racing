@@ -23,13 +23,13 @@ If we choose the name **helloworld** for this application, then a suitable folde
 `       └── tree.here`  
 
 `       helloworld`  
-`       ├── index.js'  
-`       ├── package.json'  
-`       ├── public'  
-`       │   ├── assets'  
-`       │   │   └── icon.jpg'  
-`       │   └── index.html'  
-`       ├── README.md'  
+`       ├── index.js`  
+`       ├── package.json`    
+`       ├── public`  
+`       │   ├── assets`    
+`       │   │   └── icon.jpg`    
+`       │   └── index.html`  
+`       ├── README.md`  
      
 # Essential Components
 Essential components in the SignalK web app are:
