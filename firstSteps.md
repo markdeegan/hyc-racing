@@ -12,7 +12,7 @@ If we choose the name **helloworld** for this application, then a suitable folde
             **/public/index.html**  
             **index.js**  
             **package.json**  
-`            .  `
+`            .`  
 `       ├── index.js`  
 `       ├── package.json`  
 `       ├── public`  
