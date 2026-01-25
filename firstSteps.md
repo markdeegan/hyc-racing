@@ -8,10 +8,10 @@ This repo and documentation was put together to help developers to build some of
 # Directory Structure
 One of the first things you will need to do is to set up a directory structure that will contain the minimum set of files to get you started.  
 If we choose the name **helloworld** for this application, then a suitable folder structure would be as follows:  
-**/helloworld**  
-   **/public/index.html**  
-   **index.js**  
-   **package.json**  
+  **/helloworld**  
+    **/public/index.html**  
+    **index.js**  
+    **package.json**  
      
 # Essential Components
 Essential components in the SignalK web app are:
