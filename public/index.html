@@ -68,9 +68,19 @@
 
   <script>
     // Determine WebSocket URL based on current location
+    // When served by SignalK server, we use relative path which automatically works
+    // If port is standard HTTP/HTTPS (80/443), assume development and use port 3000
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const port = window.location.port || (protocol === 'wss:' ? '443' : '80');
-    const wsUrl = protocol + '//' + window.location.hostname + ':' + (port === '80' || port === '443' ? '3000' : port) + '/signalk/v1/stream';
+    
+    // If no port or standard ports, try SignalK default port 3000
+    // Otherwise use the same port (for when served directly by SignalK)
+    let wsPort = port;
+    if (port === '80' || port === '443') {
+      wsPort = '3000'; // SignalK default port
+    }
+    
+    const wsUrl = protocol + '//' + window.location.hostname + ':' + wsPort + '/signalk/v1/stream';
     
     console.log('Connecting to SignalK WebSocket:', wsUrl);
     
@@ -98,18 +108,22 @@
         // Parse and pretty-print the JSON data
         const data = JSON.parse(event.data);
         const timestamp = new Date().toLocaleTimeString();
-        const messageText = `[${timestamp}] Message #${messageCount}:\n${JSON.stringify(data, null, 2)}\n\n`;
+        const messageText = `[${timestamp}] Message #${messageCount}:\n${JSON.stringify(data, null, 2)}`;
         
         messages.push(messageText);
         if (messages.length > maxMessages) {
           messages.shift(); // Remove oldest message
         }
         
-        outputDiv.textContent = messages.join('---\n');
+        // More efficient DOM update: only rebuild when necessary
+        outputDiv.textContent = messages.join('\n---\n');
         // Auto-scroll to bottom
         outputDiv.scrollTop = outputDiv.scrollHeight;
       } catch (e) {
-        outputDiv.textContent += `[Error parsing message: ${e.message}]\n`;
+        // Append error without replacing all content
+        const errorMsg = document.createTextNode(`\n[Error parsing message: ${e.message}]\n`);
+        outputDiv.appendChild(errorMsg);
+        outputDiv.scrollTop = outputDiv.scrollHeight;
       }
     };
     
