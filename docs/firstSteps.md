@@ -29,7 +29,7 @@ Essential files needed to create a SignalK web app are:
 `       ├── index.js`  
 `       ├── package.json`    
 **`       ├── public`**  
-**`       │   ├── assets`**    
+**`           └── assets`**    
 `       │   │   └── icon.jpg`    
 `       │   └── index.html`  
 `       └── README.md`  
