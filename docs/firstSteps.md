@@ -12,7 +12,7 @@ One of the first things you will need to do is to set up a directory structure t
 If we choose the name **helloworld** for this application, then a suitable folder structure would be as follows:  
 
 **`     helloworld`**    
-**`       ├── public`**  
+**`       └── public`**  
 **`           └── assets`**   
 
      
