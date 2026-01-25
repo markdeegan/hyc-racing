@@ -9,6 +9,6 @@
   "main": "index.js",
   "signalk": {
     "displayName": "helloworld",
-    "appIcon": "./assets/icons/HYCLogo-72.png"
+    "appIcon": "./assets/icons/HYCLogo-7272.png"
   }
 }
