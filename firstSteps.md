@@ -16,7 +16,7 @@ If we choose the name **helloworld** for this application, then a suitable folde
 `       │   ├── assets`    
 `       │   │   └── icon.jpg`    
 `       │   └── index.html`  
-`       ├── README.md`  
+`       └── README.md`  
      
 # Essential Components
 Essential components in the SignalK web app are:
