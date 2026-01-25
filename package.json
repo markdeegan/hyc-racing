@@ -1,0 +1,19 @@
+{
+  "name": "@signalk/helloworld",
+  "version": "1.0.0",
+  "description": "A bare-bones SignalK web app - minimal starter for developers",
+  "main": "index.js",
+  "keywords": [
+    "signalk-webapp"
+  ],
+  "signalk": {
+    "displayName": "Hello World",
+    "description": "A minimal SignalK web app example"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markdeegan/helloworld.git"
+  }
+}

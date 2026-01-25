@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World - SignalK WebApp</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+    }
+    #status {
+      padding: 10px;
+      margin: 20px 0;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .connected {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .disconnected {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    #output {
+      background-color: white;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 5px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .info {
+      background-color: #d1ecf1;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+      border: 1px solid #bee5eb;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello World - SignalK WebApp</h1>
+  
+  <div class="info">
+    <p><strong>About this app:</strong></p>
+    <p>This is a bare-bones SignalK web application that demonstrates the minimum required to connect to a SignalK server and receive data.</p>
+    <p>It connects to the SignalK WebSocket stream and displays the received delta messages in real-time.</p>
+  </div>
+
+  <div id="status" class="disconnected">Status: Disconnected</div>
+  
+  <h2>SignalK Data Stream:</h2>
+  <div id="output">Waiting for connection...</div>
+
+  <script>
+    // Determine WebSocket URL based on current location
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const port = window.location.port || (protocol === 'wss:' ? '443' : '80');
+    const wsUrl = protocol + '//' + window.location.hostname + ':' + (port === '80' || port === '443' ? '3000' : port) + '/signalk/v1/stream';
+    
+    console.log('Connecting to SignalK WebSocket:', wsUrl);
+    
+    const statusDiv = document.getElementById('status');
+    const outputDiv = document.getElementById('output');
+    
+    let messageCount = 0;
+    const maxMessages = 50; // Keep last 50 messages
+    const messages = [];
+    
+    // Create WebSocket connection
+    const ws = new WebSocket(wsUrl);
+    
+    ws.onopen = function() {
+      console.log('SignalK WebSocket connection established');
+      statusDiv.textContent = 'Status: Connected to SignalK server';
+      statusDiv.className = 'connected';
+      outputDiv.textContent = 'Connected! Waiting for data...\n';
+    };
+    
+    ws.onmessage = function(event) {
+      messageCount++;
+      
+      try {
+        // Parse and pretty-print the JSON data
+        const data = JSON.parse(event.data);
+        const timestamp = new Date().toLocaleTimeString();
+        const messageText = `[${timestamp}] Message #${messageCount}:\n${JSON.stringify(data, null, 2)}\n\n`;
+        
+        messages.push(messageText);
+        if (messages.length > maxMessages) {
+          messages.shift(); // Remove oldest message
+        }
+        
+        outputDiv.textContent = messages.join('---\n');
+        // Auto-scroll to bottom
+        outputDiv.scrollTop = outputDiv.scrollHeight;
+      } catch (e) {
+        outputDiv.textContent += `[Error parsing message: ${e.message}]\n`;
+      }
+    };
+    
+    ws.onerror = function(error) {
+      console.error('WebSocket error:', error);
+      statusDiv.textContent = 'Status: Connection error';
+      statusDiv.className = 'disconnected';
+      outputDiv.textContent = 'WebSocket error occurred. Check console for details.\n';
+    };
+    
+    ws.onclose = function(event) {
+      console.log('WebSocket connection closed:', event.code, event.reason);
+      statusDiv.textContent = 'Status: Disconnected';
+      statusDiv.className = 'disconnected';
+      outputDiv.textContent += '\nConnection closed.\n';
+    };
+  </script>
+</body>
+</html>
