@@ -1,1 +1,14 @@
-
+{
+  "name": "helloworld-signalk-webapp",
+  "version": "1.0.0",
+  "description": "helloworld SignalK 1.0",
+  "keywords": [
+    "signalk-webapp"
+  ],
+  "author": "Author Name",
+  "main": "index.js",
+  "signalk": {
+    "displayName": "helloworld",
+    "appIcon": "./assets/icons/icon.jpg"
+  }
+}
