@@ -13,7 +13,15 @@ This repo was put together to help developers build a **SignalK** web app, from 
           If you are using your own SignalK system also for dsevelopment, that makes the installation of webapps, and development of ofther software artefacts easier. However, developing on a different system, and sending files over to the SignalK system is not a particular challenge. I achieve this on my systems using [GitHub](github.com)   
 3. *node.js* environment    
              [Node.js and npm setup instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-
+To test if you have Node.js and npm in stalled on your development system, you can issue the commands:    
+`          node -v`    
+`          npm -v`    
+If you have both Node.js and npm installed on your system, you should see results something similar to the following:    
+`          node -v`    
+                    v22.11.0`    
+`          npm -v`    
+`                    10.9.0`    
+You may get later versions of each of the above. That's fine.
 
 
 # Directory Structure
@@ -29,14 +37,10 @@ If we choose the name **helloworld** for this application, then a suitable folde
 # Initialise NPM project 
 This section assumes that you already have *Node.js* and *npm* installed on your development system.    
 You need to initialise a new node project in the home directory (helloworld) for your new project.   
-The command to achieve this is *npm init*. To test if you have Node.js and npm in stalled on your development system, you can issue the commands:    
-`          node -v`    
-`          npm -v`    
-If you have both Node.js and npm installed on your system, you should see results something similar to the following:    
-`          node -v<br>
-                    v22.11.0`    
-`          npm -v`    
-`                    10.9.0`    
+The command to achieve this is *npm init*. This command builds a required file *package.json* that identifies to the node.js system what is contained in your package, or webapp.    
+You can write the *package.json* file from scratch, similar to the example below, or you can use the *npm init* command to generate it for you.    
+If you choose to run the npm init command, most of the options are suggested for you, but you can accept the default options suggested. Later you may want something a little differnet, but for now, the defaults will do.  
+If you chosse to create the package.json file directly, using a text editor, then you will need something approaximating to the package.json file contained in this example repo: [package.json](../package.json)    
 
 
      
