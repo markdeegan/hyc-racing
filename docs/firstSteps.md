@@ -13,7 +13,7 @@ If we choose the name **helloworld** for this application, then a suitable folde
 
 **`     helloworld`**    
 **`       └── public`**  
-**`           └── assets`**   
+**`           └── assets*`**   
 
 
 # Initialise NPM project 
