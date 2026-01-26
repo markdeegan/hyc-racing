@@ -14,8 +14,8 @@ This repo was put together to help developers build a **SignalK** web app, from 
 3. *node.js* environment    
              [Node.js and npm setup instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 To test if you have Node.js and npm in stalled on your development system, you can issue the commands:    
-`          node -v`    
-`          npm -v`    
+`  node -v`    
+`  npm -v`    
 If you have both Node.js and npm installed on your system, you should see results something similar to the following:    
 `  node -v`   
 `  v22.11.0`    
