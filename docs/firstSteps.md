@@ -33,8 +33,8 @@ The command to achieve this is *npm init*. To test if you have Node.js and npm i
 `          node -v`    
 `          npm -v`    
 If you have both Node.js and npm installed on your system, you should see results something similar to the following:    
-`          node -v`    
-`                    v22.11.0`    
+`          node -v    
+                    v22.11.0`    
 `          npm -v`    
 `                    10.9.0`    
 
