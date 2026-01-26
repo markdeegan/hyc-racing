@@ -6,7 +6,7 @@ This repo was put together to help developers build a **SignalK** web app, from 
 
 
 # Development Environment
-1.      SignalK System
+1. *SignalK* system
           To develop *SignalK* web apps and plugins, you will need access to a *SignalK* server. This document does not cover that step, but instructions can be found here: 
 
 
