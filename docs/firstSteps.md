@@ -6,8 +6,13 @@ This repo was put together to help developers build a **SignalK** web app, from 
 
 
 # Development Environment
-1. *SignalK* system
-          To develop *SignalK* web apps and plugins, you will need access to a *SignalK* server. This document does not cover that step, but instructions can be found here: 
+1. *SignalK* system   
+          To develop *SignalK* web apps and plugins, you will need access to a *SignalK* server. This document does not cover that step, but instructions can be found here: [SignalK Installation](https://demo.signalk.org/documentation/Installation.html)
+2. Development platform
+          This could be a laptop, desktop, or even the SignalK system itself.
+          If you are using your own SignalK system also for dsevelopment, that makes the installation of webapps, and development of ofther software artefacts easier. However, developing on a different system, and sending files over to the ignalK system is not a particular challenge. I achieve this on my systems using [GitHub](github.com)   
+3. *node.js* environment
+             [Node.js and npm setup instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 
 
