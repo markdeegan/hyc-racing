@@ -15,6 +15,7 @@ If we choose the name **helloworld** for this application, then a suitable folde
 **`       └── public`**  
 **`           └── assets*`**   
 
+**assets***: Please note that 
 
 # Initialise NPM project 
 
