@@ -18,7 +18,7 @@ To test if you have Node.js and npm in stalled on your development system, you c
 `          npm -v`    
 If you have both Node.js and npm installed on your system, you should see results something similar to the following:    
 `          node -v`    
-                    v22.11.0`    
+`                    v22.11.0`    
 `          npm -v`    
 `                    10.9.0`    
 You may get later versions of each of the above. That's fine.
