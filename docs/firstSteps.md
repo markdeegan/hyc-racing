@@ -32,6 +32,11 @@ You need to initialise a new node project in the home directory (helloworld) for
 The command to achieve this is *npm init*. To test if you have Node.js and npm in stalled on your development system, you can issue the commands:    
 `          node -v`    
 `          npm -v`    
+If you have both Node.js and npm installed on your system, you should see results something similar to the following:    
+`          node -v`    
+`                    v22.11.0`    
+`          npm -v`    
+`                    10.9.0`    
 
 
      
