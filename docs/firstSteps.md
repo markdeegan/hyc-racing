@@ -29,8 +29,10 @@ If we choose the name **helloworld** for this application, then a suitable folde
 # Initialise NPM project 
 This section assumes that you already have *Node.js* and *npm* installed on your development system.    
 You need to initialise a new node project in the home directory (helloworld) for your new project.   
-The command to achieve this is *npm init*. To test if you have Node.js and npm in stalled on your development system, you can issued the command    
-          npm -v
+The command to achieve this is *npm init*. To test if you have Node.js and npm in stalled on your development system, you can issue the commands:    
+`          node -v`    
+`          npm -v`    
+
 
      
 # Essential Components
