@@ -15,7 +15,7 @@ If we choose the name **helloworld** for this application, then a suitable folde
 **`       └── public`**  
 **`           └── assets*`**   
 
-**assets***: Please note that 
+**assets***: Please note that for the absolute minimum projects, even the assets folder is probably not required. 
 
 # Initialise NPM project 
 
