@@ -27,7 +27,8 @@ If we choose the name **helloworld** for this application, then a suitable folde
 **assets***: Please note that for the absolute minimum projects, even the assets folder is probably not required. 
 
 # Initialise NPM project 
-This section assumes that you already have 
+This section assumes that you already have Node.js and npl installed on your development system.    
+You need to initialise a new node project in the home directory (helloworld) for your new project. 
      
 # Essential Components
 Essential files needed to create a SignalK web app are:
