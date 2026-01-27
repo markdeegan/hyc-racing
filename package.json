@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "helloworld SignalK 1.0",
   "keywords": [
-    "signalk-webapp"
+    "signalk-webapp",
+    "signalk-node-server-plugin "
   ],
   "author": "Author Name",
   "main": "index.js",
