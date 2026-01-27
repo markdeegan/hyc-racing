@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Signalk waypoint form update</title>
+    <script>
+
+      //function to handle for submit
+      function formSubmit(){
+        //endpoint url for waypoint using user entered location
+        //https://demo.signalk.org/documentation/Developing/REST_APIs/Course_API.html#1-navigate-to-a-location
+        const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
+        //retrieve the form data from form
+        var form = new FormData(document.getElementById("waypointForm"))
+        //create JSON object to send to server, Number() converts string to number
+        var data = {
+          position:{
+            latitude:Number(form.get("latitude")),
+            longitude:Number(form.get("longitude"))
+          }
+        }
+        //sanity check print
+        console.log(data)
+        //Create request handler XHR
+        var xhr = new XMLHttpRequest()
+        //open the request using PUT method
+        xhr.open("PUT", url)
+        //set the content type to JSON, refer to MIME type reference below
+        //https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+        xhr.setRequestHeader("Content-Type","application/json")
+        //send the put request (Won't work for me locally)
+        xhr.send(data)
+        //give a little pop-up letting user know they submitted something
+        window.alert("Form sent!")
+      }
+
+    </script>
+  </head>
+  <body>
+    <form id="waypointForm">
+      <label for="longitude">longitude:</label>
+      <input type="number" name="longitude">
+      <label for="latitude">latitude:</label>
+      <input type="number" name="latitude">
+    </form>
+    <button type="submit" onclick="formSubmit()">Submit</button>
+  </body>
+</html>
