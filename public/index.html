@@ -25,7 +25,7 @@
       oReq.addEventListener('load', updateDisplay)
       oReq.open(
         'GET',
-        '/signalk/v1/api/vessels/self/name'
+        '/signalk/v1/api/vessels/self/navigation.course.nextPoint',
       )
       oReq.send()
     }
