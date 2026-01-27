@@ -14,19 +14,15 @@
         //retrieve the form data from form
         var form = new FormData(document.getElementById("waypointForm"))
         //create JSON object to send to server, Number() converts string to number
-        var data = JSON.stringify({
-          position:{
-            latitude:Number(6),
-            longitude:Number(53.25)
-          }
-        });
+        var data = JSON.stringify(
+          { "latitude": 53, "longitude": -6 });
 
         var data2 = {
           position:{
             latitude:Number(form.get("latitude")),
             longitude:Number(form.get("longitude"))
           }
-        }
+        };
         //sanity check print
         console.log(data)
         //Create request handler XHR
