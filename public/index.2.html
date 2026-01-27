@@ -1,0 +1,69 @@
+<!doctype html>
+<!----------------------------------------->
+<!-- start the html document             -->
+<!----------------------------------------->
+<html>
+  <!--------------------------------------->
+  <!-- start the html header             -->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!------------------------------------>
+    <!-- Set the title for the page     -->
+    <title>Signal K Sample Consumer</title>
+  </head>
+  <!-- end of html header               -->
+  <!-------------------------------------->
+
+  <!--------------------------------------->
+  <!-- start the html body               -->
+  <body>
+    <pre>
+    <div id="data"/>
+  </pre>
+  </body>
+  <!-- end of html body                 -->
+  <!-------------------------------------->
+
+  <!-------------------------------------->
+  <script>
+    // Get reference to the div where we will display the data
+    var dataDiv = document.getElementById('data')
+
+    // Function to update the display with data from the REST API
+    function updateDisplay(event) {
+      // log the response text to the console for debugging
+      console.log(event.target.responseText)
+      // Update the div with the response text
+      dataDiv.innerHTML = event.target.responseText
+      // Schedule the next data fetch in 1 second
+      // or timeout if not received
+      setTimeout(fetchDataFromRestApi, 1000)
+    } // end of updateDisplay function
+
+    // Function to fetch data from the REST API
+    function fetchDataFromRestApi() {
+      // Create a new XMLHttpRequest
+      var oReq = new XMLHttpRequest()
+      // Set up the event listener for when the data is loaded
+      oReq.addEventListener('load', updateDisplay)
+      // Open a GET request to the Signal K REST API endpoint
+      // for the vessel's destination 
+      oReq.open(
+        'GET',
+        '/signalk/v2/api/vessels/self/navigation/course'
+      )
+      // Send the request
+      oReq.send()
+    } // end of fetchDataFromRestApi function
+
+    // Initial call to start fetching data
+    fetchDataFromRestApi()
+
+  </script> 
+  <!-- end of script                    -->
+  <!-------------------------------------->
+</html>
+<!-- end of html document               -->
+<!---------------------------------------->

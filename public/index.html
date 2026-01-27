@@ -1,69 +1,49 @@
-<!doctype html>
-<!----------------------------------------->
-<!-- start the html document             -->
-<!----------------------------------------->
-<html>
-  <!--------------------------------------->
-  <!-- start the html header             -->
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Signalk waypoint form update</title>
+    <script>
 
-    <!------------------------------------>
-    <!-- Set the title for the page     -->
-    <title>Signal K Sample Consumer</title>
+      //function to handle for submit
+      function formSubmit(){
+        //endpoint url for waypoint using user entered location
+        //https://demo.signalk.org/documentation/Developing/REST_APIs/Course_API.html#1-navigate-to-a-location
+        const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
+        //retrieve the form data from form
+        var form = new FormData(document.getElementById("waypointForm"))
+        //create JSON object to send to server, Number() converts string to number
+        var data = {
+          position:{
+            latitude:Number(form.get("latitude")),
+            longitude:Number(form.get("longitude"))
+          }
+        }
+        //sanity check print
+        console.log(data)
+        //Create request handler XHR
+        var xhr = new XMLHttpRequest()
+        //open the request using PUT method
+        xhr.open("PUT", url)
+        //set the content type to JSON, refer to MIME type reference below
+        //https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+        xhr.setRequestHeader("Content-Type","application/json")
+        //send the put request (Won't work for me locally)
+        xhr.send(data)
+        //give a little pop-up letting user know they submitted something
+        window.alert("Form sent!")
+      }
+
+    </script>
   </head>
-  <!-- end of html header               -->
-  <!-------------------------------------->
-
-  <!--------------------------------------->
-  <!-- start the html body               -->
   <body>
-    <pre>
-    <div id="data"/>
-  </pre>
+    <form id="waypointForm">
+      <label for="longitude">longitude:</label>
+      <input type="number" name="longitude">
+      <label for="latitude">latitude:</label>
+      <input type="number" name="latitude">
+    </form>
+    <button type="submit" onclick="formSubmit()">Submit</button>
   </body>
-  <!-- end of html body                 -->
-  <!-------------------------------------->
-
-  <!-------------------------------------->
-  <script>
-    // Get reference to the div where we will display the data
-    var dataDiv = document.getElementById('data')
-
-    // Function to update the display with data from the REST API
-    function updateDisplay(event) {
-      // log the response text to the console for debugging
-      console.log(event.target.responseText)
-      // Update the div with the response text
-      dataDiv.innerHTML = event.target.responseText
-      // Schedule the next data fetch in 1 second
-      // or timeout if not received
-      setTimeout(fetchDataFromRestApi, 1000)
-    } // end of updateDisplay function
-
-    // Function to fetch data from the REST API
-    function fetchDataFromRestApi() {
-      // Create a new XMLHttpRequest
-      var oReq = new XMLHttpRequest()
-      // Set up the event listener for when the data is loaded
-      oReq.addEventListener('load', updateDisplay)
-      // Open a GET request to the Signal K REST API endpoint
-      // for the vessel's destination 
-      oReq.open(
-        'GET',
-        '/signalk/v2/api/vessels/self/navigation/course'
-      )
-      // Send the request
-      oReq.send()
-    } // end of fetchDataFromRestApi function
-
-    // Initial call to start fetching data
-    fetchDataFromRestApi()
-
-  </script> 
-  <!-- end of script                    -->
-  <!-------------------------------------->
 </html>
-<!-- end of html document               -->
-<!---------------------------------------->
