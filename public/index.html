@@ -30,7 +30,8 @@
         //https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
         xhr.setRequestHeader("Content-Type","application/json")
         //send the put request (Won't work for me locally)
-        xhr.send(data)
+        // xhr.send(data)
+        xhr.send(JSON.stringify(data)); 
         //give a little pop-up letting user know they submitted something
         window.alert("Form sent!")
       }
