@@ -57,11 +57,8 @@
    function setDestinationB(){
         const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
         var data = {
-          position:{
-            latitude:53.3883,
-            longitude:-6.0543
+          href:"/resources/waypoints/5a567b67-01ed-48f1-bad5-c14118fe6c45"
           },
-          name:"Balscadden"
         };
         console.log(data)
         var xhr = new XMLHttpRequest()
