@@ -36,6 +36,39 @@
         window.alert("Form sent!")
       }
 
+      //function to set destination to Apex
+      function setDestination(A){
+        const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
+        var data = {
+          position:{
+            latitude:53.349805,
+            longitude:-6.260315
+          }
+        };
+        console.log(data)
+        var xhr = new XMLHttpRequest()
+        xhr.open("PUT", url)
+        xhr.setRequestHeader("Content-Type","application/json")
+        xhr.send(JSON.stringify(data));
+        window.alert("Destination set to Apex!")
+      }
+
+   function setDestinationB(){
+        const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
+        var data = {
+          position:{
+            latitude:53.353998,
+            longitude:-6.226239
+          }
+        };
+        console.log(data)
+        var xhr = new XMLHttpRequest()
+        xhr.open("PUT", url)
+        xhr.setRequestHeader("Content-Type","application/json")
+        xhr.send(JSON.stringify(data));
+        window.alert("Destination set to Balscadden!")
+      }  
+       
     </script>
   </head>
   <body>
@@ -46,5 +79,7 @@
       <input type="number" name="latitude">
     </form>
     <button type="submit" onclick="formSubmit()">Submit</button>
+    <button id="apexButton" type="submit" onclick="setDestinationA()">Destination Apex</button>
+    <button id="balscaddenButton" type="submit" onclick="setDestinationB()">Destination Balscadden</button>
   </body>
 </html>
