@@ -48,6 +48,26 @@
         xhr.setRequestHeader("Content-Type","application/json")
         xhr.send(JSON.stringify(data));
         document.getElementById("output").innerText = "Destination set to Apex!"
+
+        const url2 = "/signalk/v2/api/resources/routes";
+        var data2 = {
+          "name": "Apex to Balscadden",
+          "waypoints": [
+            {
+              "href": "/resources/waypoints/f60dbafd-4745-434d-b9d9-52a851224229"
+            },
+            {
+              "href": "/resources/waypoints/5a567b67-01ed-48f1-bad5-c14118fe6c45"
+            }
+          ]
+        };
+        console.log(data2)
+        var xhr2 = new XMLHttpRequest()
+        xhr2.open("POST", url2)
+        xhr2.setRequestHeader("Content-Type","application/json")
+        xhr2.send(JSON.stringify(data2));
+        document.getElementById("output").innerText = "Route set from Apex to Balscadden!";
+
       }
 
    function setDestinationB(){
