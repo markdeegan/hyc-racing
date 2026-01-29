@@ -47,7 +47,7 @@
         xhr.open("PUT", url)
         xhr.setRequestHeader("Content-Type","application/json")
         xhr.send(JSON.stringify(data));
-        window.alert("Destination set to Apex!")
+        document.getElementById("output").innerText = "Destination set to Apex!"
       }
 
    function setDestinationB(){
@@ -60,7 +60,7 @@
         xhr.open("PUT", url)
         xhr.setRequestHeader("Content-Type","application/json")
         xhr.send(JSON.stringify(data));
-        window.alert("Destination set to Balscadden!")
+        document.getElementById("output").innerText = "Destination set to Balscadden!"
       }
 
   function setDestinationP(){
@@ -73,7 +73,7 @@
         xhr.open("PUT", url)
         xhr.setRequestHeader("Content-Type","application/json")
         xhr.send(JSON.stringify(data));
-        window.alert("Destination set to Dublin Port!")
+        document.getElementById("output").innerText = "Destination set to Portmarnock!"
       }
     </script>
   </head>
@@ -88,5 +88,8 @@
     <button id="apexButton" type="submit" onclick="setDestinationA()">Destination Apex</button>
     <button id="balscaddenButton" type="submit" onclick="setDestinationB()">Destination Balscadden</button>
     <button id="portmarnockButton" type="submit" onclick="setDestinationP()">Destination Portmarnock</button>
+    <div id="output">
+      Some Text Here
+    </div>
   </body>
 </html>
