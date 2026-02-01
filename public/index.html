@@ -108,6 +108,8 @@
             var output = "Waypoints Keys:\n";
             printObjectKeys(waypoints);
             printObjectValues(waypoints);
+            console.log("Key for waypoint named 'Boy': " + getKeyForNamedWaypoint(waypoints, "Boy"));
+            document.getElementById("output").innerText = "Waypoints listed in console."; 
           } else {
             console.error("Error fetching waypoints: " + xhr.status);
           }
@@ -135,6 +137,16 @@
           console.log(value);
         }
       };
+     ////////// ////////// ////////// //////////A
+
+     function getKeyForNamedWaypoint(obj, waypointName) {
+        for (const [key, value] of Object.entries(obj)) {
+          if (value.name === waypointName) {
+            return key;
+          }
+        }
+        return null; // Return null if no matching waypoint is found
+      }
      ////////// ////////// ////////// //////////
 
     </script>
