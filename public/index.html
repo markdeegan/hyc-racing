@@ -95,6 +95,27 @@
         xhr.send(JSON.stringify(data));
         document.getElementById("output").innerText = "Destination set to Portmarnock!"
       }
+
+      function listAllWaypoints(){
+        const url = "/signalk/v2/api/resources/waypoints"
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", url)
+        xhr.setRequestHeader("Content-Type","application/json")
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            var waypoints = JSON.parse(xhr.responseText);
+            console.log(waypoints);
+            var output = "Waypoints:\n";
+            waypoints.forEach(function(waypoint) {
+              output += waypoint.name + " (" + waypoint.position.latitude + ", " + waypoint.position.longitude + ")\n";
+            });
+            document.getElementById("output").innerText = output;
+          } else {
+            console.error("Error fetching waypoints: " + xhr.status);
+          }
+        };
+        xhr.send();
+      }
     </script>
   </head>
   <body>
