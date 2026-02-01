@@ -106,10 +106,12 @@
             var waypoints = JSON.parse(xhr.responseText);
             console.log(waypoints);
             var output = "Waypoints:\n";
-            for (const child of Object.values(waypoints)) {
-              waypoints = child;
-              console.log(waypoints);
-              output += JSON.stringify(waypoints, null, 2);
+            // for (const child of Object.values(waypoints)) {
+            // expand waypoints listing
+            for ( entry of Object.entries(waypoints) ) {
+              const [key, child] = entry;
+              console.log(child);
+              output += JSON.stringify(child, null, 2);
             }
             document.getElementById("output").innerText = output;
           } else {
