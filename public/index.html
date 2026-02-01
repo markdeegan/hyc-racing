@@ -108,11 +108,10 @@
             var output = "Waypoints:\n";
             for (const child of Object.values(waypoints)) {
               waypoints = child;
+              console.log(waypoints);
+              output += JSON.stringify(waypoints, null, 2);
               break; // Get the first child which contains the waypoints array
             }
-            waypoints.forEach(function(waypoint) {
-              output += waypoint.name + " (" + waypoint.position.latitude + ", " + waypoint.position.longitude + ")\n";
-            });
             document.getElementById("output").innerText = output;
           } else {
             console.error("Error fetching waypoints: " + xhr.status);
