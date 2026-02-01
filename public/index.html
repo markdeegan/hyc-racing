@@ -139,8 +139,7 @@
       };
      ////////// ////////// ////////// //////////
      function getKey() {
-        const waypointName = "Apex"; // Change this to the desired waypoint name
-        waypointName = document.getElementById("waypointForm").elements["destinationName"].value;
+        const waypointName = document.getElementById("waypointForm").elements["destinationName"].value;
         const url = "/signalk/v2/api/resources/waypoints";
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
