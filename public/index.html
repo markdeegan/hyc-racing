@@ -196,13 +196,15 @@
   </head>
   <body>
     <form id="waypointForm">
+      <label id="options"> Waypoints available at this time, Boy, October, War, Red, A,B,C,D,E,F</label>
+      <hr>
+      <button id="getHrefForNamedDestinationButton" type="submit" onclick="getKey()">Set destination to: </button>
       <label for="destinationName">destinationName:</label>
       <input type="text" name="destinationName">
     </form>
 
-    <button id="balscaddenButton" type="submit" onclick="setDestinationB()">Destination Balscadden</button>
-    <button id="listWaypointsButton" type="submit" onclick="listAllWaypoints()">List All Waypoints</button>
-    <button id="getHrefForNamedDestinationButton" type="submit" onclick="getKey()">Get Href for Named Destination</button>
+    <button id="balscaddenButton" type="submit" onclick="setDestinationB()">(hardwired) Destination Boy</button>
+    <br>
 
     <div id="output">
       Some Text Here
