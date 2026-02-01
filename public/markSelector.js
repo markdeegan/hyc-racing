@@ -64,12 +64,32 @@ function setDestinationFromHREF(href) {
     xhr.send(JSON.stringify(data));
 }
 
+function displayMarksInfo() {
+    console.log("Reading marks from Wednesday data...");
+    
+    // Import Wednesday marks data
+    import('./wednesday.js').then(module => {
+        const marks = module.Wednesday.marks;
+        
+        console.log("=== Marks Information ===");
+        marks.forEach(mark => {
+            console.log("Short Name: " + mark.shortName + ", Shape: " + mark.shape + ", Colour: " + mark.colour);
+        });
+        console.log("=== End of Marks ===");
+    }).catch(error => {
+        console.error("Error importing Wednesday data:", error);
+    });
+}
+
 function setupButtonClickHandlers() {
     const buttons = document.querySelectorAll('button');
     
     buttons.forEach(button => {
-        // Skip the updateWaypoints button
+        // Handle updateWaypoints button separately
         if (button.id === 'updateWaypoints') {
+            button.addEventListener('click', () => {
+                displayMarksInfo();
+            });
             return;
         }
         
