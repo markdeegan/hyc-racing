@@ -106,20 +106,20 @@
             var waypoints = JSON.parse(xhr.responseText);
             console.log(waypoints);
             var output = "Waypoints Keys:\n";
-            // for (const child of Object.values(waypoints)) {
-            // expand waypoints listing
-            for ( entry of Object.entries(waypoints) ) {
-              const [key, child] = entry;
-              console.log(key);
-              output += JSON.stringify(key, null, 2);
-            }
-            document.getElementById("output").innerText = output;
+            printObjectKeys(waypoints);
           } else {
             console.error("Error fetching waypoints: " + xhr.status);
           }
         };
         xhr.send();
       }
+
+      function printObjectKeys(obj) {
+        for (const key of Object.keys(obj)) {
+          console.log(key);
+        }
+      };
+
     </script>
   </head>
   <body>
