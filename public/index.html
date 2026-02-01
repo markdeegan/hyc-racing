@@ -39,8 +39,11 @@
       //function to set destination to Apex
       function setDestinationA(){
         const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
+        const  hrefRoot="/resources/waypoints/";
+        const hrefApex = getKeyForNamedWaypoint("Apex");
+        const fullHref = hrefRoot + hrefApex;
         var data = {
-          href:"/resources/waypoints/f60dbafd-4745-434d-b9d9-52a851224229"
+          href: fullHref
         };
         console.log(data)
         var xhr = new XMLHttpRequest()
