@@ -110,7 +110,7 @@
             // expand waypoints listing
             for ( entry of Object.entries(waypoints) ) {
               const [key, child] = entry;
-              console.log(child);
+              console.log(key);
               output += JSON.stringify(child, null, 2);
             }
             document.getElementById("output").innerText = output;
