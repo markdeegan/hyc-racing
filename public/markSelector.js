@@ -68,6 +68,11 @@ function setupButtonClickHandlers() {
     const buttons = document.querySelectorAll('button');
     
     buttons.forEach(button => {
+        // Skip the updateWaypoints button
+        if (button.id === 'updateWaypoints') {
+            return;
+        }
+        
         const letterElement = button.querySelector('.letter');
         const letter = letterElement ? letterElement.textContent : button.querySelector('.name').textContent;
         
