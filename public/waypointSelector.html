@@ -5,18 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Waypoint Selector</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
         }
+        .grid-container {
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 0;
+        }
+        .grid-cell {
+            border: 1px solid black;
+            min-width: 0;
+            min-height: 0;
+        }
         button {
             width: 100%;
             height: 100%;
-            font-size: 4vw;
             cursor: pointer;
             border: none;
             background-color: #f0f0f0;
+            overflow: hidden;
+            padding: 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         button:hover {
             background-color: #d0d0d0;
@@ -24,36 +46,73 @@
         button:active {
             background-color: #b0b0b0;
         }
+        .letter {
+            font-size: 3vw;
+            font-weight: bold;
+            display: block;
+        }
+        .name {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+        }
     </style>
     </head>
     <body>
-        <div style="width: 100vw; height: 100vh; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(6, 1fr); border: 1px solid black; box-sizing: border-box;">
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>A - APEX</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>B</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>C</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>D</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>E</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>F</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>G</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>H</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>I</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>J</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>K</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>L</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>M</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>N</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>O</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>P</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>Q</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>R</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>S</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>T</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>U</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>V</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>W</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>X</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>Y</button></div>
-            <div style="border: 1px solid black; box-sizing: border-box;"><button>Z</button></div>
+        <div class="grid-container">
+            <div class="grid-cell"><button><span class="letter">A</span><span class="name">APEX</span></button></div>
+            <div class="grid-cell"><button><span class="letter">B</span><span class="name">BALSCADDEN</span></button></div>
+            <div class="grid-cell"><button><span class="letter">C</span><span class="name">CUSH</span></button></div>
+            <div class="grid-cell"><button><span class="letter">D</span><span class="name">DUNBO</span></button></div>
+            <div class="grid-cell"><button><span class="letter">E</span><span class="name">EAST</span></button></div>
+            <div class="grid-cell"><button><span class="letter">F</span><span class="name">FINISH</span></button></div>
+            <div class="grid-cell"><button><span class="letter">G</span><span class="name">GARBH</span></button></div>
+            <div class="grid-cell"><button><span class="name">HOWTH</span></button></div>
+            <div class="grid-cell"><button><span class="letter">H</span><span class="name">HUB</span></button></div>
+            <div class="grid-cell"><button><span class="letter">I</span><span class="name">ISLAND</span></button></div>
+            <div class="grid-cell"><button><span class="letter">J</span><span class="name">THULLA</span></button></div>
+            <div class="grid-cell"><button><span class="letter">K</span><span class="name">STACK</span></button></div>
+            <div class="grid-cell"><button><span class="letter">O</span><span class="name">OSPREY</span></button></div>
+            <div class="grid-cell"><button><span class="letter">P</span><span class="name">PORTMARNOCK</span></button></div>
+            <div class="grid-cell"><button><span class="letter">Q</span><span class="name">ROWAN ROCKS</span></button></div>
+            <div class="grid-cell"><button><span class="letter">R</span><span class="name">SOUTH ROWAN</span></button></div>
+            <div class="grid-cell"><button><span class="letter">S</span><span class="name">SPIT</span></button></div>
+            <div class="grid-cell"><button><span class="letter">U</span><span class="name">ULYSSES</span></button></div>
+            <div class="grid-cell"><button><span class="letter">V</span><span class="name">VICEROY</span></button></div>
+            <div class="grid-cell"><button><span class="letter">W</span><span class="name">WEST</span></button></div>
+            <div class="grid-cell"><button><span class="letter">X</span><span class="name">XEBEC</span></button></div>
+            <div class="grid-cell"><button><span class="letter">Z</span><span class="name">ZEPHYR</span></button></div>
         </div>
+
+        <script>
+            function resizeButtonText() {
+                const buttons = document.querySelectorAll('button');
+                
+                buttons.forEach(button => {
+                    const name = button.querySelector('.name');
+                    if (!name) return;
+                    
+                    // Start with a reasonable size
+                    let fontSize = 50;
+                    name.style.fontSize = fontSize + 'px';
+                    
+                    // Reduce font size until text fits within button width (accounting for padding)
+                    const maxWidth = button.clientWidth - 15;
+                    
+                    while (name.scrollWidth > maxWidth && fontSize > 5) {
+                        fontSize -= 0.5;
+                        name.style.fontSize = fontSize + 'px';
+                    }
+                });
+            }
+
+            // Run on page load with a slight delay to ensure layout is complete
+            window.addEventListener('load', () => {
+                setTimeout(resizeButtonText, 50);
+            });
+            
+            // Re-run on window resize
+            window.addEventListener('resize', resizeButtonText);
+        </script>
     </body>
 </html>
