@@ -105,7 +105,7 @@
           if (xhr.status === 200) {
             var waypoints = JSON.parse(xhr.responseText);
             console.log(waypoints);
-            var output = "Waypoints:\n";
+            var output = "Waypoints Keys:\n";
             // for (const child of Object.values(waypoints)) {
             // expand waypoints listing
             for ( entry of Object.entries(waypoints) ) {
