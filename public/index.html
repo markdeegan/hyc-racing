@@ -169,10 +169,26 @@
      function getKeyForNamedWaypoint(obj, waypointName) {
         for (const [key, value] of Object.entries(obj)) {
           if (value.name === waypointName) {
+            setDestinationHref = key;
+            setDestinationFromHREF(setDestinationHref);
             return key;
           }
         }
         return null; // Return null if no matching waypoint is found
+      }
+     ////////// ////////// ////////// //////////
+
+     function setDestinationFromHREF(href) {
+        const url = "/signalk/v2/api/vessels/self/navigation/course/destination";
+        var data = {
+          href: "/resources/waypoints/" + href
+        };
+        console.log(data);
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(data));
+        document.getElementById("output").innerText = "Destination set to waypoint with href: " + href;
       }
      ////////// ////////// ////////// //////////
 
