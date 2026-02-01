@@ -139,6 +139,7 @@
       };
      ////////// ////////// ////////// //////////
      function getKey() {
+      listAllWaypoints();
         const waypointName = document.getElementById("waypointForm").elements["destinationName"].value;
         const url = "/signalk/v2/api/resources/waypoints";
         var xhr = new XMLHttpRequest();
