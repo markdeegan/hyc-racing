@@ -137,7 +137,31 @@
           console.log(value);
         }
       };
-     ////////// ////////// ////////// //////////A
+     ////////// ////////// ////////// //////////
+     function getKey() {
+        const waypointName = "Apex"; // Change this to the desired waypoint name
+        waypointName = document.getElementById("waypointForm").elements["destinationName"].value;
+        const url = "/signalk/v2/api/resources/waypoints";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            var waypoints = JSON.parse(xhr.responseText);
+            const key = getKeyForNamedWaypoint(waypoints, waypointName);
+            if (key) {
+              console.log("Key for waypoint named '" + waypointName + "': " + key);
+              document.getElementById("output").innerText = "Key for waypoint named '" + waypointName + "': " + key;
+            } else {
+              console.log("No waypoint found with the name '" + waypointName + "'");
+              document.getElementById("output").innerText = "No waypoint found with the name '" + waypointName + "'";
+            }
+          } else {
+            console.error("Error fetching waypoints: " + xhr.status);
+          }
+        };
+        xhr.send();
+      };
 
      function getKeyForNamedWaypoint(obj, waypointName) {
         for (const [key, value] of Object.entries(obj)) {
@@ -166,7 +190,7 @@
     <button id="balscaddenButton" type="submit" onclick="setDestinationB()">Destination Balscadden</button>
     <button id="portmarnockButton" type="submit" onclick="setDestinationP()">Destination Portmarnock</button>
     <button id="listWaypointsButton" type="submit" onclick="listAllWaypoints()">List All Waypoints</button>
-    <button id="getHrefForNamedDestinationButton" type="submit" onclick="getKeyForNamedWaypoint(Boy)">Get Href for Named Destination</button>
+    <button id="getHrefForNamedDestinationButton" type="submit" onclick="getKey()">Get Href for Named Destination</button>
 
     <div id="output">
       Some Text Here
