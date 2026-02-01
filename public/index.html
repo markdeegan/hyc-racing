@@ -106,6 +106,10 @@
             var waypoints = JSON.parse(xhr.responseText);
             console.log(waypoints);
             var output = "Waypoints:\n";
+            for (const child of Object.values(waypoints)) {
+              waypoints = child;
+              break; // Get the first child which contains the waypoints array
+            }
             waypoints.forEach(function(waypoint) {
               output += waypoint.name + " (" + waypoint.position.latitude + ", " + waypoint.position.longitude + ")\n";
             });
