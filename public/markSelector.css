@@ -57,3 +57,18 @@ button:active {
     left: 50%;
     transform: translateX(-50%);
 }
+
+#updateWaypoints {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#updateWaypoints:hover {
+    background-color: #45a049;
+}
+
+#updateWaypoints:active {
+    background-color: #3d8b40;
+}
