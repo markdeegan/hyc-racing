@@ -1,223 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+    <head>  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Signalk waypoint form update</title>
-    <script>
+    <title>Waypoint Selector</title>
+    <link rel="stylesheet" href="markSelector.css">
+    </head>
+    <body>
+        <div class="grid-container">
+            <div class="grid-cell"><button><span class="letter">A</span><span class="name">APEX</span></button></div>
+            <div class="grid-cell"><button><span class="letter">B</span><span class="name">BALSCADDEN</span></button></div>
+            <div class="grid-cell"><button><span class="letter">C</span><span class="name">CUSH</span></button></div>
+            <div class="grid-cell"><button><span class="letter">D</span><span class="name">DUNBO</span></button></div>
+            <div class="grid-cell"><button><span class="letter">E</span><span class="name">EAST</span></button></div>
+            <div class="grid-cell"><button><span class="letter">F</span><span class="name">FINISH</span></button></div>
+            <div class="grid-cell"><button><span class="letter">G</span><span class="name">GARBH</span></button></div>
+            <div class="grid-cell"><button><span class="name">HOWTH</span></button></div>
+            <div class="grid-cell"><button><span class="letter">H</span><span class="name">HUB</span></button></div>
+            <div class="grid-cell"><button><span class="letter">I</span><span class="name">ISLAND</span></button></div>
+            <div class="grid-cell"><button><span class="letter">J</span><span class="name">THULLA</span></button></div>
+            <div class="grid-cell"><button><span class="letter">K</span><span class="name">STACK</span></button></div>
+            <div class="grid-cell"><button><span class="letter">O</span><span class="name">OSPREY</span></button></div>
+            <div class="grid-cell"><button><span class="letter">P</span><span class="name">PORTMARNOCK</span></button></div>
+            <div class="grid-cell"><button><span class="letter">Q</span><span class="name">ROWAN ROCKS</span></button></div>
+            <div class="grid-cell"><button><span class="letter">R</span><span class="name">SOUTH ROWAN</span></button></div>
+            <div class="grid-cell"><button><span class="letter">S</span><span class="name">SPIT</span></button></div>
+            <div class="grid-cell"><button><span class="letter">U</span><span class="name">ULYSSES</span></button></div>
+            <div class="grid-cell"><button><span class="letter">V</span><span class="name">VICEROY</span></button></div>
+            <div class="grid-cell"><button><span class="letter">W</span><span class="name">WEST</span></button></div>
+            <div class="grid-cell"><button><span class="letter">X</span><span class="name">XEBEC</span></button></div>
+            <div class="grid-cell"><button><span class="letter">Z</span><span class="name">ZEPHYR</span></button></div>
+        </div>
 
-      //function to handle for submit
-      function formSubmit(){
-        //endpoint url for waypoint using user entered location
-        //https://demo.signalk.org/documentation/Developing/REST_APIs/Course_API.html#1-navigate-to-a-location
-        const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
-        //retrieve the form data from form
-        var form = new FormData(document.getElementById("waypointForm"))
-        //create JSON object to send to server, Number() converts string to number
-        var data = {
-          position:{
-            latitude:Number(form.get("latitude")),
-            longitude:Number(form.get("longitude"))
-          }
-        };
-        //sanity check print
-        console.log(data)
-        //Create request handler XHR
-        var xhr = new XMLHttpRequest()
-        //open the request using PUT method
-        xhr.open("PUT", url)
-        //set the content type to JSON, refer to MIME type reference below
-        //https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
-        xhr.setRequestHeader("Content-Type","application/json")
-        //send the put request (Won't work for me locally)
-        // xhr.send(data)
-        xhr.send(JSON.stringify(data)); 
-        //give a little pop-up letting user know they submitted something
-        window.alert("Form sent!")
-      }
-
-      //function to set destination to Apex
-      function setDestinationA(){
-        const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
-        const  hrefRoot="/resources/waypoints/";
-        const hrefApex = getKeyForNamedWaypoint("Apex");
-        const fullHref = hrefRoot + hrefApex;
-        var data = {
-          href: fullHref
-        };
-        console.log(data)
-        var xhr = new XMLHttpRequest()
-        xhr.open("PUT", url)
-        xhr.setRequestHeader("Content-Type","application/json")
-        xhr.send(JSON.stringify(data));
-        document.getElementById("output").innerText = "Destination set to Apex!"
-
-        const url2 = "/signalk/v2/api/resources/routes";
-        var data2 = {
-          "name": "Apex to Balscadden",
-          "waypoints": [
-            {
-              "href": "/resources/waypoints/f60dbafd-4745-434d-b9d9-52a851224229"
-            },
-            {
-              "href": "/resources/waypoints/5a567b67-01ed-48f1-bad5-c14118fe6c45"
-            }
-          ]
-        };
-        console.log(data2)
-        var xhr2 = new XMLHttpRequest()
-        xhr2.open("POST", url2)
-        xhr2.setRequestHeader("Content-Type","application/json")
-        xhr2.send(JSON.stringify(data2));
-        document.getElementById("output").innerText = "Route set from Apex to Balscadden!";
-
-      }
-
-   function setDestinationB(){
-        const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
-        var data = {
-          href:"/resources/waypoints/645cf29c-7a58-440d-b813-2ec20355326a"
-        };
-        console.log(data)
-        var xhr = new XMLHttpRequest()
-        xhr.open("PUT", url)
-        xhr.setRequestHeader("Content-Type","application/json")
-        xhr.send(JSON.stringify(data));
-        document.getElementById("output").innerText = "Destination set to Boy!"
-      }
-
-  function setDestinationP(){
-        const url = "/signalk/v2/api/vessels/self/navigation/course/destination"
-        var data = {
-          href:"/resources/waypoints/fcc94183-b20d-4c57-8121-e93cbdbb3870"
-        };
-        console.log(data)
-        var xhr = new XMLHttpRequest()
-        xhr.open("PUT", url)
-        xhr.setRequestHeader("Content-Type","application/json")
-        xhr.send(JSON.stringify(data));
-        document.getElementById("output").innerText = "Destination set to Portmarnock!"
-      }
-
-      function listAllWaypoints(){
-        const url = "/signalk/v2/api/resources/waypoints"
-        var xhr = new XMLHttpRequest()
-        xhr.open("GET", url)
-        xhr.setRequestHeader("Content-Type","application/json")
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            var waypoints = JSON.parse(xhr.responseText);
-            console.log(waypoints);
-            var output = "Waypoints Keys:\n";
-            printObjectKeys(waypoints);
-            printObjectValues(waypoints);
-            console.log("Key for waypoint named 'Boy': " + getKeyForNamedWaypoint(waypoints, "Boy"));
-            document.getElementById("output").innerText = "Waypoints listed in console."; 
-          } else {
-            console.error("Error fetching waypoints: " + xhr.status);
-          }
-        };
-        xhr.send();
-      }
-
-     ////////// ////////// ////////// ////////// 
-     // these are utility functions for printing object keys and values
-     // printObjectKeys and printObjectValues
-     // note, only difference is use of Object.keys() vs Object.values()
-     // to return the keys or values of the object respectively
-     // for a matched waypoint name in the value of the objects
-     ////////// ////////// ////////// //////////
-      function printObjectKeys(obj) {
-        for (const key of Object.keys(obj)) {
-          console.log(key);
-        }
-      };
-     ////////// ////////// ////////// //////////
-
-     ////////// ////////// ////////// //////////
-      function printObjectValues(obj) {
-        for (const value of Object.values(obj)) {
-          console.log(value);
-        }
-      };
-     ////////// ////////// ////////// //////////
-     function getKey() {
-        const waypointName = document.getElementById("waypointForm").elements["destinationName"].value;
-        const url = "/signalk/v2/api/resources/waypoints";
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            var waypoints = JSON.parse(xhr.responseText);
-            const key = getKeyForNamedWaypoint(waypoints, waypointName);
-            if (key) {
-              console.log("Key for waypoint named '" + waypointName + "': " + key);
-              document.getElementById("output").innerText = "Key for waypoint named '" + waypointName + "': " + key;
-            } else {
-              console.log("No waypoint found with the name '" + waypointName + "'");
-              document.getElementById("output").innerText = "No waypoint found with the name '" + waypointName + "'";
-            }
-          } else {
-            console.error("Error fetching waypoints: " + xhr.status);
-          }
-        };
-        xhr.send();
-      };
-
-     function getKeyForNamedWaypoint(obj, waypointName) {
-        for (const [key, value] of Object.entries(obj)) {
-          if (value.name === waypointName) {
-            setDestinationHref = key;
-            setDestinationFromHREF(setDestinationHref);
-            return key;
-          }
-        }
-        return null; // Return null if no matching waypoint is found
-      }
-     ////////// ////////// ////////// //////////
-
-     function setDestinationFromHREF(href) {
-        const url = "/signalk/v2/api/vessels/self/navigation/course/destination";
-        var data = {
-          href: "/resources/waypoints/" + href
-        };
-        console.log(data);
-        var xhr = new XMLHttpRequest();
-        xhr.open("PUT", url);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify(data));
-        document.getElementById("output").innerText = "Destination set to waypoint with href: " + href;
-      }
-     ////////// ////////// ////////// //////////
-     function clearDestination() {
-        const url = "/signalk/v2/api/vessels/self/navigation/course/destination";
-        var data = {
-          href: null
-        };
-        console.log(data);
-        var xhr = new XMLHttpRequest();
-        xhr.open("PUT", url);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify(data));
-        document.getElementById("output").innerText = "Destination cleared!";
-      }
-     ////////// ////////// ////////// //////////
-
-    </script>
-  </head>
-  <body>
-    <label id="options">Waypoints available at this time, Boy, October, War, Red, A,B,C,D,E,F</label>
-    <form id="waypointForm">
-      <label for="destinationName">Destination Name:</label>
-      <input type="text" name="destinationName">
-    </form>
-
-    <button id="getHrefForNamedDestinationButton" type="submit" onclick="getKey()">Set Destination </button>
-    <button id="clearDestinationButton" type="button" onclick="clearDestination()">Clear Destination</button>
-    
-    <div id="output">
-      Some Text Here
-    </div>
-  </body>
+        <script src="markSelector.js"></script>
+    </body>
 </html>
