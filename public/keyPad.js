@@ -43,6 +43,96 @@ var currentLevel = 0; // start at level 0
 var chosenCourseNumber=""; // variable to hold chosen course number
 
 ////////// ////////// ////////// //////////
+// SignalK Integration Functions
+// These functions are used to set the active route in SignalK
+////////// ////////// ////////// //////////
+
+////////// ////////// ////////// //////////
+// Function to set the course as active route in SignalK
+// given the course number
+// Activates the matching course/route in SignalK
+////////// ////////// ////////// //////////
+function setCourse(courseNumber, waypoints) {
+    console.log('Setting course: ' + courseNumber, waypoints);
+    
+    // First, fetch all routes from SignalK to find the matching course
+    const routesUrl = "/signalk/v2/api/resources/routes";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", routesUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var signalKRoutes = JSON.parse(xhr.responseText);
+            
+            // Find the route with matching course number
+            // Routes in SignalK should have a name or identifier matching the course number
+            const routeKey = getKeyForNamedRoute(signalKRoutes, courseNumber);
+            
+            if (routeKey) {
+                // Activate the route in SignalK
+                setActiveRoute(routeKey);
+                // Show success message
+                alert("Course " + courseNumber + " activated: " + waypoints.join(' → '));
+            } else {
+                console.error("Route not found for course: " + courseNumber);
+                alert("Error: Route " + courseNumber + " not found in SignalK");
+            }
+        } else {
+            console.error("Error fetching routes: " + xhr.status);
+            alert("Error fetching routes from SignalK");
+        }
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Helper function to find route key by course number
+// Looks for route name matching the course number
+// Routes are expected to be named "hyc-Wednesday-XXX"
+////////// ////////// ////////// //////////
+function getKeyForNamedRoute(routes, courseNumber) {
+    // Primary match: look for "hyc-Wednesday-XXX" format
+    const expectedName = "hyc-Wednesday-" + courseNumber;
+    
+    for (const [key, value] of Object.entries(routes)) {
+        // Check if route name matches expected format
+        if (value.name === expectedName) {
+            return key;
+        }
+    }
+    
+    // Fallback: try other formats for backward compatibility
+    for (const [key, value] of Object.entries(routes)) {
+        if (value.name === courseNumber || 
+            value.name === parseInt(courseNumber).toString() ||
+            value.name === 'Course ' + courseNumber ||
+            value.name === courseNumber.replace(/^0+/, '') ||
+            value.name === 'HYC-Wed-' + courseNumber) {
+            return key;
+        }
+    }
+    return null;
+}
+
+////////// ////////// ////////// //////////
+// Function to set active route in SignalK
+////////// ////////// ////////// //////////
+function setActiveRoute(routeHref) {
+    const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
+    var data = {
+        href: "/resources/routes/" + routeHref
+    };
+    console.log('Setting active route:', data);
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(data));
+}
+////////// ////////// ////////// //////////
+
+////////// ////////// ////////// //////////
 // function called on page load
 // this is jQuery syntax
 // and it needs the jQuery library to be loaded first
@@ -327,93 +417,4 @@ $(document).ready(
     } // end definition of ready function
 ); // end of document ready function
 ////////// ////////// ////////// //////////
-
-////////// ////////// ////////// //////////
-// SignalK Integration Functions
-// These functions are used to set the active route in SignalK
-////////// ////////// ////////// //////////
-
-////////// ////////// ////////// //////////
-// Function to set the course as active route in SignalK
-// given the course number
-// Activates the matching course/route in SignalK
-////////// ////////// ////////// //////////
-function setCourse(courseNumber, waypoints) {
-    console.log('Setting course: ' + courseNumber, waypoints);
-    
-    // First, fetch all routes from SignalK to find the matching course
-    const routesUrl = "/signalk/v2/api/resources/routes";
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", routesUrl);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            var signalKRoutes = JSON.parse(xhr.responseText);
-            
-            // Find the route with matching course number
-            // Routes in SignalK should have a name or identifier matching the course number
-            const routeKey = getKeyForNamedRoute(signalKRoutes, courseNumber);
-            
-            if (routeKey) {
-                // Activate the route in SignalK
-                setActiveRoute(routeKey);
-                // Show success message
-                alert("Course " + courseNumber + " activated: " + waypoints.join(' → '));
-            } else {
-                console.error("Route not found for course: " + courseNumber);
-                alert("Error: Route " + courseNumber + " not found in SignalK");
-            }
-        } else {
-            console.error("Error fetching routes: " + xhr.status);
-            alert("Error fetching routes from SignalK");
-        }
-    };
-    
-    xhr.send();
-}
-
-////////// ////////// ////////// //////////
-// Helper function to find route key by course number
-// Looks for route name matching the course number
-// Routes are expected to be named "hyc-Wednesday-XXX"
-////////// ////////// ////////// //////////
-function getKeyForNamedRoute(routes, courseNumber) {
-    // Primary match: look for "hyc-Wednesday-XXX" format
-    const expectedName = "hyc-Wednesday-" + courseNumber;
-    
-    for (const [key, value] of Object.entries(routes)) {
-        // Check if route name matches expected format
-        if (value.name === expectedName) {
-            return key;
-        }
-    }
-    
-    // Fallback: try other formats for backward compatibility
-    for (const [key, value] of Object.entries(routes)) {
-        if (value.name === courseNumber || 
-            value.name === parseInt(courseNumber).toString() ||
-            value.name === 'Course ' + courseNumber ||
-            value.name === courseNumber.replace(/^0+/, '') ||
-            value.name === 'HYC-Wed-' + courseNumber) {
-            return key;
-        }
-    }
-    return null;
-}
-
-////////// ////////// ////////// //////////
-// Function to set active route in SignalK
-////////// ////////// ////////// //////////
-function setActiveRoute(routeHref) {
-    const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
-    var data = {
-        href: "/resources/routes/" + routeHref
-    };
-    console.log('Setting active route:', data);
-    var xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify(data));
-}
 ////////// ////////// ////////// //////////
