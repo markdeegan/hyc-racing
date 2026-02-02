@@ -1,4 +1,7 @@
 ////////// ////////// ////////// //////////
+// Mark Deegan 2026                      //
+// Mon Feb  2 22:27:24 GMT 2026          //
+////////// ////////// ////////// //////////
 // SignalK Route Visibility Manager      //
 // Automatically hides inactive routes   //
 // when a route is activated             //
