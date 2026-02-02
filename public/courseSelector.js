@@ -330,7 +330,33 @@ function createAllCourses() {
                                         document.getElementById('infoLabel').textContent = 
                                             "Created " + coursesCreated + "/" + coursesTotal + " courses. " + errors.length + " errors.";
                                         console.error("Errors:", errors);
-   Uses template route structure if provided
+                                    }
+                                    resizeInfoLabel();
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    console.error("Error fetching waypoints: " + xhr.status);
+                    document.getElementById('infoLabel').textContent = "Error fetching waypoints from SignalK";
+                    resizeInfoLabel();
+                }
+            };
+            
+            xhr.send();
+        } else {
+            console.error("Error fetching routes: " + routesXhr.status);
+            document.getElementById('infoLabel').textContent = "Error fetching routes from SignalK";
+            resizeInfoLabel();
+        }
+    };
+    
+    routesXhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to create a single route in SignalK
+// Uses template route structure if provided
 ////////// ////////// ////////// //////////
 function createRouteInSignalK(courseNumber, routePoints, templateRoute, callback) {
     // Generate a UUID for the route
