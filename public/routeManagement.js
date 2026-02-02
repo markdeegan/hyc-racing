@@ -110,6 +110,131 @@ function updateRouteName(routeId, route, newName, callback) {
 }
 
 ////////// ////////// ////////// //////////
+// Function to update route descriptions with waypoint lists
+// Updates all HYC-Wed-XXX routes to include waypoints in description
+// Format: "Wednesday-XXX-WAYPOINTSLIST" (e.g., "Wednesday-003-ZPWPWCPC")
+////////// ////////// ////////// //////////
+export function updateRouteDescriptions(coursesData, infoLabelCallback, resizeInfoLabelCallback) {
+    infoLabelCallback("Updating route descriptions...");
+    resizeInfoLabelCallback();
+    
+    // Fetch all existing routes from SignalK
+    const routesUrl = "/signalk/v2/api/resources/routes";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", routesUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var existingRoutes = JSON.parse(xhr.responseText);
+            
+            let routesUpdated = 0;
+            let routesTotal = 0;
+            let errors = [];
+            
+            // Find routes that need description updates (HYC-Wed-XXX pattern)
+            for (const [key, route] of Object.entries(existingRoutes)) {
+                // Check if route name matches HYC-Wed-XXX pattern
+                const match = route.name && route.name.match(/^HYC-Wed-(\d{3})$/);
+                if (match) {
+                    const courseNumber = match[1];
+                    routesTotal++;
+                    
+                    // Find the course data to get waypoints
+                    const course = coursesData.find(c => c.number === courseNumber);
+                    
+                    if (course && course.waypoints) {
+                        // Create waypoint string (remove asterisks from starboard marks)
+                        const waypointString = course.waypoints.map(wp => wp.replace('*', '')).join('');
+                        
+                        // Create new description
+                        const newDescription = "Wednesday-" + courseNumber + "-" + waypointString;
+                        
+                        // Update the route description
+                        updateRouteDescription(key, route, newDescription, (success) => {
+                            if (success) {
+                                routesUpdated++;
+                                console.log("Updated description for route " + route.name + " to " + newDescription);
+                            } else {
+                                errors.push("Failed to update description for route " + route.name);
+                            }
+                            
+                            // Update status after processing each route
+                            if (routesUpdated + errors.length === routesTotal) {
+                                // All routes processed
+                                if (errors.length === 0) {
+                                    infoLabelCallback("Successfully updated " + routesUpdated + " route descriptions");
+                                } else {
+                                    infoLabelCallback("Updated " + routesUpdated + "/" + routesTotal + " descriptions. " + errors.length + " errors.");
+                                    console.error("Errors:", errors);
+                                }
+                                resizeInfoLabelCallback();
+                            }
+                        });
+                    } else {
+                        errors.push("Course data not found for " + route.name);
+                        console.error("Course data not found for route " + route.name + " (course " + courseNumber + ")");
+                        
+                        // Update counter
+                        if (routesUpdated + errors.length === routesTotal) {
+                            if (errors.length === 0) {
+                                infoLabelCallback("Successfully updated " + routesUpdated + " route descriptions");
+                            } else {
+                                infoLabelCallback("Updated " + routesUpdated + "/" + routesTotal + " descriptions. " + errors.length + " errors.");
+                                console.error("Errors:", errors);
+                            }
+                            resizeInfoLabelCallback();
+                        }
+                    }
+                }
+            }
+            
+            if (routesTotal === 0) {
+                infoLabelCallback("No HYC-Wed-XXX routes found to update");
+                resizeInfoLabelCallback();
+            }
+        } else {
+            console.error("Error fetching routes: " + xhr.status);
+            infoLabelCallback("Error fetching routes from SignalK");
+            resizeInfoLabelCallback();
+        }
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to update a route's description in SignalK
+////////// ////////// ////////// //////////
+function updateRouteDescription(routeId, route, newDescription, callback) {
+    // Create updated route with new description
+    const updatedRoute = JSON.parse(JSON.stringify(route));
+    updatedRoute.description = newDescription;
+    
+    const url = "/signalk/v2/api/resources/routes/" + routeId;
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200 || xhr.status === 201) {
+            callback(true);
+        } else {
+            console.error("Error updating description for route " + route.name + ": " + xhr.status);
+            console.error("Response:", xhr.responseText);
+            callback(false);
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error("Network error updating description for route " + route.name);
+        callback(false);
+    };
+    
+    xhr.send(JSON.stringify(updatedRoute));
+}
+
+////////// ////////// ////////// //////////
 // Function to create all courses in SignalK
 // Reads courses from wednesday.js and creates routes
 // Omits the first waypoint (Z - start line) from each route
