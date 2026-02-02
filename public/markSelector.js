@@ -98,16 +98,16 @@ function resizeInfoText() {
     const infoDisplay = document.getElementById('infoDisplay');
     if (!infoDisplay || !infoDisplay.textContent) return;
     
-    // Start with a large size
-    let fontSize = 100;
+    // Start with a very large size
+    let fontSize = 200;
     infoDisplay.style.fontSize = fontSize + 'px';
     
     // Reduce font size until text fits without wrapping or overflowing
-    const maxWidth = infoDisplay.clientWidth - 20; // Account for padding
+    const maxWidth = infoDisplay.clientWidth - 40; // Account for padding
     const maxHeight = infoDisplay.clientHeight - 20;
     
-    while ((infoDisplay.scrollWidth > maxWidth || infoDisplay.scrollHeight > maxHeight) && fontSize > 20) {
-        fontSize -= 1;
+    while ((infoDisplay.scrollWidth > maxWidth || infoDisplay.scrollHeight > maxHeight) && fontSize > 15) {
+        fontSize -= 0.5;
         infoDisplay.style.fontSize = fontSize + 'px';
     }
 }
