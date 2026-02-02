@@ -19,6 +19,8 @@ export class Tuesday
     // the following table indicates the courses available
     // marks in lower-case and followed with an asterisk (*) are to be left to starboard
     // all others are to be left to port
+    // courses containing only "1", "2, "3" are placeholder courses
+    // and should be replaced with actual courses as required
     // Marks coloured RED shall be rounded / passed to PORT
     // Marks coloured GREEN shall be rounded / passed to STARBOARD
     ////////// ////////// ////////// //////////
@@ -104,4 +106,33 @@ export class Tuesday
     // Reference them via HYCRacingWaypoints
     static marks = HYCRacingWaypoints;
     ////////// ////////// ////////// //////////
-} // end Tuesday class
+
+  ////////// ////////// ////////// //////////
+  // Add any supporting functions here in the Tuesday class
+  static getCourseByNumber(courseNumber)
+    {
+      for (let i=0; i<Tuesday.courses.length; i++)
+        {
+          if (Tuesday.courses[i].number === courseNumber)
+            {
+              return Tuesday.courses[i];
+            }
+        }
+      return null; // course not found
+    } // end of getCourseByNumber function
+  ////////// ////////// ////////// //////////
+
+  ////////// ////////// ////////// //////////
+  // Function to return courses as formatted JSON string
+  // Parameters:
+  //   indent - number of spaces for indentation (default: 2)
+  // Returns: formatted JSON string
+  ////////// ////////// ////////// //////////
+  static getCoursesAsJSON(indent = 2)
+    {
+      return JSON.stringify(Tuesday.courses, null, indent);
+    } // end of getCoursesAsJSON function
+  ////////// ////////// ////////// //////////
+  
+} // end declaration of the Tuesday class containing static data
+////////// ////////// ////////// //////////

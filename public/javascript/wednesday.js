@@ -134,6 +134,18 @@ export class Wednesday
       return null; // course not found
     } // end of getCourseByNumber function
   ////////// ////////// ////////// //////////
+
+  ////////// ////////// ////////// //////////
+  // Function to return courses as formatted JSON string
+  // Parameters:
+  //   indent - number of spaces for indentation (default: 2)
+  // Returns: formatted JSON string
+  ////////// ////////// ////////// //////////
+  static getCoursesAsJSON(indent = 2)
+    {
+      return JSON.stringify(Wednesday.courses, null, indent);
+    } // end of getCoursesAsJSON function
+  ////////// ////////// ////////// //////////
   
 } // end declaration of the Wednesday class containing static data
 ////////// ////////// ////////// //////////

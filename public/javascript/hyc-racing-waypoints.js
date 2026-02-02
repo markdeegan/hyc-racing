@@ -11,6 +11,7 @@
 
 export const HYCRacingWaypoints = 
 [ // start of marks array
+  // A-APEX
   {
   "shortName": "A",
   "longName": "Apex",
@@ -25,6 +26,7 @@ export const HYCRacingWaypoints =
   "lat": "53.446",
   "lon": "-6.0543"
 },
+// B-BALSCADDEN
 {
   "shortName": "B",
   "longName": "Balscadden",
@@ -39,6 +41,7 @@ export const HYCRacingWaypoints =
   "lat": "53.3883",
   "lon": "-6.0543"
 },
+// C-CUSH
 {
   "shortName": "C",
   "longName": "Cush",
@@ -53,6 +56,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4101",
   "lon": "-6.0908"
 },
+// D-DUNBO
 {
   "shortName": "D",
   "longName": "Dunbo",
@@ -67,6 +71,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4121",
   "lon": "-6.0641"
 },
+// E-EAST
 {
   "shortName": "E",
   "longName": "East",
@@ -81,6 +86,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4333",
   "lon": "-6.0366"
 },
+// F-FINISH
 {
   "shortName": "F",
   "longName": "Finish",
@@ -95,6 +101,7 @@ export const HYCRacingWaypoints =
   "lat": "53.3968",
   "lon": "-6.0617"
 },
+// G-GARBH
 {
   "shortName": "G",
   "longName": "Garbh",
@@ -109,6 +116,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4166",
   "lon": "-6.0386"
 },
+// HOWTH
 {
   "shortName": "Howth",
   "longName": "Howth",
@@ -123,6 +131,7 @@ export const HYCRacingWaypoints =
   "lat": "53.3948",
   "lon": "-6.0593"
 },
+// H-HUB
 {
   "shortName": "H",
   "longName": "Hub",
@@ -137,6 +146,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4285",
   "lon": "-6.0738"
 },
+// I-ISLAND
 {
   "shortName": "I",
   "longName": "Island",
@@ -151,6 +161,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4116",
   "lon": "-6.0726"
 },
+// J-THULLA
 {
   "shortName": "J",
   "longName": "Thulla",
@@ -165,6 +176,7 @@ export const HYCRacingWaypoints =
   "lat": "53.3966",
   "lon": "-6.0566"
 },
+// K-STACK
 {
   "shortName": "K",
   "longName": "Stack",
@@ -179,6 +191,7 @@ export const HYCRacingWaypoints =
   "lat": "53.41",
   "lon": "-6.0518"
 },
+// O-OSPREY
 {
   "shortName": "O",
   "longName": "Osprey",
@@ -193,6 +206,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4235",
   "lon": "-6.0586"
 },
+// P-PORTMARNOCK
 {
   "shortName": "P",
   "longName": "Portmarnock",
@@ -207,6 +221,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4271",
   "lon": "-6.0966"
 },
+// Q-ROWAN ROCKS
 {
   "shortName": "Q",
   "longName": "Rowan Rocks",
@@ -221,6 +236,7 @@ export const HYCRacingWaypoints =
   "lat": "53.398",
   "lon": "-6.0536"
 },
+// R-SOUTH ROWAN
 {
   "shortName": "R",
   "longName": "South Rowan",
@@ -235,6 +251,7 @@ export const HYCRacingWaypoints =
   "lat": "53.3963",
   "lon": "-6.0646"
 },
+// S-SPIT
 {
   "shortName": "S",
   "longName": "Spit",
@@ -249,6 +266,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4058",
   "lon": "-6.0746"
 },
+// U-ULYSSES
 {
   "shortName": "U",
   "longName": "Ulysses",
@@ -263,6 +281,7 @@ export const HYCRacingWaypoints =
   "lat": "53.437",
   "lon": "-6.0828"
 },
+// V-VICEROY
 {
   "shortName": "V",
   "longName": "Viceroy",
@@ -277,6 +296,7 @@ export const HYCRacingWaypoints =
   "lat": "53.4186",
   "lon": "-6.0796"
 },
+// W-WEST
 {
   "shortName": "W",
   "longName": "West",
@@ -291,6 +311,7 @@ export const HYCRacingWaypoints =
   "lat": "53.416",
   "lon": "-6.1011"
 },
+// X-XEBEC
 {
   "shortName": "X",
   "longName": "Xebec",
@@ -305,6 +326,7 @@ export const HYCRacingWaypoints =
   "lat": "53.3971",
   "lon": "-6.0735"
 },
+// Z-ZEPHYR
 {
   "shortName": "Z",
   "longName": "Zephyr",
@@ -320,4 +342,15 @@ export const HYCRacingWaypoints =
   "lon": "-6.0441"
 }
 ]; // end of marks array
+////////// ////////// ////////// //////////
+
+////////// ////////// ////////// //////////
+// Function to return waypoints as formatted JSON string
+// Parameters:
+//   indent - number of spaces for indentation (default: 2)
+// Returns: formatted JSON string
+////////// ////////// ////////// //////////
+export function getWaypointsAsJSON(indent = 2) {
+  return JSON.stringify(HYCRacingWaypoints, null, indent);
+}
 ////////// ////////// ////////// //////////
