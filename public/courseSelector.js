@@ -60,45 +60,6 @@ function createCourseButtons() {
         gridContainer.appendChild(gridCell);
     });
     
-    // Add a createCourses button
-    const createCoursesCell = document.createElement('div');
-    createCoursesCell.className = 'grid-cell';
-    const createCoursesButton = document.createElement('button');
-    createCoursesButton.className = 'back-button';
-    createCoursesButton.innerHTML = '<div class="course-number">CREATE COURSES</div>';
-    createCoursesButton.addEventListener('click', () => {
-        // Get all valid courses (same filter as display)
-        const courses = Wednesday.courses;
-        const validCourses = courses.filter(course => {
-            return course.number !== "000" && !course.waypoints.some(wp => wp === "1" || wp === "2" || wp === "3");
-        });
-        
-        // Call the imported function with callback functions
-        createAllCourses(
-            validCourses,
-            getKeyForNamedWaypoint,
-            (text) => document.getElementById('infoLabel').textContent = text,
-            resizeInfoLabel
-        );
-    });
-    createCoursesCell.appendChild(createCoursesButton);
-    gridContainer.appendChild(createCoursesCell);
-    
-    // Add a rename routes button
-    const renameRoutesCell = document.createElement('div');
-    renameRoutesCell.className = 'grid-cell';
-    const renameRoutesButton = document.createElement('button');
-    renameRoutesButton.className = 'back-button';
-    renameRoutesButton.innerHTML = '<div class="course-number">RENAME ROUTES</div>';
-    renameRoutesButton.addEventListener('click', () => {
-        renameExistingRoutes(
-            (text) => document.getElementById('infoLabel').textContent = text,
-            resizeInfoLabel
-        );
-    });
-    renameRoutesCell.appendChild(renameRoutesButton);
-    gridContainer.appendChild(renameRoutesCell);
-    
     // Add a back button at the end
     const backCell = document.createElement('div');
     backCell.className = 'grid-cell';
