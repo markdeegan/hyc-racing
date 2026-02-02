@@ -1,32 +1,66 @@
+////////// ////////// ////////// //////////
+// Mark Deegan
+// Mon Feb  2 01:29:27 GMT 2026
+////////// ////////// ////////// //////////
+// Mark Selector Script
+// Accompanies index.html
+// and is used to set waypoints in SignalK from buttons
+////////// ////////// ////////// //////////
 function resizeButtonText() {
+    // function to resize text in buttons to fit within button width
+    // get all buttons based on their class or tag
     const buttons = document.querySelectorAll('button');
     
+    // For each button, adjust the font size of the 
+    // .name span
     buttons.forEach(button => {
+        // get the name span from the button
         const name = button.querySelector('.name');
+        // if there is no name span, skip this
         if (!name) return;
         
         // Start with a reasonable size
         let fontSize = 50;
+        // set the font size to 50px
         name.style.fontSize = fontSize + 'px';
         
         // Reduce font size until text fits within button width (accounting for padding)
         const maxWidth = button.clientWidth - 15;
         
+        // Reduce font size until it fits
+        // as long as the scrollWidth is greater than maxWidth
+        // keep reducing font size
         while (name.scrollWidth > maxWidth && fontSize > 5) {
             fontSize -= 0.5;
             name.style.fontSize = fontSize + 'px';
-        }
-    });
-}
+        } // end while
+    }); // end forEach
+} // end resizeButtonText
+////////// ////////// ////////// //////////
 
+
+////////// ////////// ////////// //////////
+// Function to set the mark as destination
+// given the letter (shortName) of the mark
+// Fetches waypoints from SignalK resources
+// and sets the destination accordingly
+// based on the letter provided by the button
+// matching that of the waypoint name
+// and then setting the destination using its href
+////////// ////////// ////////// ////////// 
 function setMark(letter) {
+    // Debug log the letter received as a parametert
     console.log(letter);
     
-    // Get waypoints from resources provider
+    // Get all waypoints from resources provider
     const url = "/signalk/v2/api/resources/waypoints";
+    // set up XMLHttpRequest to fetch waypoints
     var xhr = new XMLHttpRequest();
+    // open GET request
     xhr.open("GET", url);
+    // set content type
     xhr.setRequestHeader("Content-Type", "application/json");
+    // onload function to process response
     xhr.onload = function() {
         if (xhr.status === 200) {
             var waypoints = JSON.parse(xhr.responseText);
