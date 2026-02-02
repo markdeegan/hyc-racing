@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" creator="@panaaj" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.topografix.com/GPX/Private/TopoGrafix/0/1 http://www.topografix.com/GPX/Private/TopoGrafix/0/1/topografix.xsd" xmlns:topografix="http://www.topografix.com/GPX/Private/TopoGrafix/0/1">
+	<metadata>
+		<name>Signal K Resource Export</name>
+		<desc>Freeboard export of Signal K resources</desc>
+		<time>2026-02-02T12:27:01.789Z</time>
+		<bounds minlat="53.3883" minlon="-6.1011" maxlat="53.446" maxlon="-6.0366"></bounds>
+	</metadata>
+	<wpt lat="53.446000" lon="-6.054300">
+		<name>A</name>
+		<desc>A-APEX</desc>
+		<extensions>
+			<signalk>
+				<uuid>161f52b7-1244-4338-8801-1d6032f2dfa4</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.388300" lon="-6.054300">
+		<name>B</name>
+		<desc>B-BALSCADDEN</desc>
+		<extensions>
+			<signalk>
+				<uuid>ebfe78e5-10c0-4181-afa5-73c66d25e510</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.410100" lon="-6.090800">
+		<name>C</name>
+		<desc>C-CUSH</desc>
+		<extensions>
+			<signalk>
+				<uuid>aa92be3f-d89f-4b69-93ba-9f6b0efc067e</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.412100" lon="-6.064100">
+		<name>D</name>
+		<desc>D-DUNBO</desc>
+		<extensions>
+			<signalk>
+				<uuid>27cf695e-ac63-4f45-9750-ea37d64622a0</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.434300" lon="-6.036600">
+		<name>E</name>
+		<desc>E-EAST</desc>
+		<extensions>
+			<signalk>
+				<uuid>6516952d-12c3-4c56-a539-4a78641c024f</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.416600" lon="-6.038600">
+		<name>G</name>
+		<desc>G-GARBH</desc>
+		<extensions>
+			<signalk>
+				<uuid>756cad49-012b-40d3-8b07-152e4bb3a19e</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.428500" lon="-6.073800">
+		<name>H</name>
+		<desc>H-HUB</desc>
+		<extensions>
+			<signalk>
+				<uuid>fdf85ce8-6f27-4c24-b9fc-b64ef155f713</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.395068" lon="-6.059460">
+		<name>HOWTH</name>
+		<desc>HOWTH</desc>
+		<extensions>
+			<signalk>
+				<uuid>6443cd51-2240-4ae6-a400-d54b8af26782</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.411600" lon="-6.072600">
+		<name>I</name>
+		<desc>I-ISLAND</desc>
+		<extensions>
+			<signalk>
+				<uuid>601f5520-c71b-4bea-9bf3-b32a0687ec93</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.396600" lon="-6.056600">
+		<name>J</name>
+		<desc>J-THULLA</desc>
+		<extensions>
+			<signalk>
+				<uuid>ee066f71-68cf-4c81-b5c6-700e993bdda7</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.410000" lon="-6.051800">
+		<name>K</name>
+		<desc>K-STACK</desc>
+		<extensions>
+			<signalk>
+				<uuid>849a73af-5b95-47d8-9b66-6a3fec7e4150</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.423500" lon="-6.058600">
+		<name>O</name>
+		<desc>O-OSPREY</desc>
+		<extensions>
+			<signalk>
+				<uuid>50b97de1-c145-470b-8b86-7ac04a308789</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.427100" lon="-6.096600">
+		<name>P</name>
+		<desc>P-PORTMARNOCK</desc>
+		<extensions>
+			<signalk>
+				<uuid>147903cd-58ff-4677-84d0-2df685602ff2</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.397933" lon="-6.054570">
+		<name>Q</name>
+		<desc>Q-ROWANROCKS</desc>
+		<extensions>
+			<signalk>
+				<uuid>9855bb89-0eab-497c-93bb-9c1ea2c73279</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.396212" lon="-6.065691">
+		<name>R</name>
+		<desc>SOUTHROWAN</desc>
+		<extensions>
+			<signalk>
+				<uuid>1efe5108-44f2-402e-aedc-fb3b6447ab47</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.405800" lon="-6.074600">
+		<name>S</name>
+		<desc>S-SPIT</desc>
+		<extensions>
+			<signalk>
+				<uuid>deb83812-05e3-4ff8-ad9f-fe7a4a1a5a81</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.437000" lon="-6.082800">
+		<name>U</name>
+		<desc>U-ULYSSES</desc>
+		<extensions>
+			<signalk>
+				<uuid>1674503d-bd4d-43a4-990a-8b1588435fdd</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.418600" lon="-6.079600">
+		<name>V</name>
+		<desc>V-VICEROY</desc>
+		<extensions>
+			<signalk>
+				<uuid>179cded0-a9d7-4778-b0ee-7731283cb2f3</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.416000" lon="-6.101100">
+		<name>W</name>
+		<desc>W-WEST</desc>
+		<extensions>
+			<signalk>
+				<uuid>f93d1a90-26d0-4075-a5da-e745260b0ed1</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+	<wpt lat="53.397100" lon="-6.073500">
+		<name>X</name>
+		<desc>X-XEBEC</desc>
+		<extensions>
+			<signalk>
+				<uuid>5adc4772-360e-479b-9f18-7c65302aa83a</uuid>
+			</signalk>
+		</extensions>
+	</wpt>
+</gpx>

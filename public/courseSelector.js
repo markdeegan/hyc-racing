@@ -247,91 +247,92 @@ function createAllCourses() {
         return course.number !== "000" && !course.waypoints.some(wp => wp === "1" || wp === "2" || wp === "3");
     });
     
-    // First, fetch all waypoints from SignalK
-    const url = "/signalk/v2/api/resources/waypoints";
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.setRequestHeader("Content-Type", "application/json");
+    // First, fetch existing routes to use as a template
+    const routesUrl = "/signalk/v2/api/resources/routes";
+    var routesXhr = new XMLHttpRequest();
+    routesXhr.open("GET", routesUrl);
+    routesXhr.setRequestHeader("Content-Type", "application/json");
     
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            var signalKWaypoints = JSON.parse(xhr.responseText);
+    routesXhr.onload = function() {
+        if (routesXhr.status === 200) {
+            var existingRoutes = JSON.parse(routesXhr.responseText);
             
-            let coursesCreated = 0;
-            let coursesTotal = validCourses.length;
-            let errors = [];
+            // Find a sample route (001, 002, or 003) to use as template
+            let templateRoute = null;
+            for (const [key, value] of Object.entries(existingRoutes)) {
+                if (value.name === "001" || value.name === "002" || value.name === "003") {
+                    templateRoute = value;
+                    console.log("Using route template:", value.name, templateRoute);
+                    break;
+                }
+            }
             
-            // Create each course
-            validCourses.forEach((course, index) => {
-                // Remove the first waypoint (Z - start line) from the course
-                const routeWaypoints = course.waypoints.slice(1);
-                
-                // Build the route data
-                const routePoints = [];
-                let allWaypointsFound = true;
-                
-                for (let waypointLetter of routeWaypoints) {
-                    // Remove asterisk if present (indicates starboard rounding)
-                    const cleanLetter = waypointLetter.replace('*', '');
-                    const key = getKeyForNamedWaypoint(signalKWaypoints, cleanLetter);
+            // Now fetch waypoints
+            const url = "/signalk/v2/api/resources/waypoints";
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var signalKWaypoints = JSON.parse(xhr.responseText);
                     
-                    if (key && signalKWaypoints[key]) {
-                        const waypoint = signalKWaypoints[key];
-                        // Log the waypoint structure for debugging
-                        console.log("Waypoint " + cleanLetter + " structure:", waypoint);
+                    let coursesCreated = 0;
+                    let coursesTotal = validCourses.length;
+                    let errors = [];
+                    
+                    // Create each course
+                    validCourses.forEach((course, index) => {
+                        // Remove the first waypoint (Z - start line) from the course
+                        const routeWaypoints = course.waypoints.slice(1);
                         
-                        routePoints.push({
-                            href: "/resources/waypoints/" + key,
-                            waypoint: waypoint,
-                            key: key
-                        });
-                    } else {
-                        console.error("Waypoint not found for course " + course.number + ": " + cleanLetter);
-                        allWaypointsFound = false;
-                        errors.push("Course " + course.number + ": waypoint " + cleanLetter + " not found");
-                        break;
-                    }
-                }
-                
-                if (allWaypointsFound) {
-                    // Create the route in SignalK
-                    createRouteInSignalK(course.number, routePoints, (success) => {
-                        if (success) {
-                            coursesCreated++;
-                        } else {
-                            errors.push("Failed to create course " + course.number);
-                        }
+                        // Build the route data
+                        const routePoints = [];
+                        let allWaypointsFound = true;
                         
-                        // Update status after each course
-                        if (coursesCreated + errors.length === coursesTotal) {
-                            // All courses processed
-                            if (errors.length === 0) {
-                                document.getElementById('infoLabel').textContent = 
-                                    "Successfully created " + coursesCreated + " courses in SignalK";
+                        for (let waypointLetter of routeWaypoints) {
+                            // Remove asterisk if present (indicates starboard rounding)
+                            const cleanLetter = waypointLetter.replace('*', '');
+                            const key = getKeyForNamedWaypoint(signalKWaypoints, cleanLetter);
+                            
+                            if (key && signalKWaypoints[key]) {
+                                const waypoint = signalKWaypoints[key];
+                                
+                                routePoints.push({
+                                    href: "/resources/waypoints/" + key,
+                                    waypoint: waypoint,
+                                    key: key
+                                });
                             } else {
-                                document.getElementById('infoLabel').textContent = 
-                                    "Created " + coursesCreated + "/" + coursesTotal + " courses. " + errors.length + " errors.";
-                                console.error("Errors:", errors);
+                                console.error("Waypoint not found for course " + course.number + ": " + cleanLetter);
+                                allWaypointsFound = false;
+                                errors.push("Course " + course.number + ": waypoint " + cleanLetter + " not found");
+                                break;
                             }
-                            resizeInfoLabel();
                         }
-                    });
-                }
-            });
-        } else {
-            console.error("Error fetching waypoints: " + xhr.status);
-            document.getElementById('infoLabel').textContent = "Error fetching waypoints from SignalK";
-            resizeInfoLabel();
-        }
-    };
-    
-    xhr.send();
-}
-
+                        
+                        if (allWaypointsFound) {
+                            // Create the route in SignalK using template
+                            createRouteInSignalK(course.number, routePoints, templateRoute, (success) => {
+                                if (success) {
+                                    coursesCreated++;
+                                } else {
+                                    errors.push("Failed to create course " + course.number);
+                                }
+                                
+                                // Update status after each course
+                                if (coursesCreated + errors.length === coursesTotal) {
+                                    // All courses processed
+                                    if (errors.length === 0) {
+                                        document.getElementById('infoLabel').textContent = 
+                                            "Successfully created " + coursesCreated + " courses in SignalK";
+                                    } else {
+                                        document.getElementById('infoLabel').textContent = 
+                                            "Created " + coursesCreated + "/" + coursesTotal + " courses. " + errors.length + " errors.";
+                                        console.error("Errors:", errors);
+   Uses template route structure if provided
 ////////// ////////// ////////// //////////
-// Function to create a single route in SignalK
-////////// ////////// ////////// //////////
-function createRouteInSignalK(courseNumber, routePoints, callback) {
+function createRouteInSignalK(courseNumber, routePoints, templateRoute, callback) {
     // Generate a UUID for the route
     const routeId = 'course-' + courseNumber;
     
@@ -368,6 +369,54 @@ function createRouteInSignalK(courseNumber, routePoints, callback) {
             console.error("Missing position in waypoint for course " + courseNumber, pt.waypoint);
             callback(false);
             return;
+        }
+        
+        if (lon === undefined || lat === undefined) {
+            console.error("Invalid position data for course " + courseNumber + ", waypoint:", pt.waypoint);
+            callback(false);
+            return;
+        }
+        coordinates.push([lon, lat]);
+    }
+    
+    // Build route data using template structure if available
+    let routeData;
+    if (templateRoute) {
+        // Use template structure
+        routeData = {
+            ...templateRoute,
+            name: courseNumber,
+            description: "Course " + courseNumber,
+            feature: {
+                ...templateRoute.feature,
+                geometry: {
+                    type: "LineString",
+                    coordinates: coordinates
+                }
+            },
+            points: routePoints.map(pt => ({
+                href: pt.href
+            }))
+        };
+    } else {
+        // Fallback to basic structure
+        routeData = {
+            name: courseNumber,
+            description: "Course " + courseNumber,
+            feature: {
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: coordinates
+                },
+                properties: {}
+            },
+            points: routePoints.map(pt => ({
+                href: pt.href,
+                type: "waypoint"
+            }))
+        };
+    }      return;
         }
         
         if (lon === undefined || lat === undefined) {
