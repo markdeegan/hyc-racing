@@ -382,22 +382,14 @@ function createRouteInSignalK(courseNumber, routePoints, templateRoute, callback
     // Build route data using template structure if available
     let routeData;
     if (templateRoute) {
-        // Use template structure
-        routeData = {
-            ...templateRoute,
-            name: courseNumber,
-            description: "Course " + courseNumber,
-            feature: {
-                ...templateRoute.feature,
-                geometry: {
-                    type: "LineString",
-                    coordinates: coordinates
-                }
-            },
-            points: routePoints.map(pt => ({
-                href: pt.href
-            }))
-        };
+        // Use template structure - copy all properties from template
+        routeData = JSON.parse(JSON.stringify(templateRoute));
+        routeData.name = courseNumber;
+        routeData.description = "Course " + courseNumber;
+        routeData.feature.geometry.coordinates = coordinates;
+        routeData.points = routePoints.map(pt => ({
+            href: pt.href
+        }));
     } else {
         // Fallback to basic structure
         routeData = {
