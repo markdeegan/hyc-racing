@@ -112,11 +112,10 @@ function displayMarkInfo(markName) {
         const mark = marks.find(m => m.shortName === markName || m.longName === markName);
         
         if (mark) {
-            // Capitalize first letter of colour and shape
+            // Capitalize first letter of colour
             const colour = mark.colour.charAt(0).toUpperCase() + mark.colour.slice(1);
-            const shape = mark.shape.charAt(0).toUpperCase() + mark.shape.slice(1);
             
-            const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - " + colour + " - " + shape;
+            const infoText = mark.longName + " (" + mark.shortName + ") - " + colour;
             document.getElementById('infoLabel').textContent = infoText;
             resizeInfoLabel();
         } else {
