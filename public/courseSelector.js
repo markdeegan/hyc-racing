@@ -369,9 +369,6 @@ function createRouteInSignalK(courseNumber, routePoints, callback) {
     };
     
     xhr.send(JSON.stringify(routeData));
-}       fontSize -= 1;
-        infoLabel.style.fontSize = fontSize + 'px';
-    }
 }
 
 ////////// ////////// ////////// //////////
