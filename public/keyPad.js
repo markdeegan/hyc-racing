@@ -274,7 +274,6 @@ $(document).ready(
             // but add instructions to course number field
             if(value=="")
             { // if empty string
-                let 
                 $("#courseNumber").fontSize="10px";
                 $("#courseNumber").val("Enter 3-digit Course");
                 $("#waypoints").html("");
