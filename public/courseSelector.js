@@ -165,15 +165,15 @@ function getKeyForNamedWaypoint(obj, waypointName) {
 }
 
 ////////// ////////// ////////// //////////
-// Function to set destination in SignalK
-////////// ////////active route in SignalK
+// Function to set active route in SignalK
 ////////// ////////// ////////// //////////
 function setActiveRoute(routeHref) {
     const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
     var data = {
         href: "/resources/routes/" + routeHref
     };
-    console.log('Setting active route
+    console.log('Setting active route:', data);
+    var xhr = new XMLHttpRequest();
     xhr.open("PUT", url);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
