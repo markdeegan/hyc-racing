@@ -59,6 +59,18 @@ function createCourseButtons() {
         gridContainer.appendChild(gridCell);
     });
     
+    // Add a createCourses button
+    const createCoursesCell = document.createElement('div');
+    createCoursesCell.className = 'grid-cell';
+    const createCoursesButton = document.createElement('button');
+    createCoursesButton.className = 'back-button';
+    createCoursesButton.innerHTML = '<div class="course-number">CREATE COURSES</div>';
+    createCoursesButton.addEventListener('click', () => {
+        createAllCourses();
+    });
+    createCoursesCell.appendChild(createCoursesButton);
+    gridContainer.appendChild(createCoursesCell);
+    
     // Add a back button at the end
     const backCell = document.createElement('div');
     backCell.className = 'grid-cell';
@@ -215,7 +227,146 @@ function resizeInfoLabel() {
     infoLabel.style.whiteSpace = 'nowrap';
     
     while (infoLabel.scrollWidth > containerWidth && fontSize > 5) {
-        fontSize -= 1;
+ 
+
+////////// ////////// ////////// //////////
+// Function to create all courses in SignalK
+// Reads courses from wednesday.js and creates routes
+// Omits the first waypoint (Z - start line) from each route
+////////// ////////// ////////// //////////
+function createAllCourses() {
+    document.getElementById('infoLabel').textContent = "Creating courses...";
+    resizeInfoLabel();
+    
+    // Get all valid courses (same filter as display)
+    const courses = Wednesday.courses;
+    const validCourses = courses.filter(course => {
+        return course.number !== "000" && !course.waypoints.some(wp => wp === "1" || wp === "2" || wp === "3");
+    });
+    
+    // First, fetch all waypoints from SignalK
+    const url = "/signalk/v2/api/resources/waypoints";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var signalKWaypoints = JSON.parse(xhr.responseText);
+            
+            let coursesCreated = 0;
+            let coursesTotal = validCourses.length;
+            let errors = [];
+            
+            // Create each course
+            validCourses.forEach((course, index) => {
+                // Remove the first waypoint (Z - start line) from the course
+                const routeWaypoints = course.waypoints.slice(1);
+                
+                // Build the route data
+                const routePoints = [];
+                let allWaypointsFound = true;
+                
+                for (let waypointLetter of routeWaypoints) {
+                    // Remove asterisk if present (indicates starboard rounding)
+                    const cleanLetter = waypointLetter.replace('*', '');
+                    const key = getKeyForNamedWaypoint(signalKWaypoints, cleanLetter);
+                    
+                    if (key) {
+                        routePoints.push({
+                            href: "/resources/waypoints/" + key,
+                            position: signalKWaypoints[key].position
+                        });
+                    } else {
+                        console.error("Waypoint not found for course " + course.number + ": " + cleanLetter);
+                        allWaypointsFound = false;
+                        errors.push("Course " + course.number + ": waypoint " + cleanLetter + " not found");
+                        break;
+                    }
+                }
+                
+                if (allWaypointsFound) {
+                    // Create the route in SignalK
+                    createRouteInSignalK(course.number, routePoints, (success) => {
+                        if (success) {
+                            coursesCreated++;
+                        } else {
+                            errors.push("Failed to create course " + course.number);
+                        }
+                        
+                        // Update status after each course
+                        if (coursesCreated + errors.length === coursesTotal) {
+                            // All courses processed
+                            if (errors.length === 0) {
+                                document.getElementById('infoLabel').textContent = 
+                                    "Successfully created " + coursesCreated + " courses in SignalK";
+                            } else {
+                                document.getElementById('infoLabel').textContent = 
+                                    "Created " + coursesCreated + "/" + coursesTotal + " courses. " + errors.length + " errors.";
+                                console.error("Errors:", errors);
+                            }
+                            resizeInfoLabel();
+                        }
+                    });
+                }
+            });
+        } else {
+            console.error("Error fetching waypoints: " + xhr.status);
+            document.getElementById('infoLabel').textContent = "Error fetching waypoints from SignalK";
+            resizeInfoLabel();
+        }
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to create a single route in SignalK
+////////// ////////// ////////// //////////
+function createRouteInSignalK(courseNumber, routePoints, callback) {
+    // Generate a UUID for the route
+    const routeId = 'course-' + courseNumber;
+    
+    const routeData = {
+        name: courseNumber,
+        description: "Course " + courseNumber,
+        feature: {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: routePoints.map(pt => [pt.position.longitude, pt.position.latitude])
+            },
+            properties: {}
+        },
+        points: routePoints.map((pt, idx) => ({
+            href: pt.href,
+            type: "waypoint",
+            position: pt.position
+        }))
+    };
+    
+    const url = "/signalk/v2/api/resources/routes/" + routeId;
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200 || xhr.status === 201) {
+            console.log("Created course " + courseNumber);
+            callback(true);
+        } else {
+            console.error("Error creating course " + courseNumber + ": " + xhr.status);
+            callback(false);
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error("Network error creating course " + courseNumber);
+        callback(false);
+    };
+    
+    xhr.send(JSON.stringify(routeData));
+}       fontSize -= 1;
         infoLabel.style.fontSize = fontSize + 'px';
     }
 }
