@@ -76,15 +76,40 @@ function displayMarkInfo(markName) {
         const mark = marks.find(m => m.shortName === markName || m.longName === markName);
         
         if (mark) {
-            const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - Colour: " + mark.colour + " - Shape: " + mark.shape;
+            // Capitalize first letter of colour and shape
+            const colour = mark.colour.charAt(0).toUpperCase() + mark.colour.slice(1);
+            const shape = mark.shape.charAt(0).toUpperCase() + mark.shape.slice(1);
+            
+            const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - " + colour + " - " + shape;
             document.getElementById('infoDisplay').textContent = infoText;
+            resizeInfoText();
         } else {
             document.getElementById('infoDisplay').textContent = "Mark information not found for: " + markName;
+            resizeInfoText();
         }
     }).catch(error => {
         console.error("Error loading mark information:", error);
         document.getElementById('infoDisplay').textContent = "Error loading mark information";
+        resizeInfoText();
     });
+}
+
+function resizeInfoText() {
+    const infoDisplay = document.getElementById('infoDisplay');
+    if (!infoDisplay || !infoDisplay.textContent) return;
+    
+    // Start with a large size
+    let fontSize = 50;
+    infoDisplay.style.fontSize = fontSize + 'px';
+    
+    // Reduce font size until text fits without wrapping or overflowing
+    const maxWidth = infoDisplay.clientWidth - 20; // Account for padding
+    const maxHeight = infoDisplay.clientHeight - 20;
+    
+    while ((infoDisplay.scrollWidth > maxWidth || infoDisplay.scrollHeight > maxHeight) && fontSize > 10) {
+        fontSize -= 1;
+        infoDisplay.style.fontSize = fontSize + 'px';
+    }
 }
 
 function applyMarkColors() {

@@ -64,11 +64,11 @@ button:active {
     background-color: #e8e8e8;
     border: 1px solid black;
     padding: 10px;
-    font-size: 2.5vh;
     font-weight: bold;
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: auto;
+    overflow: hidden;
+    white-space: nowrap;
 }
