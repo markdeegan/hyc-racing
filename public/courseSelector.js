@@ -339,6 +339,10 @@ function createRouteInSignalK(courseNumber, routePoints, callback) {
     const coordinates = [];
     for (let pt of routePoints) {
         if (!pt.waypoint) {
+            console.error("Missing waypoint in route point for course " + courseNumber);
+            callback(false);
+            return;
+        }
         
         // Get position - it might be directly on waypoint or nested
         let pos = pt.waypoint.position;
