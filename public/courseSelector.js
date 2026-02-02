@@ -275,10 +275,11 @@ function createAllCourses() {
                     const cleanLetter = waypointLetter.replace('*', '');
                     const key = getKeyForNamedWaypoint(signalKWaypoints, cleanLetter);
                     
-                    if (key) {
+                    if (key && signalKWaypoints[key]) {
+                        const waypoint = signalKWaypoints[key];
                         routePoints.push({
                             href: "/resources/waypoints/" + key,
-                            position: signalKWaypoints[key].position
+                            waypoint: waypoint
                         });
                     } else {
                         console.error("Waypoint not found for course " + course.number + ": " + cleanLetter);
@@ -330,6 +331,15 @@ function createRouteInSignalK(courseNumber, routePoints, callback) {
     // Generate a UUID for the route
     const routeId = 'course-' + courseNumber;
     
+    // Build coordinates array from waypoints
+    const coordinates = routePoints.map(pt => {
+        const pos = pt.waypoint.position;
+        // Handle both lat/lon and latitude/longitude formats
+        const lon = pos.longitude !== undefined ? pos.longitude : pos.lon;
+        const lat = pos.latitude !== undefined ? pos.latitude : pos.lat;
+        return [lon, lat];
+    });
+    
     const routeData = {
         name: courseNumber,
         description: "Course " + courseNumber,
@@ -337,14 +347,13 @@ function createRouteInSignalK(courseNumber, routePoints, callback) {
             type: "Feature",
             geometry: {
                 type: "LineString",
-                coordinates: routePoints.map(pt => [pt.position.longitude, pt.position.latitude])
+                coordinates: coordinates
             },
             properties: {}
         },
         points: routePoints.map((pt, idx) => ({
             href: pt.href,
-            type: "waypoint",
-            position: pt.position
+            type: "waypoint"
         }))
     };
     
