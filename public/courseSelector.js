@@ -227,7 +227,10 @@ function resizeInfoLabel() {
     infoLabel.style.whiteSpace = 'nowrap';
     
     while (infoLabel.scrollWidth > containerWidth && fontSize > 5) {
- 
+        fontSize -= 1;
+        infoLabel.style.fontSize = fontSize + 'px';
+    }
+}
 
 ////////// ////////// ////////// //////////
 // Function to create all courses in SignalK
