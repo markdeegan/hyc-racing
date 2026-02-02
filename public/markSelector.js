@@ -71,11 +71,73 @@ function displayMarksInfo() {
     import('./wednesday.js').then(module => {
         const marks = module.Wednesday.marks;
         
-        console.log("=== Marks Information ===");
-        marks.forEach(mark => {
-            console.log("Short Name: " + mark.shortName + ", Shape: " + mark.shape + ", Colour: " + mark.colour);
-        });
-        console.log("=== End of Marks ===");
+        // Get waypoints from SignalK
+        const url = "/signalk/v2/api/resources/waypoints";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var waypoints = JSON.parse(xhr.responseText);
+                
+                console.log("=== Marks Information ===");
+                let updateCount = 0;
+                
+                marks.forEach(mark => {
+                    console.log("Short Name: " + mark.shortName + ", Shape: " + mark.shape + ", Colour: " + mark.colour);
+                    
+                    // Find matching waypoint in SignalK
+                    const waypointKey = getKeyForNamedWaypoint(waypoints, mark.shortName);
+                    
+                    if (waypointKey) {
+                        console.log("  - Found waypoint href: " + waypointKey);
+                        
+                        // Update waypoint position
+                        const updateUrl = "/signalk/v2/api/resources/waypoints/" + waypointKey;
+                        const position = {
+                            latitude: parseFloat(mark.lat),
+                            longitude: parseFloat(mark.lon)
+                        };
+                        
+                        // Get existing waypoint data first
+                        var getXhr = new XMLHttpRequest();
+                        getXhr.open("GET", updateUrl);
+                        getXhr.setRequestHeader("Content-Type", "application/json");
+                        getXhr.onload = function() {
+                            if (getXhr.status === 200) {
+                                var existingWaypoint = JSON.parse(getXhr.responseText);
+                                existingWaypoint.position = position;
+                                
+                                // Send PUT request to update waypoint
+                                var putXhr = new XMLHttpRequest();
+                                putXhr.open("PUT", updateUrl);
+                                putXhr.setRequestHeader("Content-Type", "application/json");
+                                putXhr.onload = function() {
+                                    if (putXhr.status === 200) {
+                                        updateCount++;
+                                        console.log("  - Updated position to lat: " + position.latitude + ", lon: " + position.longitude);
+                                    } else {
+                                        console.error("  - Failed to update waypoint. Status: " + putXhr.status);
+                                    }
+                                };
+                                putXhr.send(JSON.stringify(existingWaypoint));
+                            } else {
+                                console.error("  - Failed to get existing waypoint data. Status: " + getXhr.status);
+                            }
+                        };
+                        getXhr.send();
+                    } else {
+                        console.log("  - No matching waypoint found in SignalK");
+                    }
+                });
+                
+                console.log("=== End of Marks ===");
+                console.log("Initiated updates for waypoints");
+            } else {
+                console.error("Error fetching waypoints from SignalK: " + xhr.status);
+            }
+        };
+        xhr.send();
     }).catch(error => {
         console.error("Error importing Wednesday data:", error);
     });
