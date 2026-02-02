@@ -174,6 +174,59 @@ function applyMarkColors() {
     });
 }
 
+function updateFinishLocation() {
+    // Get current boat position
+    const positionUrl = "/signalk/v2/api/vessels/self/navigation/position";
+    
+    fetch(positionUrl)
+        .then(response => response.json())
+        .then(position => {
+            if (position && position.value) {
+                const latitude = position.value.latitude;
+                const longitude = position.value.longitude;
+                
+                // Get all waypoints to find the F-Finish waypoint
+                const waypointsUrl = "/signalk/v2/api/resources/waypoints";
+                return fetch(waypointsUrl)
+                    .then(response => response.json())
+                    .then(waypoints => {
+                        // Find the F waypoint
+                        const key = getKeyForNamedWaypoint(waypoints, "F");
+                        if (key) {
+                            // Update the waypoint location
+                            const updateUrl = "/signalk/v2/api/resources/waypoints/" + key;
+                            const updatedWaypoint = {
+                                ...waypoints[key],
+                                position: {
+                                    latitude: latitude,
+                                    longitude: longitude
+                                }
+                            };
+                            
+                            return fetch(updateUrl, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(updatedWaypoint)
+                            });
+                        } else {
+                            throw new Error("F-Finish waypoint not found");
+                        }
+                    });
+            }
+        })
+        .then(() => {
+            document.getElementById('infoLabel').textContent = "FINISH location updated";
+            resizeInfoLabel();
+        })
+        .catch(error => {
+            console.error("Error updating finish location:", error);
+            document.getElementById('infoLabel').textContent = "Error updating FINISH location";
+            resizeInfoLabel();
+        });
+}
+
 function setupButtonClickHandlers() {
     const buttons = document.querySelectorAll('button');
     
@@ -181,9 +234,55 @@ function setupButtonClickHandlers() {
         const letterElement = button.querySelector('.letter');
         const letter = letterElement ? letterElement.textContent : button.querySelector('.name').textContent;
         
-        button.addEventListener('click', () => {
-            setMark(letter);
-        });
+        // Special handling for F-Finish button
+        if (letter === 'F') {
+            let pressTimer = null;
+            let isLongPress = false;
+            
+            const startPress = () => {
+                isLongPress = false;
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    updateFinishLocation();
+                }, 2000); // 2 seconds
+            };
+            
+            const cancelPress = () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            };
+            
+            const handleRelease = () => {
+                cancelPress();
+                if (!isLongPress) {
+                    // Normal click - set as destination
+                    setMark(letter);
+                }
+            };
+            
+            // Mouse events
+            button.addEventListener('mousedown', startPress);
+            button.addEventListener('mouseup', handleRelease);
+            button.addEventListener('mouseleave', cancelPress);
+            
+            // Touch events for mobile
+            button.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startPress();
+            });
+            button.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                handleRelease();
+            });
+            button.addEventListener('touchcancel', cancelPress);
+        } else {
+            // Normal button handling for all other buttons
+            button.addEventListener('click', () => {
+                setMark(letter);
+            });
+        }
     });
 }
 
