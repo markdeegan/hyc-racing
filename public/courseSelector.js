@@ -434,33 +434,7 @@ function createRouteInSignalK(courseNumber, routePoints, templateRoute, callback
                 type: "waypoint"
             }))
         };
-    }      return;
-        }
-        
-        if (lon === undefined || lat === undefined) {
-            console.error("Invalid position data for course " + courseNumber + ", waypoint:", pt.waypoint);
-            callback(false);
-            return;
-        }
-        coordinates.push([lon, lat]);
     }
-    
-    const routeData = {
-        name: courseNumber,
-        description: "Course " + courseNumber,
-        feature: {
-            type: "Feature",
-            geometry: {
-                type: "LineString",
-                coordinates: coordinates
-            },
-            properties: {}
-        },
-        points: routePoints.map((pt, idx) => ({
-            href: pt.href,
-            type: "waypoint"
-        }))
-    };
     
     const url = "/signalk/v2/api/resources/routes/" + routeId;
     var xhr = new XMLHttpRequest();
