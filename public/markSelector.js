@@ -88,11 +88,17 @@ function displayMarksInfo() {
                 marks.forEach(mark => {
                     console.log("Short Name: " + mark.shortName + ", Shape: " + mark.shape + ", Colour: " + mark.colour);
                     
-                    // Find matching waypoint in SignalK
-                    const waypointKey = getKeyForNamedWaypoint(waypoints, mark.shortName);
+                    // Find matching waypoint - match by shortName or longName
+                    let waypointKey = null;
+                    for (const [key, value] of Object.entries(waypoints)) {
+                        if (value.name === mark.shortName || value.name === mark.longName) {
+                            waypointKey = key;
+                            break;
+                        }
+                    }
                     
                     if (waypointKey) {
-                        console.log("  - Found waypoint href: " + waypointKey);
+                        console.log("  - Found waypoint href: " + waypointKey + " (name: " + waypoints[waypointKey].name + ")");
                         
                         // Prepare updated waypoint data
                         const updateUrl = "/signalk/v2/api/resources/waypoints/" + waypointKey;
@@ -147,7 +153,7 @@ function displayMarksInfo() {
                         getXhr.send();
                     } else {
                         processedMarks++;
-                        console.log("  - No matching waypoint found in SignalK");
+                        console.log("  - No matching waypoint found in SignalK for mark: " + mark.shortName);
                     }
                 });
                 
