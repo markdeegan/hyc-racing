@@ -8,7 +8,7 @@
 ////////// ////////// ////////// //////////
 
 import { Wednesday } from './wednesday.js';
-import { renameExistingRoutes, createAllCourses, updateRouteDescriptions, verifySignalKRoutes } from './routeManagement.js';
+import { renameExistingRoutes, createAllCourses } from './utils/routeManagement.js';
 
 ////////// ////////// ////////// //////////
 // Function to dynamically create course buttons
@@ -59,38 +59,6 @@ function createCourseButtons() {
         gridCell.appendChild(button);
         gridContainer.appendChild(gridCell);
     });
-    
-    // Add an update descriptions button
-    const updateDescCell = document.createElement('div');
-    updateDescCell.className = 'grid-cell';
-    const updateDescButton = document.createElement('button');
-    updateDescButton.className = 'back-button';
-    updateDescButton.innerHTML = '<div class="course-number">UPDATE DESCRIPTIONS</div>';
-    updateDescButton.addEventListener('click', () => {
-        updateRouteDescriptions(
-            Wednesday.courses,
-            (text) => document.getElementById('infoLabel').textContent = text,
-            resizeInfoLabel
-        );
-    });
-    updateDescCell.appendChild(updateDescButton);
-    gridContainer.appendChild(updateDescCell);
-    
-    // Add a verify routes button
-    const verifyCell = document.createElement('div');
-    verifyCell.className = 'grid-cell';
-    const verifyButton = document.createElement('button');
-    verifyButton.className = 'back-button';
-    verifyButton.innerHTML = '<div class="course-number">VERIFY ROUTES</div>';
-    verifyButton.addEventListener('click', () => {
-        verifySignalKRoutes(
-            Wednesday.courses,
-            (text) => document.getElementById('infoLabel').textContent = text,
-            resizeInfoLabel
-        );
-    });
-    verifyCell.appendChild(verifyButton);
-    gridContainer.appendChild(verifyCell);
     
     // Add a back button at the end
     const backCell = document.createElement('div');
