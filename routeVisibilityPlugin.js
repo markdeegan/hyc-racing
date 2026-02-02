@@ -8,22 +8,38 @@
 ////////// ////////// ////////// //////////
 
 module.exports = function (app) {
+  // Utility logging functions
+  // We use app.error and app.debug if available
+  // otherwise fallback to console
   const logError = app.error || (err => console.error(err))
   const debug = app.debug || (msg => console.log(msg))
 
+  // define the plugin object
   let plugin = {
+    // unsubscribe functions for cleanup
     unsubscribes: [],
+    // backup of hidden routes
+    // I'm not sure I like this, but it's necessary for restoration
+    // of other routes when no route is active
     routeBackup: new Map() // Store hidden routes for restoration
   }
+  ////////// ////////// ////////// //////////
 
+  ////////// ////////// ////////// //////////
+  // define plugin metadata, id, name, description, schema
   plugin.id = 'route-visibility-manager'
   plugin.name = 'Route Visibility Manager'
   plugin.description = 'Automatically hides inactive routes when a route is activated in SignalK'
+  ////////// ////////// ////////// //////////
 
+  ////////// ////////// ////////// //////////
+  // define the configuration schema
   plugin.schema = {
     type: 'object',
     required: ['mode'],
     properties: {
+      ///////// ////////// ////////// //////////
+      // mode: hide, delete, keep-backup for hidden routes
       mode: {
         type: 'string',
         title: 'Visibility Mode',
@@ -31,12 +47,22 @@ module.exports = function (app) {
         default: 'hide',
         enum: ['hide', 'delete', 'keep-backup']
       },
+      // end of mode
+      ///////// ////////// ////////// //////////
+
+      ///////// ////////// ////////// //////////
+      // autoRestore: true/false
       autoRestore: {
         type: 'boolean',
         title: 'Auto Restore Routes',
         description: 'Restore hidden routes when no route is active',
         default: true
       },
+      // end of autoRestore
+      ///////// ////////// ////////// //////////
+
+      ///////// ////////// ////////// //////////
+      // excludeRoutes: array of route UUIDs to never hide
       excludeRoutes: {
         type: 'array',
         title: 'Exclude Routes',
@@ -45,28 +71,40 @@ module.exports = function (app) {
           type: 'string'
         },
         default: []
-      }
-    }
-  }
+      } // end of excludeRoutes
+      ///////// ////////// ////////// //////////
+    } // end of properties
+  } // end of schema
+  ////////// ////////// ////////// //////////
 
+  ////////// ////////// ////////// //////////
+  // start the plugin
   plugin.start = function (options) {
+    // Log starting message
     debug('Route Visibility Manager starting...')
     
+    // merge options with defaults
     const mode = options.mode || 'hide'
     const autoRestore = options.autoRestore !== false
     const excludeRoutes = options.excludeRoutes || []
+    ////////// ////////// ////////// //////////  
 
+    ////////// ////////// ////////// //////////  
     // Subscribe to active route changes
+    // every second
     const subscription = {
       context: 'vessels.self',
       subscribe: [
         {
           path: 'navigation.courseGreatCircle.activeRoute.href',
           period: 1000
-        }
-      ]
-    }
+        } 
+        // end of subscribe array item
+      ] // end of subscribe array
+    } // end of subscription object
+    ////////// ////////// ////////// //////////
 
+    ////////// ////////// ////////// //////////
     app.subscriptionmanager.subscribe(
       subscription,
       plugin.unsubscribes,
@@ -81,13 +119,18 @@ module.exports = function (app) {
             }
           })
         })
-      }
-    )
+      } // end of delta callback
+    ) // end of subscribe call
+    ////////// ////////// ////////// //////////
 
     debug('Route Visibility Manager started')
-  }
+  } // end of start function
+  ////////// ////////// ////////// //////////
 
+  ////////// ////////// ////////// //////////
+  // stop the plugin
   plugin.stop = function () {
+    // Log stopping message
     debug('Route Visibility Manager stopping...')
     
     // Unsubscribe from all subscriptions
@@ -97,9 +140,13 @@ module.exports = function (app) {
     // Optionally restore all routes on stop
     restoreAllRoutes()
     
+    // Log stopped message
     debug('Route Visibility Manager stopped')
   }
+  // end of stop function
+  ////////// ////////// ////////// //////////
 
+  ////////// ////////// ////////// //////////
   // Handle active route changes
   function handleActiveRouteChange(activeRouteHref, mode, autoRestore, excludeRoutes) {
     if (!activeRouteHref) {
@@ -109,7 +156,9 @@ module.exports = function (app) {
         restoreAllRoutes()
       }
       return
-    }
+    } // end of no active route
+    // Active route present - hide other routes
+    ///////// ////////// ////////// //////////
 
     debug(`Active route changed to: ${activeRouteHref}`)
 
@@ -119,10 +168,12 @@ module.exports = function (app) {
     // Get all routes
     const routes = app.getSelfPath('resources.routes')
     
+    // No routes found
     if (!routes) {
       debug('No routes found in resources')
       return
-    }
+    } // end of no routes found
+
 
     // Process each route
     Object.keys(routes).forEach((routeId) => {
@@ -147,6 +198,7 @@ module.exports = function (app) {
   }
 
   // Delete a route from resources
+  // again, not fond of this, but necessary
   function deleteRoute(routeId) {
     const delta = {
       updates: [
@@ -163,8 +215,11 @@ module.exports = function (app) {
 
     app.handleMessage(plugin.id, delta)
     debug(`Deleted route: ${routeId}`)
-  }
+  } //
+  // end of deleteRoute function
+  ////////// ////////// ////////// //////////
 
+  ////////// ////////// ////////// //////////
   // Restore all backed-up routes
   function restoreAllRoutes() {
     if (plugin.routeBackup.size === 0) {
@@ -193,7 +248,11 @@ module.exports = function (app) {
 
     // Clear backup
     plugin.routeBackup.clear()
-  }
+  } // end of restoreAllRoutes function
+  ////////// ////////// ////////// //////////
 
-  return plugin
-}
+  // end of plugin definition
+  // return the plugin object
+   return plugin
+} // end of module.exports function
+///////// ////////// ////////// //////////
