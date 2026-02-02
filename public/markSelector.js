@@ -37,10 +37,12 @@ function setMark(letter) {
             } else {
                 console.error("Waypoint not found for letter: " + letter);
                 document.getElementById('infoLabel').textContent = "Waypoint not found: " + letter;
+                resizeInfoLabel();
             }
         } else {
             console.error("Error fetching waypoints: " + xhr.status);
             document.getElementById('infoLabel').textContent = "Error fetching waypoints";
+            resizeInfoLabel();
         }
     };
     xhr.send();
@@ -82,13 +84,34 @@ function displayMarkInfo(markName) {
             
             const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - " + colour + " - " + shape;
             document.getElementById('infoLabel').textContent = infoText;
+            resizeInfoLabel();
         } else {
             document.getElementById('infoLabel').textContent = "Mark information not found for: " + markName;
+            resizeInfoLabel();
         }
     }).catch(error => {
         console.error("Error loading mark information:", error);
         document.getElementById('infoLabel').textContent = "Error loading mark information";
+        resizeInfoLabel();
     });
+}
+
+function resizeInfoLabel() {
+    const infoLabel = document.getElementById('infoLabel');
+    if (!infoLabel || !infoLabel.textContent) return;
+    
+    const containerWidth = infoLabel.clientWidth;
+    const targetWidth = containerWidth * 0.95; // Use 95% of available width
+    
+    // Start with a large font size
+    let fontSize = 150;
+    infoLabel.style.fontSize = fontSize + 'px';
+    
+    // Reduce font size until text fits within target width
+    while (infoLabel.scrollWidth > targetWidth && fontSize > 10) {
+        fontSize -= 0.5;
+        infoLabel.style.fontSize = fontSize + 'px';
+    }
 }
 
 function applyMarkColors() {
