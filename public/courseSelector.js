@@ -71,6 +71,18 @@ function createCourseButtons() {
     createCoursesCell.appendChild(createCoursesButton);
     gridContainer.appendChild(createCoursesCell);
     
+    // Add a rename routes button
+    const renameRoutesCell = document.createElement('div');
+    renameRoutesCell.className = 'grid-cell';
+    const renameRoutesButton = document.createElement('button');
+    renameRoutesButton.className = 'back-button';
+    renameRoutesButton.innerHTML = '<div class="course-number">RENAME ROUTES</div>';
+    renameRoutesButton.addEventListener('click', () => {
+        renameExistingRoutes();
+    });
+    renameRoutesCell.appendChild(renameRoutesButton);
+    gridContainer.appendChild(renameRoutesCell);
+    
     // Add a back button at the end
     const backCell = document.createElement('div');
     backCell.className = 'grid-cell';
@@ -343,6 +355,108 @@ function createAllCourses() {
                 }
             };
             
+// Function to rename existing routes in SignalK
+// Renames routes from "001" to "HYC-Wed-001" format
+////////// ////////// ////////// //////////
+function renameExistingRoutes() {
+    document.getElementById('infoLabel').textContent = "Renaming routes...";
+    resizeInfoLabel();
+    
+    // Fetch all existing routes from SignalK
+    const routesUrl = "/signalk/v2/api/resources/routes";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", routesUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var existingRoutes = JSON.parse(xhr.responseText);
+            
+            let routesRenamed = 0;
+            let routesTotal = 0;
+            let errors = [];
+            
+            // Find routes that need renaming (numeric names like "001", "002", etc.)
+            for (const [key, route] of Object.entries(existingRoutes)) {
+                // Check if route name is a 3-digit number
+                if (route.name && /^\d{3}$/.test(route.name)) {
+                    routesTotal++;
+                    
+                    // Create new name with HYC-Wed- prefix
+                    const newName = "HYC-Wed-" + route.name;
+                    
+                    // Update the route
+                    updateRouteName(key, route, newName, (success) => {
+                        if (success) {
+                            routesRenamed++;
+                            console.log("Renamed route " + route.name + " to " + newName);
+                        } else {
+                            errors.push("Failed to rename route " + route.name);
+                        }
+                        
+                        // Update status after processing each route
+                        if (routesRenamed + errors.length === routesTotal) {
+                            // All routes processed
+                            if (errors.length === 0) {
+                                document.getElementById('infoLabel').textContent = 
+                                    "Successfully renamed " + routesRenamed + " routes";
+                            } else {
+                                document.getElementById('infoLabel').textContent = 
+                                    "Renamed " + routesRenamed + "/" + routesTotal + " routes. " + errors.length + " errors.";
+                                console.error("Errors:", errors);
+                            }
+                            resizeInfoLabel();
+                        }
+                    });
+                }
+            }
+            
+            if (routesTotal === 0) {
+                document.getElementById('infoLabel').textContent = "No routes found to rename";
+                resizeInfoLabel();
+            }
+        } else {
+            console.error("Error fetching routes: " + xhr.status);
+            document.getElementById('infoLabel').textContent = "Error fetching routes from SignalK";
+            resizeInfoLabel();
+        }
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to update a route's name in SignalK
+////////// ////////// ////////// //////////
+function updateRouteName(routeId, route, newName, callback) {
+    // Create updated route with new name
+    const updatedRoute = JSON.parse(JSON.stringify(route));
+    updatedRoute.name = newName;
+    
+    const url = "/signalk/v2/api/resources/routes/" + routeId;
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200 || xhr.status === 201) {
+            callback(true);
+        } else {
+            console.error("Error renaming route " + route.name + ": " + xhr.status);
+            console.error("Response:", xhr.responseText);
+            callback(false);
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error("Network error renaming route " + route.name);
+        callback(false);
+    };
+    
+    xhr.send(JSON.stringify(updatedRoute));
+}
+
+////////// ////////// ////////// //////////
             xhr.send();
         } else {
             console.error("Error fetching routes: " + routesXhr.status);
