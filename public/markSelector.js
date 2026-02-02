@@ -81,6 +81,34 @@ function displayMarksInfo() {
     });
 }
 
+function applyMarkColors() {
+    // Import Wednesday marks data and apply colors to buttons
+    import('./wednesday.js').then(module => {
+        const marks = module.Wednesday.marks;
+        const buttons = document.querySelectorAll('button');
+        
+        buttons.forEach(button => {
+            // Skip updateWaypoints button
+            if (button.id === 'updateWaypoints') {
+                return;
+            }
+            
+            // Get the mark name from the button
+            const letterElement = button.querySelector('.letter');
+            const markName = letterElement ? letterElement.textContent : button.querySelector('.name').textContent;
+            
+            // Find the matching mark in wednesday.js data
+            const mark = marks.find(m => m.shortName === markName || m.longName === markName);
+            
+            if (mark && mark.colour) {
+                button.style.backgroundColor = mark.colour;
+            }
+        });
+    }).catch(error => {
+        console.error("Error importing Wednesday data for colors:", error);
+    });
+}
+
 function setupButtonClickHandlers() {
     const buttons = document.querySelectorAll('button');
     
@@ -106,6 +134,7 @@ function setupButtonClickHandlers() {
 window.addEventListener('load', () => {
     setTimeout(resizeButtonText, 50);
     setupButtonClickHandlers();
+    applyMarkColors();
 });
 
 // Re-run on window resize
