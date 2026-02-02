@@ -177,20 +177,24 @@ function applyMarkColors() {
 function updateFinishLocation() {
     // Get current boat position
     const positionUrl = "/signalk/v2/api/vessels/self/navigation/position";
-    
-    fetch(positionUrl)
-        .then(response => response.json())
-        .then(position => {
+    var xhr1 = new XMLHttpRequest();
+    xhr1.open("GET", positionUrl);
+    xhr1.setRequestHeader("Content-Type", "application/json");
+    xhr1.onload = function() {
+        if (xhr1.status === 200) {
+            var position = JSON.parse(xhr1.responseText);
             if (position && position.value) {
                 const latitude = position.value.latitude;
                 const longitude = position.value.longitude;
                 
                 // Get all waypoints to find the F-Finish waypoint
                 const waypointsUrl = "/signalk/v2/api/resources/waypoints";
-                return fetch(waypointsUrl)
-                    .then(response => response.json())
-                    .then(waypoints => {
-                        // Find the F waypoint
+                var xhr2 = new XMLHttpRequest();
+                xhr2.open("GET", waypointsUrl);
+                xhr2.setRequestHeader("Content-Type", "application/json");
+                xhr2.onload = function() {
+                    if (xhr2.status === 200) {
+                        var waypoints = JSON.parse(xhr2.responseText);
                         const key = getKeyForNamedWaypoint(waypoints, "F");
                         if (key) {
                             // Update the waypoint location
@@ -203,28 +207,44 @@ function updateFinishLocation() {
                                 }
                             };
                             
-                            return fetch(updateUrl, {
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(updatedWaypoint)
-                            });
+                            var xhr3 = new XMLHttpRequest();
+                            xhr3.open("PUT", updateUrl);
+                            xhr3.setRequestHeader("Content-Type", "application/json");
+                            xhr3.onload = function() {
+                                if (xhr3.status === 200 || xhr3.status === 204) {
+                                    document.getElementById('infoLabel').textContent = "FINISH location updated";
+                                    resizeInfoLabel();
+                                } else {
+                                    console.error("Error updating waypoint: " + xhr3.status);
+                                    document.getElementById('infoLabel').textContent = "Error updating FINISH location";
+                                    resizeInfoLabel();
+                                }
+                            };
+                            xhr3.send(JSON.stringify(updatedWaypoint));
                         } else {
-                            throw new Error("F-Finish waypoint not found");
+                            console.error("F-Finish waypoint not found");
+                            document.getElementById('infoLabel').textContent = "F-Finish waypoint not found";
+                            resizeInfoLabel();
                         }
-                    });
+                    } else {
+                        console.error("Error fetching waypoints: " + xhr2.status);
+                        document.getElementById('infoLabel').textContent = "Error fetching waypoints";
+                        resizeInfoLabel();
+                    }
+                };
+                xhr2.send();
+            } else {
+                console.error("Invalid position data");
+                document.getElementById('infoLabel').textContent = "Invalid position data";
+                resizeInfoLabel();
             }
-        })
-        .then(() => {
-            document.getElementById('infoLabel').textContent = "FINISH location updated";
+        } else {
+            console.error("Error fetching position: " + xhr1.status);
+            document.getElementById('infoLabel').textContent = "Error fetching position";
             resizeInfoLabel();
-        })
-        .catch(error => {
-            console.error("Error updating finish location:", error);
-            document.getElementById('infoLabel').textContent = "Error updating FINISH location";
-            resizeInfoLabel();
-        });
+        }
+    };
+    xhr1.send();
 }
 
 function setupButtonClickHandlers() {
