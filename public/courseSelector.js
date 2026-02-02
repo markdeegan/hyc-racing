@@ -139,15 +139,26 @@ function setCourse(courseNumber, waypoints) {
 ////////// ////////// ////////// //////////
 // Helper function to find route key by course number
 // Looks for route name matching the course number
+// Routes are expected to be named "hyc-Wednesday-XXX"
 ////////// ////////// ////////// //////////
 function getKeyForNamedRoute(routes, courseNumber) {
+    // Primary match: look for "hyc-Wednesday-XXX" format
+    const expectedName = "hyc-Wednesday-" + courseNumber;
+    
     for (const [key, value] of Object.entries(routes)) {
-        // Check if route name matches course number
-        // Try exact match or with/without leading zeros
+        // Check if route name matches expected format
+        if (value.name === expectedName) {
+            return key;
+        }
+    }
+    
+    // Fallback: try other formats for backward compatibility
+    for (const [key, value] of Object.entries(routes)) {
         if (value.name === courseNumber || 
             value.name === parseInt(courseNumber).toString() ||
             value.name === 'Course ' + courseNumber ||
-            value.name === courseNumber.replace(/^0+/, '')) {
+            value.name === courseNumber.replace(/^0+/, '') ||
+            value.name === 'HYC-Wed-' + courseNumber) {
             return key;
         }
     }
