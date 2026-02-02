@@ -1,25 +1,35 @@
 /***************************************
+ * Mark Deegan
+ * Mon Feb  2 23:34:29 GMT 2026
+
  * Common Styles for HYC Racing Pages
  * Shared across all pages to reduce duplication
  ***************************************/
 
-/* CSS Custom Properties (Variables) */
+/* 
+ * CSS Custom Properties (Variables)
+ * Define reusable values for colors, spacing, and sizes.
+ * Using variables allows consistent theming and easy maintenance across all pages.
+ */
 :root {
-    /* Colors */
+    /* Colors - Background variants for interactive elements */
     --color-bg-primary: #f0f0f0;
     --color-bg-hover: #d0d0d0;
     --color-bg-active: #b0b0b0;
     --color-bg-info: #e8e8e8;
     --color-bg-disabled: #e0e0e0;
     
+    /* Colors - Red variants for back/cancel buttons */
     --color-red-primary: #ff6b6b;
     --color-red-hover: #ff5252;
     --color-red-active: #ff3838;
     
+    /* Colors - Green variants for submit/enter buttons */
     --color-green-primary: #4caf50;
     --color-green-hover: #45a049;
     --color-green-active: #3d8b40;
     
+    /* Colors - Text variants with varying opacity levels for visual hierarchy */
     --color-text-primary: #000000;
     --color-text-secondary: rgba(0, 0, 0, 0.6);
     --color-text-tertiary: rgba(0, 0, 0, 0.4);
@@ -27,15 +37,15 @@
     --color-text-disabled: #999;
     --color-text-white: white;
     
-    /* Borders */
+    /* Borders - Standard border style used throughout the application */
     --border-standard: 1px solid black;
     
-    /* Spacing */
+    /* Spacing - Consistent padding and margin values */
     --spacing-xs: 5px;
     --spacing-sm: 10px;
     --spacing-md: 0.5vh;
     
-    /* Font sizes */
+    /* Font sizes - Viewport-relative sizes for responsive typography */
     --font-size-huge: 14vh;
     --font-size-xlarge: 10vh;
     --font-size-large: 5vh;
@@ -43,7 +53,10 @@
     --font-size-small: 2.5vh;
 }
 
-/* Global Reset */
+/* 
+ * Global Reset
+ * Ensure consistent box-sizing and remove default margins/padding.
+ */
 * {
     box-sizing: border-box;
 }
@@ -53,7 +66,11 @@ body {
     padding: 0;
 }
 
-/* Common Button Styles */
+/* 
+ * Common Button Styles
+ * Default styling for all buttons with hover and active states.
+ * Buttons fill their containers and use flexbox for centering content.
+ */
 button {
     width: 100%;
     height: 100%;
@@ -68,22 +85,32 @@ button {
     align-items: center;
 }
 
+/* Darken button background when user hovers over it */
 button:hover {
     background-color: var(--color-bg-hover);
 }
 
+/* Further darken button background when user clicks/touches it */
 button:active {
     background-color: var(--color-bg-active);
 }
 
-/* Common Grid Cell */
+/* 
+ * Common Grid Cell
+ * Standard styling for grid container cells used in mark and course selectors.
+ * Prevents overflow and maintains consistent borders.
+ */
 .grid-cell {
     border: var(--border-standard);
-    min-width: 0;
-    min-height: 0;
+    min-width: 0;  /* Allow grid cells to shrink below default minimum */
+    min-height: 0; /* Allow grid cells to shrink below default minimum */
 }
 
-/* Common Back/Return Button */
+/* 
+ * Common Back/Return Button
+ * Styling for navigation buttons that return to the index page.
+ * Uses red color scheme to indicate a "back" or "cancel" action.
+ */
 .back-button,
 button[onclick*="index.html"] {
     background-color: var(--color-red-primary);
@@ -91,17 +118,23 @@ button[onclick*="index.html"] {
     font-weight: bold;
 }
 
+/* Darken back button on hover for visual feedback */
 .back-button:hover,
 button[onclick*="index.html"]:hover {
     background-color: var(--color-red-hover);
 }
 
+/* Further darken back button when clicked */
 .back-button:active,
 button[onclick*="index.html"]:active {
     background-color: var(--color-red-active);
 }
 
-/* Common Info Display */
+/* 
+ * Common Info Display
+ * Bottom status bar that displays selected course or mark information.
+ * Flexbox centers the content with overflow protection.
+ */
 #infoDisplay {
     width: 100%;
     background-color: var(--color-bg-info);
@@ -119,11 +152,15 @@ button[onclick*="index.html"]:active {
     box-sizing: border-box;
 }
 
-/* Common disabled state */
+/* 
+ * Common Disabled State
+ * Visual styling for disabled buttons (e.g., inactive keypad digits).
+ * Reduces opacity and prevents pointer events.
+ */
 .disabledbtn {
-    opacity: 0.3;
-    cursor: not-allowed;
+    opacity: 0.3;              /* Fade button to indicate disabled state */
+    cursor: not-allowed;       /* Show "not-allowed" cursor on hover */
     background-color: var(--color-bg-disabled);
     color: var(--color-text-disabled);
-    pointer-events: none;
+    pointer-events: none;      /* Prevent all mouse/touch interactions */
 }
