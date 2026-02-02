@@ -35,8 +35,11 @@
     <link rel="stylesheet" href="css/keypad.css">
 
     <!------------------------------------------>
-    <!-- load jQuery library from local file  -->
-    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <!-- load jQuery library from CDN (with local fallback) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+            crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../node_modules/jquery/dist/jquery.min.js"><\/script>')</script>
     <!------------------------------------------>
     <!-- load the JavaScript file for keypad functionality -->
     <script type="module" src="./keyPad.js"></script>
