@@ -139,15 +139,9 @@ function setActiveRoute(routeHref) {
 // see the html file for this js code
 ///////// ////////// ////////// //////////
 
-// Wait for both DOM and jQuery to be ready
-if (typeof window !== 'undefined') {
-    window.addEventListener('load', function() {
-        console.log("Page loaded, jQuery available:", typeof $ !== 'undefined');
-        initializeKeypad();
-    });
-}
+// Access jQuery from window object in module scope
+const $ = window.jQuery;
 
-function initializeKeypad() {
 $(document).ready(
     function () 
     { // define the ready function
@@ -427,6 +421,5 @@ $(document).ready(
 
     } // end definition of ready function
 ); // end of document ready function
-} // end of initializeKeypad function
 ////////// ////////// ////////// //////////
 ////////// ////////// ////////// //////////
