@@ -192,9 +192,9 @@ function updateFinishLocation() {
     xhr1.onload = function() {
         if (xhr1.status === 200) {
             var position = JSON.parse(xhr1.responseText);
-            if (position && position.latitude && position.longitude) {
-                const latitude = position.latitude;
-                const longitude = position.longitude;
+            if (position && position.value && position.value.latitude && position.value.longitude) {
+                const latitude = position.value.latitude;
+                const longitude = position.value.longitude;
                 
                 // Get all waypoints to find the F-Finish waypoint
                 const waypointsUrl = "/signalk/v2/api/resources/waypoints";
