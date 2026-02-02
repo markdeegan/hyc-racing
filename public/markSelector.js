@@ -33,11 +33,14 @@ function setMark(letter) {
             const key = getKeyForNamedWaypoint(waypoints, letter);
             if (key) {
                 setDestinationFromHREF(key);
+                displayMarkInfo(letter);
             } else {
                 console.error("Waypoint not found for letter: " + letter);
+                document.getElementById('infoDisplay').textContent = "Waypoint not found: " + letter;
             }
         } else {
             console.error("Error fetching waypoints: " + xhr.status);
+            document.getElementById('infoDisplay').textContent = "Error fetching waypoints";
         }
     };
     xhr.send();
@@ -62,6 +65,26 @@ function setDestinationFromHREF(href) {
     xhr.open("PUT", url);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
+}
+
+function displayMarkInfo(markName) {
+    // Import Wednesday marks data to get mark details
+    import('./wednesday.js').then(module => {
+        const marks = module.Wednesday.marks;
+        
+        // Find the mark by shortName or longName
+        const mark = marks.find(m => m.shortName === markName || m.longName === markName);
+        
+        if (mark) {
+            const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - Colour: " + mark.colour;
+            document.getElementById('infoDisplay').textContent = infoText;
+        } else {
+            document.getElementById('infoDisplay').textContent = "Mark information not found for: " + markName;
+        }
+    }).catch(error => {
+        console.error("Error loading mark information:", error);
+        document.getElementById('infoDisplay').textContent = "Error loading mark information";
+    });
 }
 
 function applyMarkColors() {
