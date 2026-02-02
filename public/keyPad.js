@@ -96,6 +96,8 @@ function getKeyForNamedRoute(routes, courseNumber) {
     // Primary match: look for "hyc-Wednesday-XXX" format
     const expectedName = "hyc-Wednesday-" + courseNumber;
     
+    // this is used for expected format first
+    // if it succeeds, we return immediately and the fallback is not used
     for (const [key, value] of Object.entries(routes)) {
         // Check if route name matches expected format
         if (value.name === expectedName) {
@@ -104,6 +106,9 @@ function getKeyForNamedRoute(routes, courseNumber) {
     }
     
     // Fallback: try other formats for backward compatibility
+    // if it has not been found yet, then this code is executed
+    // to handle older naming conventions
+    // if it succeeds, we return the key
     for (const [key, value] of Object.entries(routes)) {
         if (value.name === courseNumber || 
             value.name === parseInt(courseNumber).toString() ||
@@ -113,23 +118,34 @@ function getKeyForNamedRoute(routes, courseNumber) {
             return key;
         }
     }
+    // only reached if no match found in either of the above search loops
     return null;
-}
+} // end of function getKeyForNamedRoute
+////////// ////////// ////////// //////////
 
 ////////// ////////// ////////// //////////
 // Function to set active route in SignalK
 ////////// ////////// ////////// //////////
 function setActiveRoute(routeHref) {
+    // this is the base URL to set the active route
     const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
+    // this is the data to send in the PUT request
+    // it includes the href of the route to set as active
     var data = {
         href: "/resources/routes/" + routeHref
     };
+    // log the data being sent
     console.log('Setting active route:', data);
+    // create and send the PUT request to SignalK
     var xhr = new XMLHttpRequest();
+    // open the PUT request
     xhr.open("PUT", url);
+    // set the content type to JSON
     xhr.setRequestHeader("Content-Type", "application/json");
+    // define the onload function to handle the response
     xhr.send(JSON.stringify(data));
 }
+// end of function setActiveRoute
 ////////// ////////// ////////// //////////
 
 ////////// ////////// ////////// //////////
@@ -420,5 +436,5 @@ $(document).ready(
 
     } // end definition of ready function
 ); // end of document ready function
-////////// ////////// ////////// //////////
+// end of file
 ////////// ////////// ////////// //////////

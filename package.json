@@ -11,5 +11,8 @@
   "signalk": {
     "displayName": "HYC Racing",
     "appIcon": "./assets/icons/HYCLogo-7272.png"
+  },
+  "dependencies": {
+    "jquery": "^4.0.0"
   }
 }

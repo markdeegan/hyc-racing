@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- Course Selector Page -->
     <head>  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- load favicon for the page -->
     <link rel="icon" type="image/png" href="assets/icons/Anchor_Icon_72.png">
-    <title>Course Selector</title>
+    <!-- set the title for the page -->
+    <title>HYC Course Selector Table</title>
+    <!-- load courseSelector.css for styling -->
     <link rel="stylesheet" href="css/courseSelector.css">
     </head>
+    <!-- end of head -->
+
+    <!-- start of body -->
     <body>
         <div class="grid-container" id="courseGrid">
             <!-- Course buttons will be dynamically generated here -->
+            <!-- This is taken care of by the javascript file courseSelector.js -->
         </div>
 
         <div id="infoDisplay">
+            <!-- Information label to display selected course details -->
             <label id="infoLabel">Select a course</label>
         </div>
 
+        <!-- Load the JavaScript module for course selection functionality -->
         <script type="module" src="javascript/courseSelector.js"></script>
     </body>
+    <!-- start of body -->
 </html>
+<!-- end of html document -->
+<!-- end of file -- >

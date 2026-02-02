@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- Start of head section -->
     <head>  
     <meta charset="UTF-8">
+    <!-- Ensure proper scaling on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- load favicon for the page -->
     <link rel="icon" type="image/png" href="assets/icons/Anchor_Icon_72.png">
-    <title>Waypoint Selector</title>
+    <!-- Set the title for the page -->
+    <title>HYC Racing Mark and Waypoint Selector table</title>
+    <!-- load markSelector.css for styling -->
     <link rel="stylesheet" href="css/markSelector.css">
     </head>
+    <!-- end of head -->
+    
+    <!-- start of body --> 
+    <!---------------------------------->
     <body>
         <div class="grid-container">
+            <!-- create a button for each of the defined marks -->
             <div class="grid-cell"><button><span class="letter">A</span><span class="name">APEX</span></button></div>
             <div class="grid-cell"><button><span class="letter">B</span><span class="name">BALSCADDEN</span></button></div>
             <div class="grid-cell"><button><span class="letter">C</span><span class="name">CUSH</span></button></div>
@@ -33,11 +43,17 @@
             <div class="grid-cell"><button><span class="letter">Z</span><span class="name">ZEPHYR</span></button></div>
             <div class="grid-cell"><button onclick="window.location.href='index.html'"><span class="name">BACK</span></button></div>
         </div>
+        <!-- end of container for the marks buttons -->
 
+        <!-- define a section to display information about the selected mark -->
         <div id="infoDisplay">
             <label id="infoLabel" style="font-size: 15vh;">Information</label>
         </div>
 
+        <!-- load the JavaScript file for mark selector functionality -->
         <script src="javascript/markSelector.js"></script>
     </body>
+    <!-- end of body -->
 </html>
+<!-- end of html document -->
+<!--end of file -->
