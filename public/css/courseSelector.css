@@ -1,9 +1,7 @@
-* {
-    box-sizing: border-box;
-}
+/* Course Selector specific styles */
+/* Common styles imported from common.css */
+
 body {
-    margin: 0;
-    padding: 0;
     overflow-x: hidden;
     overflow-y: auto;
     display: flex;
@@ -11,6 +9,7 @@ body {
     min-height: 100vh;
     width: 100vw;
 }
+
 .grid-container {
     width: 100%;
     flex: 1;
@@ -19,77 +18,40 @@ body {
     grid-auto-rows: minmax(150px, 1fr);
     gap: 0;
 }
-.grid-cell {
-    border: 1px solid black;
-    min-width: 0;
-    min-height: 0;
-}
+
 button {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    border: none;
-    background-color: #f0f0f0;
-    overflow: hidden;
-    padding: 5px;
-    text-align: center;
-    display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     position: relative;
 }
-button:hover {
-    background-color: #d0d0d0;
-}
-button:active {
-    background-color: #b0b0b0;
-}
+
 button.back-button {
-    background-color: #ff6b6b;
-    color: white;
-    font-weight: bold;
-    font-size: 3vh;
+    font-size: var(--font-size-medium);
 }
-button.back-button:hover {
-    background-color: #ff5252;
-}
+
 .course-number {
-    font-size: 10vh;
+    font-size: var(--font-size-xlarge);
     font-weight: bold;
-    color: #000000;
+    color: var(--color-text-primary);
     line-height: 1;
 }
+
 .course-waypoints {
-    font-size: 3vh;
-    color: rgba(0, 0, 0, 0.6);
-    margin-top: 0.5vh;
+    font-size: var(--font-size-medium);
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-md);
     white-space: nowrap;
     overflow: hidden;
 }
+
 .course-length {
-    font-size: 2.5vh;
-    color: rgba(0, 0, 0, 0.4);
+    font-size: var(--font-size-small);
+    color: var(--color-text-tertiary);
     margin-top: 0.3vh;
 }
 
 #infoDisplay {
-    width:0 0 auto;
+    flex: 0 0 auto;
     min-height: 60px;
-    background-color: #e8e8e8;
-    border-top: 1px solid black;
-    padding: 10px;
-    margin: 0;
-    font-weight: bold;
-    font-family: sans-serif;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    white-space: nowrap;
-    box-sizing: border-box;
     position: sticky;
-    bottom: 0
-    box-sizing: border-box;
+    bottom: 0;
 }

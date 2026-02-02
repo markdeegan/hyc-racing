@@ -1,10 +1,7 @@
-* {
-    box-sizing: border-box;
-}
+/* Keypad page specific styles */
+/* Common styles imported from common.css */
 
 body {
-    margin: 0;
-    padding: 0;
     overflow: hidden;
     height: 100vh;
     width: 100vw;
@@ -19,7 +16,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
     cursor: pointer;
 }
@@ -29,34 +26,33 @@ body {
     top: 50%;
     left: 50%;
     font-size: 180px;
-    color: white;
+    color: var(--color-text-white);
     font-family: Arial, sans-serif;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
 }
 
 /* Course number input field */
 .courseNumber {
-    color: black;
+    color: var(--color-text-primary);
     font-size: 12vmin !important;
     font-weight: bolder;
     text-align: center;
     width: 100%; 
     height: 14vh; 
     border: none;
-    background-color: #f0f0f0;
+    background-color: var(--color-bg-primary);
 }
 
 /* Waypoints display */
 .waypoints {
-    color: black;
-    font-size: 12vmin !important;
+    color: var(--color-text-primary);
+    font-size: clamp(18px, 3vw, 26px);
     font-weight: heavier;
     text-align: center;
     width: 100%; 
     height: 14vh; 
     border: none;
-    font-size: clamp(18px, 3vw, 26px);
     letter-spacing: -0.1em;
     background-color: #f9f9f9;
 }
@@ -66,77 +62,57 @@ input:focus {
     outline: none;
 }
 
-/* Default button styles - matching courseSelector and markSelector */
+/* Default button styles */
 button, input[type="button"] {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    border: none;
-    background-color: #f0f0f0;
-    overflow: hidden;
-    padding: 5px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 12vmin !important;
     font-weight: 550;
-    color: black;
+    color: var(--color-text-primary);
 }
 
 /* Enabled digit buttons */
 .pinButton {
-    background-color: #f0f0f0;
-    color: black;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
 }
 
 .pinButton:hover {
-    background-color: #d0d0d0;
+    background-color: var(--color-bg-hover);
 }
 
 .pinButton:active {
-    background-color: #b0b0b0;
-}
-
-/* Disabled buttons */
-.disabledbtn {
-    opacity: 0.3;
-    cursor: not-allowed;
-    background-color: #e0e0e0;
-    color: #999;
-    pointer-events: none;
+    background-color: var(--color-bg-active);
 }
 
 /* Clear button */
 .clear {
-    background-color: #ff6b6b;
-    color: white;
+    background-color: var(--color-red-primary);
+    color: var(--color-text-white);
     font-size: 10vmin !important;
     font-weight: bold;
 }
 
 .clear:hover {
-    background-color: #ff5252;
+    background-color: var(--color-red-hover);
 }
 
 .clear:active {
-    background-color: #ff3838;
+    background-color: var(--color-red-active);
 }
 
 /* Enter button */
 .enter {
-    background-color: #4caf50;
-    color: white;
+    background-color: var(--color-green-primary);
+    color: var(--color-text-white);
     font-size: 10vmin !important;
     font-weight: bold;
 }
 
 .enter:hover {
-    background-color: #45a049;
+    background-color: var(--color-green-hover);
 }
 
 .enter:active {
-    background-color: #3d8b40;
+    background-color: var(--color-green-active);
 }
 
 /* Table styling */
@@ -144,33 +120,22 @@ button, input[type="button"] {
     width: 100%;
     height: 84vh;
     table-layout: fixed;
-    border: 1px solid black;
+    border: var(--border-standard);
     border-collapse: collapse;
 }
 
 #pinPadTable tr {
-    border: 1px solid black;
+    border: var(--border-standard);
 }
 
 #pinPadTable td {
-    border: 1px solid black;
+    border: var(--border-standard);
     text-align: center;
     vertical-align: middle;
     padding: 0;
 }
 
-/* Back button styling to match other pages */
+/* Back button styling */
 button[onclick*="index.html"] {
-    background-color: #ff6b6b;
-    color: white;
-    font-weight: bold;
     font-size: 8vmin;
-}
-
-button[onclick*="index.html"]:hover {
-    background-color: #ff5252;
-}
-
-button[onclick*="index.html"]:active {
-    background-color: #ff3838;
 }
