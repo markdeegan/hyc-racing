@@ -36,11 +36,11 @@ function setMark(letter) {
                 displayMarkInfo(letter);
             } else {
                 console.error("Waypoint not found for letter: " + letter);
-                document.getElementById('infoDisplay').textContent = "Waypoint not found: " + letter;
+                document.getElementById('infoLabel').textContent = "Waypoint not found: " + letter;
             }
         } else {
             console.error("Error fetching waypoints: " + xhr.status);
-            document.getElementById('infoDisplay').textContent = "Error fetching waypoints";
+            document.getElementById('infoLabel').textContent = "Error fetching waypoints";
         }
     };
     xhr.send();
@@ -81,13 +81,13 @@ function displayMarkInfo(markName) {
             const shape = mark.shape.charAt(0).toUpperCase() + mark.shape.slice(1);
             
             const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - " + colour + " - " + shape;
-            document.getElementById('infoDisplay').textContent = infoText;
+            document.getElementById('infoLabel').textContent = infoText;
         } else {
-            document.getElementById('infoDisplay').textContent = "Mark information not found for: " + markName;
+            document.getElementById('infoLabel').textContent = "Mark information not found for: " + markName;
         }
     }).catch(error => {
         console.error("Error loading mark information:", error);
-        document.getElementById('infoDisplay').textContent = "Error loading mark information";
+        document.getElementById('infoLabel').textContent = "Error loading mark information";
     });
 }
 
