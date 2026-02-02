@@ -1,5 +1,5 @@
-# helloworld
-## Hello World web app for SignalK
+# HYC Racing
+## HYC Racing Course Selector Web App for SignalK
 
 This github repo is shared in the hope that others might also find value in developing SignalK webapp from first-principles.<br>
 In a world of inceasing use of AI to write code (and other things), I think it important that developers can, if they so wish, still build applications 'from the ground up'.<br>

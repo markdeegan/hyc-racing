@@ -1,7 +1,7 @@
 {
-  "name": "helloworld",
+  "name": "hyc-racing",
   "version": "1.0.0",
-  "description": "helloworld SignalK 1.0",
+  "description": "HYC Racing Course Selector for SignalK",
   "keywords": [
     "signalk-webapp",
     "signalk-node-server-plugin "
@@ -9,7 +9,7 @@
   "author": "Author Name",
   "main": "index.js",
   "signalk": {
-    "displayName": "HYC HelloWorld",
+    "displayName": "HYC Racing",
     "appIcon": "./assets/icons/HYCLogo-7272.png"
   }
 }
