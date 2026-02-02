@@ -332,13 +332,30 @@ function createRouteInSignalK(courseNumber, routePoints, callback) {
     const routeId = 'course-' + courseNumber;
     
     // Build coordinates array from waypoints
-    const coordinates = routePoints.map(pt => {
+    const coordinates = [];
+    for (let pt of routePoints) {
+        if (!pt.waypoint) {
+            console.error("Missing waypoint in route point for course " + courseNumber);
+            callback(false);
+            return;
+        }
+        if (!pt.waypoint.position) {
+            console.error("Missing position in waypoint for course " + courseNumber, pt.waypoint);
+            callback(false);
+            return;
+        }
         const pos = pt.waypoint.position;
         // Handle both lat/lon and latitude/longitude formats
         const lon = pos.longitude !== undefined ? pos.longitude : pos.lon;
         const lat = pos.latitude !== undefined ? pos.latitude : pos.lat;
-        return [lon, lat];
-    });
+        
+        if (lon === undefined || lat === undefined) {
+            console.error("Invalid position data for course " + courseNumber, pos);
+            callback(false);
+            return;
+        }
+        coordinates.push([lon, lat]);
+    }
     
     const routeData = {
         name: courseNumber,
