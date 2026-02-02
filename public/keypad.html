@@ -1,0 +1,279 @@
+<!--------------------------------------
+  Copyright (c) 2026 Mark Deegan
+  
+  Mark Deegan
+  Thu Jan 15 18:08:28 GMT 2026
+
+ html page to present options of 
+ race courses at HYC.
+ As set out in 
+ /docs/images/Keelboat_Club_Racing_2025_Wednesday_CV_Course_Card_(REV_C).pdf
+ Unlike the companion page couseSelectorTable.html (which uses a table format),
+ This page uses a keypad format..
+ All Keys are visible, but not all keys are active (to reduce the possibility of
+ incorrect selections).
+
+ Some of this page is adapted from:
+ https://www.jqueryscript.net/other/virtual-keypad-pinpad.html#google_vignette
+
+-->
+
+<!DOCTYPE html>
+<html lang="en"> 
+  <!--**************************************-->
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--**************************************-->
+  <!-- start of head section -->
+<head>
+   <!-- set the favicon for the page -->
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+    <title>HYC Course Selector KeyPad</title>
+
+    <!--**************************************-->
+    <!-- load jQuery library from CDN         -->
+    <!--**************************************-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+    <!--**************************************-->
+    <!-- load the JavaScript file for route selector functionality --> 
+    <script type="module" src="./routeKeyPadScript.js"></script>
+    <!-- load the JavaScript file for keypad functionality -->
+    <script type="module" src="./keyPad.js"></script>
+    <!--**************************************-->
+
+    <style type="text/css">
+      /*****************************************/
+      #overlay { /* style for the overlay */
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 2;
+        cursor: pointer;
+      }
+      /*****************************************/
+
+      /*****************************************/
+      #overlayText{ /* style for the overlay text */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 180px;
+        color: white;
+        font-family:Arial, sans-serif;
+        transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+      } /* end of overlayText style */
+      /*****************************************/
+
+      /*****************************************/
+      /* default style for all buttons */
+      .button, .clearButton, .enterButton {
+        /* style for the buttons, crucial here */
+        background-color: #04AA6D;
+        color: white;
+        padding: 2px 2px; /* vertical padding, followed by horizontal */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 2px 2px;
+      } /* end of button style */
+      /*****************************************/
+
+      /*****************************************/
+      /* style for the courseNumber class */
+      .courseNumber {
+        color: black;
+        font-size:12vmin !important;
+        font-weight: bolder;
+        text-align: center;
+        width: 100%; 
+        height: 14vh; 
+        border: none;
+      } /* end of input field style */
+      /*****************************************/
+      
+      /*****************************************/
+      /* style for the waypoints class */
+      .waypoints {
+        color: black;
+        font-size: 12vmin !important;
+        font-weight: heavier;
+        text-align: center;
+        width: 100%; 
+        height: 14vh; 
+        border: none;
+        font-size: clamp(18px, 3vw, 26px);
+        letter-spacing:-0.1em
+      }
+      /*****************************************/
+
+      /*****************************************/
+      /* remove outline on focus of input field */
+      input:focus {
+        outline:none;
+      }
+      /*****************************************/
+   
+      /*****************************************/
+      /* style for the keypad buttons, whether enabled or disabled */
+      .pinButton, .disabledbtn {
+        color: black;
+        background: #20d020 ;
+        border-radius:5%;
+        font-weight:550;
+        text-shadow:0 0 0 rgb(100,100,100);
+        font-size:12vmin !important;
+        width: 100%;
+        height: 100%;
+      } /* end of pinButton style and disabledbtn style */
+      /*****************************************/
+
+      /*****************************************/
+      /* style for enabled action buttons: clear, enter */
+      .clear, .enter {
+        font-size: 10vmin !important;
+      }
+      /*****************************************/
+    
+      /*****************************************/
+      /* hover and active styles for enabled keypad buttons */
+      .pinButton:hover {
+        box-shadow:#506ce8 0 0 1px 1px;
+      }
+      /*****************************************/
+
+      /*****************************************/
+      /* active style for enabled keypad buttons */
+      .pinButton:active {
+        background:#506ce8;
+        color:#fff;
+      }
+      /*****************************************/
+
+      /*****************************************/
+      /* style for disabled keypad buttons */
+      .disabledbtn {
+        opacity: 0.2;
+        cursor: not-allowed;
+        background: #ff0000;
+        pointer-events: none;
+      }
+      /*****************************************/
+    
+      /*****************************************/
+      /* hover and active styles for action buttons: clear, enter */
+      .clear:hover {
+        box-shadow:#AA3333 0 0 1px 1px;
+      }
+      /*****************************************/
+    
+      /*****************************************/
+      /* active style for clear button */
+      .clear:active {
+        background:#ff4040;
+        color:#fff;
+      }
+      /*****************************************/
+    
+      /*****************************************/
+      /* hover and active styles for enter button */
+      .enter:hover {
+      box-shadow:#40c070 0 0 1px 1px;
+      }
+      /*****************************************/
+    
+      /*****************************************/
+      /* active style for enter button */
+      .enter:active {
+        background:#ff4040;
+        color:#fff;
+      }
+      /*****************************************/
+
+    </style>
+    <!-- end of style section -->
+    <!--**************************************-->
+
+  </head>
+  <!-- end of head section -->
+  <!--**************************************-->
+
+  <!--**************************************-->
+  <!-- start of body section -->
+  <body style="overflow: hidden;"> <!-- Hide scrollbars -->
+  <!---------------------------------->
+    <div id="overlay" onclick="off()">
+        <div id="overlayText"></div>
+    </div>
+  <!---------------------------------->
+    
+  <!---------------------------------->
+      <table id="pinPadTable" style="width:100%; height:84vh; table-layout: fixed; border: 1px solid black;">
+          <!------------------------------------------>
+          <tr style="border: 1px solid black">
+            <!-- cell containing input field -->
+            <td colspan="3" style="border: 1px solid black; text-align: center; vertical-align: middle;">
+                <!------------------------------------------>
+                <!--  input field to show the course number selected
+                      should initially be empty
+                      contains maximum 3 digits before being locked
+                      only accepts input from the kaybad,
+                      as it is designed for use on a touch screen device,
+                      but may, later, also accept input from keyboard -->
+                <!------------------------------------------>
+                <input type="text" value="" id="courseNumber" maxlength="3" readonly class="courseNumber">
+                <!------------------------------------------>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" style="border: 1px solid black; text-align: center; vertical-align: middle;">
+                <div type="text" value="" id="waypoints" readonly class="waypoints"></div>
+            </td>
+          </tr>
+        <!------------------------------------------>
+        <!-- keypad buttons 1,2,3 -->
+          <tr style="height: 14vh; border: 1px solid black;">
+            <td><input style="width:100%; height:100%" type="button" value="1" id="1" class="pinButton digit"></td>
+            <td><input style="width:100%; height:100%" type="button" value="2" id="2" class="pinButton digit"></td>
+            <td><input style="width:100%; height:100%" type="button" value="3" id="3" class="pinButton digit"></td>
+          </tr>
+        <!------------------------------------------>
+        <!-- keypad buttons 4,5,6 -->
+          <tr style="height: 14vh; border: 1px solid black;">
+            <td><input style="width:100%; height:100%" type="button" value="4" id="4" class="pinButton digit"></td>
+            <td><input style="width:100%; height:100%" type="button" value="5" id="5" class="pinButton digit"></td>
+            <td><input style="width:100%; height:100%" type="button" value="6" id="6" class="pinButton digit"></td>
+          </tr>
+        <!------------------------------------------>
+        <!-- keypad buttons 7,8,9 -->
+          <tr style="height: 14vh; border: 1px solid black;">
+            <td><input style="width:100%; height:100%" type="button" value="7" id="7" class="pinButton digit"></td>
+            <td><input style="width:100%; height:100%" type="button" value="8" id="8" class="pinButton digit"></td>
+            <td><input style="width:100%; height:100%" type="button" value="9" id="9" class="pinButton digit"></td>
+          </tr>
+        <!------------------------------------------>
+        <!-- keypad buttons clear,0,enter -->
+          <tr style="height: 14vh; border: 1px solid black;">
+            <td><button style="width:100%; height:100%" type="button" value="clear" id="clear" class="clear">clear</button></td>
+            <td><input style="width:100%; height:100%" type="button" value="0" id="0" class="pinButton digit"></td>
+            <td><button style="width:100%; height:100%" type="button" value="enter" id="enter" class="enter">enter</button></td>
+          </tr>
+        <!------------------------------------------>
+        <!-- back button -->
+          <tr style="height: 14vh; border: 1px solid black;">
+            <td colspan="3"><button style="width:100%; height:100%; background-color: #f44336; font-size: 8vmin; font-weight: bold;" type="button" onclick="window.location.href='index.html'">BACK</button></td>
+          </tr>
+        <!------------------------------------------>
+        </table>
+      <!---------------------------------->
+  </body> <!-- end of body -->
+  <!---------------------------------->
+</html> <!-- end of html document --> 
+<!------------------------------------------>
