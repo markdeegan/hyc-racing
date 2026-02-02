@@ -463,4 +463,143 @@ function createRouteInSignalK(courseNumber, routePoints, templateRoute, callback
     
     xhr.send(JSON.stringify(routeData));
 }
+
+////////// ////////// ////////// //////////
+// Function to verify SignalK routes match wednesday.js data
+// Routes should have same waypoints as wednesday.js MINUS the first Z waypoint
+////////// ////////// ////////// //////////
+export function verifySignalKRoutes(coursesData, infoLabelCallback, resizeInfoLabelCallback) {
+    infoLabelCallback("Verifying SignalK routes...");
+    resizeInfoLabelCallback();
+    
+    // Fetch all existing routes from SignalK
+    const routesUrl = "/signalk/v2/api/resources/routes";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", routesUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var existingRoutes = JSON.parse(xhr.responseText);
+            
+            let totalChecked = 0;
+            let matchCount = 0;
+            let mismatchCount = 0;
+            let mismatches = [];
+            
+            console.log('========================================');
+            console.log('SIGNALK ROUTE VERIFICATION REPORT');
+            console.log('========================================\n');
+            
+            // Check each HYC-Wed-XXX route
+            for (const [routeId, route] of Object.entries(existingRoutes)) {
+                // Check if route name matches HYC-Wed-XXX pattern
+                const match = route.name && route.name.match(/^HYC-Wed-(\d{3})$/);
+                if (!match) continue;
+                
+                const courseNumber = match[1];
+                totalChecked++;
+                
+                // Find corresponding course in wednesday.js
+                const course = coursesData.find(c => c.number === courseNumber);
+                
+                if (!course) {
+                    console.log(`⚠️  Route ${route.name}: Course ${courseNumber} NOT FOUND in wednesday.js`);
+                    mismatchCount++;
+                    mismatches.push({
+                        route: route.name,
+                        issue: 'Course not found in course data'
+                    });
+                    continue;
+                }
+                
+                // Get expected waypoints (remove first Z waypoint)
+                const expectedWaypoints = course.waypoints.slice(1);
+                const expectedString = expectedWaypoints.map(wp => wp.replace('*', '')).join('');
+                
+                // Get actual waypoints from SignalK route
+                let actualString = '';
+                if (route.points && Array.isArray(route.points)) {
+                    // Extract waypoint names from href paths
+                    actualString = route.points.map(point => {
+                        if (point.href) {
+                            const parts = point.href.split('/');
+                            return parts[parts.length - 1];
+                        }
+                        return null;
+                    }).filter(w => w !== null).join('');
+                }
+                
+                if (!actualString) {
+                    console.log(`❌ Route ${route.name}: No waypoint data in SignalK route`);
+                    mismatchCount++;
+                    mismatches.push({
+                        route: route.name,
+                        course: courseNumber,
+                        issue: 'No waypoint data',
+                        expected: expectedString
+                    });
+                    continue;
+                }
+                
+                if (actualString === expectedString) {
+                    console.log(`✅ Route ${route.name}: MATCH (${actualString})`);
+                    matchCount++;
+                } else {
+                    console.log(`❌ Route ${route.name}: MISMATCH`);
+                    console.log(`   Expected: ${expectedString}`);
+                    console.log(`   Actual:   ${actualString}`);
+                    mismatchCount++;
+                    mismatches.push({
+                        route: route.name,
+                        course: courseNumber,
+                        expected: expectedString,
+                        actual: actualString
+                    });
+                }
+            }
+            
+            console.log('\n========================================');
+            console.log('SUMMARY');
+            console.log('========================================');
+            console.log(`Total HYC-Wed routes checked: ${totalChecked}`);
+            console.log(`Matches: ${matchCount}`);
+            console.log(`Mismatches: ${mismatchCount}`);
+            
+            if (mismatches.length > 0) {
+                console.log('\n========================================');
+                console.log('MISMATCHES DETAIL');
+                console.log('========================================');
+                mismatches.forEach(m => {
+                    console.log(`\nRoute: ${m.route}${m.course ? ` (Course ${m.course})` : ''}`);
+                    if (m.issue) {
+                        console.log(`  Issue: ${m.issue}`);
+                        if (m.expected) {
+                            console.log(`  Expected: ${m.expected}`);
+                        }
+                    } else {
+                        console.log(`  Expected: ${m.expected}`);
+                        console.log(`  Actual:   ${m.actual}`);
+                    }
+                });
+            }
+            console.log('\n========================================\n');
+            
+            // Update UI
+            if (mismatchCount === 0) {
+                infoLabelCallback(`Verified ${matchCount} routes - all match!`);
+            } else {
+                infoLabelCallback(`Verified ${totalChecked} routes: ${matchCount} match, ${mismatchCount} mismatch. Check console.`);
+            }
+            resizeInfoLabelCallback();
+        } else {
+            console.error("Error fetching routes: " + xhr.status);
+            infoLabelCallback("Error fetching routes from SignalK");
+            resizeInfoLabelCallback();
+        }
+    };
+    
+    xhr.send();
+}
+
 ////////// ////////// ////////// //////////
