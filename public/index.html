@@ -1,39 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>  
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Waypoint Selector</title>
-    <link rel="stylesheet" href="markSelector.css">
-    </head>
-    <body>
-        <div class="grid-container">
-            <div class="grid-cell"><button><span class="letter">A</span><span class="name">APEX</span></button></div>
-            <div class="grid-cell"><button><span class="letter">B</span><span class="name">BALSCADDEN</span></button></div>
-            <div class="grid-cell"><button><span class="letter">C</span><span class="name">CUSH</span></button></div>
-            <div class="grid-cell"><button><span class="letter">D</span><span class="name">DUNBO</span></button></div>
-            <div class="grid-cell"><button><span class="letter">E</span><span class="name">EAST</span></button></div>
-            <div class="grid-cell"><button><span class="letter">F</span><span class="name">FINISH</span></button></div>
-            <div class="grid-cell"><button><span class="letter">G</span><span class="name">GARBH</span></button></div>
-            <div class="grid-cell"><button><span class="name">HOWTH</span></button></div>
-            <div class="grid-cell"><button><span class="letter">H</span><span class="name">HUB</span></button></div>
-            <div class="grid-cell"><button><span class="letter">I</span><span class="name">ISLAND</span></button></div>
-            <div class="grid-cell"><button><span class="letter">J</span><span class="name">THULLA</span></button></div>
-            <div class="grid-cell"><button><span class="letter">K</span><span class="name">STACK</span></button></div>
-            <div class="grid-cell"><button><span class="letter">O</span><span class="name">OSPREY</span></button></div>
-            <div class="grid-cell"><button><span class="letter">P</span><span class="name">PORTMARNOCK</span></button></div>
-            <div class="grid-cell"><button><span class="letter">Q</span><span class="name">ROWAN ROCKS</span></button></div>
-            <div class="grid-cell"><button><span class="letter">R</span><span class="name">SOUTH ROWAN</span></button></div>
-            <div class="grid-cell"><button><span class="letter">S</span><span class="name">SPIT</span></button></div>
-            <div class="grid-cell"><button><span class="letter">U</span><span class="name">ULYSSES</span></button></div>
-            <div class="grid-cell"><button><span class="letter">V</span><span class="name">VICEROY</span></button></div>
-            <div class="grid-cell"><button><span class="letter">W</span><span class="name">WEST</span></button></div>
-            <div class="grid-cell"><button><span class="letter">X</span><span class="name">XEBEC</span></button></div>
-            <div class="grid-cell"><button><span class="letter">Z</span><span class="name">ZEPHYR</span></button></div>
-        </div>
+    <title>Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        <div id="infoDisplay"><label id="infoLabel" style="font-size: 15vh;">Information</label></div>
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
 
-        <script src="markSelector.js"></script>
-    </body>
+        .nav-button {
+            flex: 1;
+            border: none;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-button:active {
+            transform: scale(0.98);
+        }
+
+        #markSelectorBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #courseSelectorBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+    </style>
+</head>
+<body>
+    <button id="markSelectorBtn" class="nav-button" onclick="window.location.href='markSelector.html'">
+        Mark Selector
+    </button>
+    <button id="courseSelectorBtn" class="nav-button" onclick="window.location.href='courseSelector.html'">
+        Course Selector
+    </button>
+</body>
 </html>
