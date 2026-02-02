@@ -359,8 +359,15 @@ function createAllCourses() {
 // Uses template route structure if provided
 ////////// ////////// ////////// //////////
 function createRouteInSignalK(courseNumber, routePoints, templateRoute, callback) {
-    // Generate a UUID for the route
-    const routeId = 'course-' + courseNumber;
+    // Generate a proper UUID for the route
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+    
+    const routeId = generateUUID();
     
     // Build coordinates array from waypoints
     const coordinates = [];
