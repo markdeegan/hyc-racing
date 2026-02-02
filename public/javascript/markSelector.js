@@ -174,18 +174,27 @@ function applyMarkColors() {
     });
 }
 
+function getKeyForFinishWaypoint(waypoints) {
+    for (const [key, value] of Object.entries(waypoints)) {
+        if (value.name === "F" || value.description === "F-FINISH") {
+            return key;
+        }
+    }
+    return null;
+}
+
 function updateFinishLocation() {
     // Get current boat position
-    const positionUrl = "/signalk/v2/api/vessels/self/navigation/position";
+    const positionUrl = "/signalk/v2/api/vessels/self/navigation/position/value";
     var xhr1 = new XMLHttpRequest();
     xhr1.open("GET", positionUrl);
     xhr1.setRequestHeader("Content-Type", "application/json");
     xhr1.onload = function() {
         if (xhr1.status === 200) {
             var position = JSON.parse(xhr1.responseText);
-            if (position && position.value) {
-                const latitude = position.value.latitude;
-                const longitude = position.value.longitude;
+            if (position && position.latitude && position.longitude) {
+                const latitude = position.latitude;
+                const longitude = position.longitude;
                 
                 // Get all waypoints to find the F-Finish waypoint
                 const waypointsUrl = "/signalk/v2/api/resources/waypoints";
@@ -195,7 +204,7 @@ function updateFinishLocation() {
                 xhr2.onload = function() {
                     if (xhr2.status === 200) {
                         var waypoints = JSON.parse(xhr2.responseText);
-                        const key = getKeyForNamedWaypoint(waypoints, "F");
+                        const key = getKeyForFinishWaypoint(waypoints);
                         if (key) {
                             // Update the waypoint location
                             const updateUrl = "/signalk/v2/api/resources/waypoints/" + key;
