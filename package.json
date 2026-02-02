@@ -6,7 +6,7 @@
     "signalk-webapp",
     "signalk-node-server-plugin"
   ],
-  "author": "Author Name",
+  "author": "Mark Deegan",
   "main": "routeVisibilityPlugin.js",
   "signalk": {
     "displayName": "HYC Racing",
