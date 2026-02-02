@@ -100,16 +100,15 @@ function resizeInfoLabel() {
     const infoLabel = document.getElementById('infoLabel');
     if (!infoLabel || !infoLabel.textContent) return;
     
-    const containerWidth = infoLabel.clientWidth;
-    const targetWidth = containerWidth * 0.95; // Use 95% of available width
+    const containerWidth = infoLabel.clientWidth - 40; // Account for padding
     
     // Start with a large font size
     let fontSize = 150;
     infoLabel.style.fontSize = fontSize + 'px';
     
-    // Reduce font size until text fits within target width
-    while (infoLabel.scrollWidth > targetWidth && fontSize > 10) {
-        fontSize -= 0.5;
+    // Reduce font size until text fits within container width
+    while (infoLabel.scrollWidth > containerWidth && fontSize > 8) {
+        fontSize -= 1;
         infoLabel.style.fontSize = fontSize + 'px';
     }
 }
