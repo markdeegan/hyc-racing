@@ -99,14 +99,14 @@ function resizeInfoText() {
     if (!infoDisplay || !infoDisplay.textContent) return;
     
     // Start with a large size
-    let fontSize = 50;
+    let fontSize = 100;
     infoDisplay.style.fontSize = fontSize + 'px';
     
     // Reduce font size until text fits without wrapping or overflowing
     const maxWidth = infoDisplay.clientWidth - 20; // Account for padding
     const maxHeight = infoDisplay.clientHeight - 20;
     
-    while ((infoDisplay.scrollWidth > maxWidth || infoDisplay.scrollHeight > maxHeight) && fontSize > 10) {
+    while ((infoDisplay.scrollWidth > maxWidth || infoDisplay.scrollHeight > maxHeight) && fontSize > 20) {
         fontSize -= 1;
         infoDisplay.style.fontSize = fontSize + 'px';
     }
