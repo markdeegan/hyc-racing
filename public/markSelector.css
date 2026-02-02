@@ -8,7 +8,7 @@ body {
 }
 .grid-container {
     width: 100vw;
-    height: 100vh;
+    height: 83.33vh;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(6, 1fr);
