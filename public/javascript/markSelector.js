@@ -185,7 +185,7 @@ function getKeyForFinishWaypoint(waypoints) {
 
 function updateFinishLocation() {
     // Get current boat position
-    const positionUrl = "/signalk/v2/api/vessels/self/navigation/position/value";
+    const positionUrl = "/signalk/v1/api/vessels/self/navigation/position";
     var xhr1 = new XMLHttpRequest();
     xhr1.open("GET", positionUrl);
     xhr1.setRequestHeader("Content-Type", "application/json");
