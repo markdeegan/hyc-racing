@@ -277,9 +277,13 @@ function createAllCourses() {
                     
                     if (key && signalKWaypoints[key]) {
                         const waypoint = signalKWaypoints[key];
+                        // Log the waypoint structure for debugging
+                        console.log("Waypoint " + cleanLetter + " structure:", waypoint);
+                        
                         routePoints.push({
                             href: "/resources/waypoints/" + key,
-                            waypoint: waypoint
+                            waypoint: waypoint,
+                            key: key
                         });
                     } else {
                         console.error("Waypoint not found for course " + course.number + ": " + cleanLetter);
@@ -335,18 +339,29 @@ function createRouteInSignalK(courseNumber, routePoints, callback) {
     const coordinates = [];
     for (let pt of routePoints) {
         if (!pt.waypoint) {
-            console.error("Missing waypoint in route point for course " + courseNumber);
-            callback(false);
-            return;
+        
+        // Get position - it might be directly on waypoint or nested
+        let pos = pt.waypoint.position;
+        
+        // If no position property, the waypoint itself might be the position object
+        // or position data might be at the root level
+        if (!pos) {
+            // Check if lat/lon are directly on the waypoint
+            if (pt.waypoint.latitude !== undefined || pt.waypoint.lat !== undefined) {
+                pos = pt.waypoint;
+            } else {
+                console.error("Missing position in waypoint for course " + courseNumber, pt.waypoint);
+                callback(false);
+                return;
+            }
         }
-        if (!pt.waypoint.position) {
-            console.error("Missing position in waypoint for course " + courseNumber, pt.waypoint);
-            callback(false);
-            return;
-        }
-        const pos = pt.waypoint.position;
+        
         // Handle both lat/lon and latitude/longitude formats
         const lon = pos.longitude !== undefined ? pos.longitude : pos.lon;
+        const lat = pos.latitude !== undefined ? pos.latitude : pos.lat;
+        
+        if (lon === undefined || lat === undefined) {
+            console.error("Invalid position data for course " + courseNumber + ", waypoint:", pt.waypoint
         const lat = pos.latitude !== undefined ? pos.latitude : pos.lat;
         
         if (lon === undefined || lat === undefined) {
