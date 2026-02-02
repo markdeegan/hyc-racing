@@ -94,63 +94,62 @@ function resizeButtonText() {
 }
 
 ////////// ////////// ////////// //////////
-// Function to set the course as route in SignalK
+// Function to set the course as active route in SignalK
 // given the course number
-// Creates a route from the waypoints in the course
+// Activates the matching course/route in SignalK
 ////////// ////////// ////////// //////////
 function setCourse(courseNumber, waypoints) {
     console.log('Setting course: ' + courseNumber, waypoints);
     
-    // Fetch all waypoints from SignalK
-    const url = "/signalk/v2/api/resources/waypoints";
+    // First, fetch all routes from SignalK to find the matching course
+    const routesUrl = "/signalk/v2/api/resources/routes";
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
+    xhr.open("GET", routesUrl);
     xhr.setRequestHeader("Content-Type", "application/json");
     
     xhr.onload = function() {
         if (xhr.status === 200) {
-            var signalKWaypoints = JSON.parse(xhr.responseText);
+            var signalKRoutes = JSON.parse(xhr.responseText);
             
-            // Build route from course waypoints
-            const routeWaypoints = [];
-            let allWaypointsFound = true;
+            // Find the route with matching course number
+            // Routes in SignalK should have a name or identifier matching the course number
+            const routeKey = getKeyForNamedRoute(signalKRoutes, courseNumber);
             
-            // Process each waypoint in the course
-            for (let waypointLetter of waypoints) {
-                // Remove asterisk if present (indicates starboard rounding)
-                const cleanLetter = waypointLetter.replace('*', '');
-                const key = getKeyForNamedWaypoint(signalKWaypoints, cleanLetter);
-                
-                if (key) {
-                    routeWaypoints.push({
-                        href: "/resources/waypoints/" + key,
-                        position: signalKWaypoints[key].position
-                    });
-                } else {
-                    console.error("Waypoint not found: " + cleanLetter);
-                    allWaypointsFound = false;
-                    break;
-                }
-            }
-            
-            if (allWaypointsFound) {
-                // Set the first waypoint as destination
-                if (routeWaypoints.length > 0) {
-                    setDestinationFromHREF(routeWaypoints[0].href.replace('/resources/waypoints/', ''));
-                    displayCourseInfo(courseNumber, waypoints);
-                }
+            if (routeKey) {
+                // Activate the route in SignalK
+                setActiveRoute(routeKey);
+                displayCourseInfo(courseNumber, waypoints);
             } else {
-                document.getElementById('infoLabel').textContent = "Error: Not all waypoints found for course " + courseNumber;
+                console.error("Route not found for course: " + courseNumber);
+                document.getElementById('infoLabel').textContent = "Error: Route " + courseNumber + " not found in SignalK";
                 resizeInfoLabel();
             }
         } else {
-            console.error("Error fetching waypoints: " + xhr.status);
-            document.getElementById('infoLabel').textContent = "Error fetching waypoints";
+            console.error("Error fetching routes: " + xhr.status);
+            document.getElementById('infoLabel').textContent = "Error fetching routes";
             resizeInfoLabel();
         }
     };
     
     xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Helper function to find route key by course number
+// Looks for route name matching the course number
+////////// ////////// ////////// //////////
+function getKeyForNamedRoute(routes, courseNumber) {
+    for (const [key, value] of Object.entries(routes)) {
+        // Check if route name matches course number
+        // Try exact match or with/without leading zeros
+        if (value.name === courseNumber || 
+            value.name === parseInt(courseNumber).toString() ||
+            value.name === 'Course ' + courseNumber ||
+            value.name === courseNumber.replace(/^0+/, '')) {
+            return key;
+        }
+    }
+    return null;
 }
 
 ////////// ////////// ////////// //////////
@@ -167,14 +166,14 @@ function getKeyForNamedWaypoint(obj, waypointName) {
 
 ////////// ////////// ////////// //////////
 // Function to set destination in SignalK
+////////// ////////active route in SignalK
 ////////// ////////// ////////// //////////
-function setDestinationFromHREF(href) {
-    const url = "/signalk/v2/api/vessels/self/navigation/course/destination";
+function setActiveRoute(routeHref) {
+    const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
     var data = {
-        href: "/resources/waypoints/" + href
+        href: "/resources/routes/" + routeHref
     };
-    console.log('Setting destination:', data);
-    var xhr = new XMLHttpRequest();
+    console.log('Setting active route
     xhr.open("PUT", url);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
