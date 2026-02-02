@@ -82,15 +82,16 @@ function displayMarkInfo(markName) {
             
             const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - " + colour + " - " + shape;
             document.getElementById('infoDisplay').textContent = infoText;
-            resizeInfoText();
+            // Small delay to ensure container is fully rendered before resizing text
+            setTimeout(resizeInfoText, 10);
         } else {
             document.getElementById('infoDisplay').textContent = "Mark information not found for: " + markName;
-            resizeInfoText();
+            setTimeout(resizeInfoText, 10);
         }
     }).catch(error => {
         console.error("Error loading mark information:", error);
         document.getElementById('infoDisplay').textContent = "Error loading mark information";
-        resizeInfoText();
+        setTimeout(resizeInfoText, 10);
     });
 }
 
@@ -98,14 +99,15 @@ function resizeInfoText() {
     const infoDisplay = document.getElementById('infoDisplay');
     if (!infoDisplay || !infoDisplay.textContent) return;
     
+    // Get the container dimensions first
+    const maxWidth = infoDisplay.clientWidth - 40;
+    const maxHeight = infoDisplay.clientHeight - 20;
+    
     // Start with a very large size
     let fontSize = 200;
     infoDisplay.style.fontSize = fontSize + 'px';
     
     // Reduce font size until text fits without wrapping or overflowing
-    const maxWidth = infoDisplay.clientWidth - 40; // Account for padding
-    const maxHeight = infoDisplay.clientHeight - 20;
-    
     while ((infoDisplay.scrollWidth > maxWidth || infoDisplay.scrollHeight > maxHeight) && fontSize > 15) {
         fontSize -= 0.5;
         infoDisplay.style.fontSize = fontSize + 'px';
