@@ -5,11 +5,14 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
 }
 .grid-container {
-    width: 100vw;
-    height: 83.33vh;
+    width: 100%;
+    flex: 0 0 83.33vh;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(6, 1fr);
@@ -60,12 +63,8 @@ button:active {
 }
 
 #infoDisplay {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
     width: 100%;
-    height: 16.67vh;
+    flex: 1;
     background-color: #e8e8e8;
     border-top: 1px solid black;
     padding: 10px;
