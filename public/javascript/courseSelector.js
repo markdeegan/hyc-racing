@@ -8,7 +8,7 @@
 ////////// ////////// ////////// //////////
 
 import { Wednesday } from './wednesday.js';
-import { renameExistingRoutes, createAllCourses } from './utils/routeManagement.js';
+import { renameExistingRoutes, createAllCourses } from '../utils/routeManagement.js';
 
 ////////// ////////// ////////// //////////
 // Function to dynamically create course buttons
