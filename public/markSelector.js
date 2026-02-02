@@ -101,7 +101,9 @@ function applyMarkColors() {
             const mark = marks.find(m => m.shortName === markName || m.longName === markName);
             
             if (mark && mark.colour) {
-                button.style.backgroundColor = mark.colour;
+                // Change black to white for better visibility
+                const color = mark.colour === 'black' ? 'white' : mark.colour;
+                button.style.backgroundColor = color;
             }
         });
     }).catch(error => {
