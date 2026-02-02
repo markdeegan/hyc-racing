@@ -10,6 +10,8 @@
 // Contains static data for Tuesday sail racing
 ////////// ////////// ////////// ///////////*
 
+import { HYCRacingWaypoints } from './hyc-racing-waypoints.js';
+
 export class Tuesday 
   { // start declaration of the Tuesday class containing static data
     // and some supporting functions
@@ -97,7 +99,9 @@ export class Tuesday
     ]; // end of courses array
     ////////// ////////// ////////// //////////
 
-    // Tuesday uses the same marks as Wednesday
-    // Reference the Wednesday marks data if needed
+    ////////// ////////// ////////// //////////
+    // Waypoints/marks are now imported from hyc-racing-waypoints.js
+    // Reference them via HYCRacingWaypoints
+    static marks = HYCRacingWaypoints;
     ////////// ////////// ////////// //////////
 } // end Tuesday class
