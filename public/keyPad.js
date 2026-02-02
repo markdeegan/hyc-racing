@@ -138,9 +138,20 @@ function setActiveRoute(routeHref) {
 // and it needs the jQuery library to be loaded first
 // see the html file for this js code
 ///////// ////////// ////////// //////////
+
+// Wait for both DOM and jQuery to be ready
+if (typeof window !== 'undefined') {
+    window.addEventListener('load', function() {
+        console.log("Page loaded, jQuery available:", typeof $ !== 'undefined');
+        initializeKeypad();
+    });
+}
+
+function initializeKeypad() {
 $(document).ready(
     function () 
     { // define the ready function
+        console.log("Document ready, initializing keypad");
         ////////// ////////// ////////// //////////
         // activate buttons for level 0
         activateKeypadButtons(0); // activate buttons for level 0
@@ -416,5 +427,6 @@ $(document).ready(
 
     } // end definition of ready function
 ); // end of document ready function
+} // end of initializeKeypad function
 ////////// ////////// ////////// //////////
 ////////// ////////// ////////// //////////
