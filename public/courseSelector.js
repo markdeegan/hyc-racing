@@ -361,11 +361,7 @@ function createRouteInSignalK(courseNumber, routePoints, callback) {
         const lat = pos.latitude !== undefined ? pos.latitude : pos.lat;
         
         if (lon === undefined || lat === undefined) {
-            console.error("Invalid position data for course " + courseNumber + ", waypoint:", pt.waypoint
-        const lat = pos.latitude !== undefined ? pos.latitude : pos.lat;
-        
-        if (lon === undefined || lat === undefined) {
-            console.error("Invalid position data for course " + courseNumber, pos);
+            console.error("Invalid position data for course " + courseNumber + ", waypoint:", pt.waypoint);
             callback(false);
             return;
         }
