@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "HYC Racing Course Selector for SignalK",
   "keywords": [
-    "signalk-webapp"
+    "signalk-webapp",
+    "signalk-node-server-plugin"
   ],
   "author": "Author Name",
+  "main": "routeVisibilityPlugin.js",
   "signalk": {
     "displayName": "HYC Racing",
     "appIcon": "./assets/icons/HYCLogo-7272.png"
