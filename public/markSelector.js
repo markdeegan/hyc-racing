@@ -64,108 +64,6 @@ function setDestinationFromHREF(href) {
     xhr.send(JSON.stringify(data));
 }
 
-function displayMarksInfo() {
-    console.log("Reading marks from Wednesday data...");
-    
-    // Import Wednesday marks data
-    import('./wednesday.js').then(module => {
-        const marks = module.Wednesday.marks;
-        
-        // Get waypoints from SignalK
-        const url = "/signalk/v2/api/resources/waypoints";
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                var waypoints = JSON.parse(xhr.responseText);
-                
-                console.log("=== Marks Information and Updates ===");
-                console.log("Total waypoints in SignalK:", Object.keys(waypoints).length);
-                let updateCount = 0;
-                let totalMarks = marks.length;
-                let processedMarks = 0;
-                
-                marks.forEach(mark => {
-                    console.log("Short Name: " + mark.shortName + ", Shape: " + mark.shape + ", Colour: " + mark.colour);
-                    
-                    // Find matching waypoint - match by shortName or longName
-                    let waypointKey = null;
-                    for (const [key, value] of Object.entries(waypoints)) {
-                        if (value.name === mark.shortName || value.name === mark.longName) {
-                            waypointKey = key;
-                            break;
-                        }
-                    }
-                    
-                    if (waypointKey) {
-                        console.log("  - Found waypoint key: " + waypointKey);
-                        console.log("  - Current waypoint data:", JSON.stringify(waypoints[waypointKey]));
-                        console.log("  - New position: lat=" + mark.lat + ", lon=" + mark.lon);
-                        
-                        // Create updated waypoint data
-                        var updatedWaypoint = JSON.parse(JSON.stringify(waypoints[waypointKey]));
-                        updatedWaypoint.position = {
-                            latitude: parseFloat(mark.lat),
-                            longitude: parseFloat(mark.lon)
-                        };
-                        
-                        console.log("  - Sending update:", JSON.stringify(updatedWaypoint));
-                        
-                        // Use PUT to update the waypoint
-                        const updateUrl = "/signalk/v2/api/resources/waypoints/" + waypointKey;
-                        console.log("  - PUT URL:", updateUrl);
-                        
-                        var putXhr = new XMLHttpRequest();
-                        putXhr.open("PUT", updateUrl);
-                        putXhr.setRequestHeader("Content-Type", "application/json");
-                        putXhr.onload = function() {
-                            processedMarks++;
-                            console.log("  - PUT Response Status:", putXhr.status);
-                            console.log("  - PUT Response Text:", putXhr.responseText);
-                            
-                            if (putXhr.status === 200 || putXhr.status === 204) {
-                                updateCount++;
-                                console.log("  - Successfully updated waypoint");
-                            } else {
-                                console.error("  - Failed to update. Status: " + putXhr.status);
-                            }
-                            
-                            if (processedMarks === totalMarks) {
-                                console.log("=== Update Complete: " + updateCount + " of " + totalMarks + " waypoints updated ===");
-                            }
-                        };
-                        putXhr.onerror = function() {
-                            processedMarks++;
-                            console.error("  - Network error during update");
-                            if (processedMarks === totalMarks) {
-                                console.log("=== Update Complete: " + updateCount + " of " + totalMarks + " waypoints updated ===");
-                            }
-                        };
-                        putXhr.send(JSON.stringify(updatedWaypoint));
-                    } else {
-                        processedMarks++;
-                        console.log("  - No matching waypoint found in SignalK for mark: " + mark.shortName);
-                        if (processedMarks === totalMarks) {
-                            console.log("=== Update Complete: " + updateCount + " of " + totalMarks + " waypoints updated ===");
-                        }
-                    }
-                });
-                
-                console.log("=== Processing " + totalMarks + " marks ===");
-            } else {
-                console.error("Error fetching waypoints from SignalK: " + xhr.status);
-            }
-        };
-        xhr.onerror = function() {
-            console.error("Network error fetching waypoints");
-        };
-        xhr.send();
-    }).catch(error => {
-        console.error("Error importing Wednesday data:", error);
-    });
-}
-
 function applyMarkColors() {
     // Import Wednesday marks data and apply colors to buttons
     import('./wednesday.js').then(module => {
@@ -173,11 +71,6 @@ function applyMarkColors() {
         const buttons = document.querySelectorAll('button');
         
         buttons.forEach(button => {
-            // Skip updateWaypoints button
-            if (button.id === 'updateWaypoints') {
-                return;
-            }
-            
             // Get the mark name from the button
             const letterElement = button.querySelector('.letter');
             const markName = letterElement ? letterElement.textContent : button.querySelector('.name').textContent;
@@ -200,14 +93,6 @@ function setupButtonClickHandlers() {
     const buttons = document.querySelectorAll('button');
     
     buttons.forEach(button => {
-        // Handle updateWaypoints button separately
-        if (button.id === 'updateWaypoints') {
-            button.addEventListener('click', () => {
-                displayMarksInfo();
-            });
-            return;
-        }
-        
         const letterElement = button.querySelector('.letter');
         const letter = letterElement ? letterElement.textContent : button.querySelector('.name').textContent;
         
