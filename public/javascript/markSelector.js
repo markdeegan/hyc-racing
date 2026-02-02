@@ -184,17 +184,21 @@ function getKeyForFinishWaypoint(waypoints) {
 }
 
 function updateFinishLocation() {
+    console.log("Starting update of FINISH location...");
     // Get current boat position
     const positionUrl = "/signalk/v1/api/vessels/self/navigation/position";
     var xhr1 = new XMLHttpRequest();
     xhr1.open("GET", positionUrl);
     xhr1.setRequestHeader("Content-Type", "application/json");
     xhr1.onload = function() {
+        console.log("Position response status:", xhr1.status);
         if (xhr1.status === 200) {
             var position = JSON.parse(xhr1.responseText);
+            console.log("Position data:", position);
             if (position && position.value && position.value.latitude && position.value.longitude) {
                 const latitude = position.value.latitude;
                 const longitude = position.value.longitude;
+                console.log("Boat position:", latitude, longitude);
                 
                 // Get all waypoints to find the F-Finish waypoint
                 const waypointsUrl = "/signalk/v2/api/resources/waypoints";
@@ -202,9 +206,12 @@ function updateFinishLocation() {
                 xhr2.open("GET", waypointsUrl);
                 xhr2.setRequestHeader("Content-Type", "application/json");
                 xhr2.onload = function() {
+                    console.log("Waypoints response status:", xhr2.status);
                     if (xhr2.status === 200) {
                         var waypoints = JSON.parse(xhr2.responseText);
+                        console.log("All waypoints:", waypoints);
                         const key = getKeyForFinishWaypoint(waypoints);
+                        console.log("Found FINISH waypoint key:", key);
                         if (key) {
                             // Update the waypoint location
                             const updateUrl = "/signalk/v2/api/resources/waypoints/" + key;
@@ -216,10 +223,15 @@ function updateFinishLocation() {
                                 }
                             };
                             
+                            console.log("Updating waypoint at:", updateUrl);
+                            console.log("Updated waypoint data:", updatedWaypoint);
+                            
                             var xhr3 = new XMLHttpRequest();
                             xhr3.open("PUT", updateUrl);
                             xhr3.setRequestHeader("Content-Type", "application/json");
                             xhr3.onload = function() {
+                                console.log("Update response status:", xhr3.status);
+                                console.log("Update response:", xhr3.responseText);
                                 if (xhr3.status === 200 || xhr3.status === 204) {
                                     document.getElementById('infoLabel').textContent = "FINISH location updated";
                                     resizeInfoLabel();
