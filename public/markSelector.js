@@ -100,17 +100,20 @@ function resizeInfoLabel() {
     const infoLabel = document.getElementById('infoLabel');
     if (!infoLabel || !infoLabel.textContent) return;
     
+    // Always start fresh with a large font size
+    let fontSize = 200;
     const containerWidth = infoLabel.clientWidth - 40; // Account for padding
     
-    // Start with a large font size
-    let fontSize = 150;
     infoLabel.style.fontSize = fontSize + 'px';
+    infoLabel.style.whiteSpace = 'nowrap';
     
     // Reduce font size until text fits within container width
-    while (infoLabel.scrollWidth > containerWidth && fontSize > 8) {
+    while (infoLabel.scrollWidth > containerWidth && fontSize > 5) {
         fontSize -= 1;
         infoLabel.style.fontSize = fontSize + 'px';
     }
+    
+    console.log('Final font size: ' + fontSize + 'px, scrollWidth: ' + infoLabel.scrollWidth + ', containerWidth: ' + containerWidth);
 }
 
 function applyMarkColors() {
