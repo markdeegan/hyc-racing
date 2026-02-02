@@ -437,6 +437,9 @@ function createRouteInSignalK(courseNumber, routePoints, templateRoute, callback
     }
     
     const url = "/signalk/v2/api/resources/routes/" + routeId;
+    
+    console.log("Sending route data for course " + courseNumber + ":", JSON.stringify(routeData, null, 2));
+    
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", url);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -447,6 +450,7 @@ function createRouteInSignalK(courseNumber, routePoints, templateRoute, callback
             callback(true);
         } else {
             console.error("Error creating course " + courseNumber + ": " + xhr.status);
+            console.error("Response:", xhr.responseText);
             callback(false);
         }
     };
