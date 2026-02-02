@@ -76,7 +76,7 @@ function displayMarkInfo(markName) {
         const mark = marks.find(m => m.shortName === markName || m.longName === markName);
         
         if (mark) {
-            const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - Colour: " + mark.colour;
+            const infoText = "Destination set: " + mark.longName + " (" + mark.shortName + ") - Colour: " + mark.colour + " - Shape: " + mark.shape;
             document.getElementById('infoDisplay').textContent = infoText;
         } else {
             document.getElementById('infoDisplay').textContent = "Mark information not found for: " + markName;
