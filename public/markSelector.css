@@ -63,7 +63,10 @@ button:active {
     height: 16.67vh;
     background-color: #e8e8e8;
     border: 1px solid black;
+    border-left: none;
+    border-right: none;
     padding: 10px;
+    margin: 0;
     font-weight: bold;
     font-family: sans-serif;
     text-align: center;
@@ -72,4 +75,5 @@ button:active {
     align-items: center;
     overflow: hidden;
     white-space: nowrap;
+    box-sizing: border-box;
 }
