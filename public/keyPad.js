@@ -149,6 +149,120 @@ function setActiveRoute(routeHref) {
 ////////// ////////// ////////// //////////
 
 ////////// ////////// ////////// //////////
+// Function to check URL parameters for courseNumber
+// If a valid courseNumber is provided in the URL,
+// it will be automatically entered and activated
+////////// ////////// ////////// //////////
+function checkURLCourseParameter() {
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseNumberParam = urlParams.get('courseNumber');
+    
+    if (!courseNumberParam) {
+        console.log("No courseNumber parameter found in URL");
+        return; // No parameter provided
+    }
+    
+    console.log("Found courseNumber parameter:", courseNumberParam);
+    
+    // Validate that it's a 3-digit number
+    if (!/^\d{3}$/.test(courseNumberParam)) {
+        console.error("Invalid courseNumber parameter - must be 3 digits:", courseNumberParam);
+        alert("Invalid course number in URL: " + courseNumberParam + ". Must be a 3-digit number.");
+        return;
+    }
+    
+    // Check if this course exists in Wednesday courses
+    const courseDetails = Wednesday.getCourseByNumber(courseNumberParam);
+    
+    if (!courseDetails) {
+        console.error("Course not found in Wednesday courses:", courseNumberParam);
+        alert("Course " + courseNumberParam + " not found in course list");
+        return;
+    }
+    
+    console.log("Valid course found:", courseDetails);
+    
+    // Verify the course exists in SignalK before proceeding
+    validateAndActivateCourse(courseNumberParam, courseDetails);
+}
+
+////////// ////////// ////////// //////////
+// Function to validate course exists in SignalK and activate it
+////////// ////////// ////////// //////////
+function validateAndActivateCourse(courseNumber, courseDetails) {
+    console.log('Validating course in SignalK: ' + courseNumber);
+    
+    // Fetch all routes from SignalK to find the matching course
+    const routesUrl = "/signalk/v2/api/resources/routes";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", routesUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var signalKRoutes = JSON.parse(xhr.responseText);
+            
+            // Find the route with matching course number
+            const routeKey = getKeyForNamedRoute(signalKRoutes, courseNumber);
+            
+            if (routeKey) {
+                console.log("Course found in SignalK, activating:", courseNumber);
+                
+                // Simulate the user typing the course number
+                simulateCourseEntry(courseNumber, courseDetails);
+                
+                // Set the course as active route in SignalK
+                setCourse(courseNumber, courseDetails.waypoints);
+            } else {
+                console.error("Route not found in SignalK for course:", courseNumber);
+                alert("Error: Course " + courseNumber + " exists locally but not found in SignalK.\nPlease check SignalK route configuration.");
+            }
+        } else {
+            console.error("Error fetching routes from SignalK:", xhr.status);
+            alert("Error connecting to SignalK (status " + xhr.status + ")");
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error("Network error when connecting to SignalK");
+        alert("Network error: Unable to connect to SignalK");
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to simulate course entry as if user typed it
+// This updates the display and internal state
+////////// ////////// ////////// //////////
+function simulateCourseEntry(courseNumber, courseDetails) {
+    // Set the global state variables
+    chosenCourseNumber = courseNumber;
+    currentLevel = 3; // Set to level 3 (course fully entered)
+    
+    // Update the display field
+    $("#courseNumber").val(courseNumber);
+    
+    // Display waypoints with highlighting
+    const waypoints = courseDetails.waypoints;
+    let waypointsHTML = waypoints.map(waypoint => {
+        if (waypoint.endsWith('*')) {
+            waypoint = waypoint.slice(0, -1);
+            return `<span style="text-decoration: underline; color: green;">${waypoint}</span>`;
+        }
+        return waypoint;
+    }).join(" ");
+    
+    $("#waypoints").html(waypointsHTML);
+    
+    // Activate buttons for level 3 (only clear and enter active)
+    activateKeypadButtons(3);
+    
+    console.log("Course entry simulated:", courseNumber);
+}
+
+////////// ////////// ////////// //////////
 // function called on page load
 // this is jQuery syntax
 // and it needs the jQuery library to be loaded first
@@ -166,6 +280,11 @@ $(document).ready(
         // activate buttons for level 0
         activateKeypadButtons(0); // activate buttons for level 0
         field(""); // clear the course number label
+
+        ////////// ////////// ////////// //////////
+        // Check for courseNumber URL parameter
+        checkURLCourseParameter();
+        ////////// ////////// ////////// //////////
 
         ////////// ////////// ////////// //////////
         // get input field
