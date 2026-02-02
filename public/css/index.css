@@ -44,3 +44,7 @@ body {
 #courseSelectorBtn {
     background: linear-gradient(135deg, #90ee90 0%, #00ff7f 40%, #006400 100%);
 }
+
+#keypadBtn {
+    background: linear-gradient(135deg, #4169e1 0%, #0047ab 40%, #00008b 100%);
+}
