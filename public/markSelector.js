@@ -81,6 +81,7 @@ function displayMarksInfo() {
                 var waypoints = JSON.parse(xhr.responseText);
                 
                 console.log("=== Marks Information and Updates ===");
+                console.log("Waypoints object:", waypoints);
                 let updateCount = 0;
                 let totalMarks = marks.length;
                 let processedMarks = 0;
@@ -98,29 +99,21 @@ function displayMarksInfo() {
                     }
                     
                     if (waypointKey) {
-                        console.log("  - Found waypoint href: " + waypointKey + " (name: " + waypoints[waypointKey].name + ")");
+                        console.log("  - Found waypoint key: " + waypointKey + " (name: " + waypoints[waypointKey].name + ")");
+                        console.log("  - Current position:", waypoints[waypointKey].position);
                         console.log("  - Updating to lat: " + mark.lat + ", lon: " + mark.lon);
                         
-                        // Use SignalK delta API to update waypoint position
-                        const deltaUrl = "/signalk/v1/api/vessels/self";
-                        const delta = {
-                            "updates": [
-                                {
-                                    "values": [
-                                        {
-                                            "path": "resources.waypoints." + waypointKey + ".position",
-                                            "value": {
-                                                "latitude": parseFloat(mark.lat),
-                                                "longitude": parseFloat(mark.lon)
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
+                        // Update position in the waypoint object
+                        waypoints[waypointKey].position = {
+                            latitude: parseFloat(mark.lat),
+                            longitude: parseFloat(mark.lon)
                         };
                         
+                        // Use PUT to update the waypoint
+                        const updateUrl = "/signalk/v2/api/resources/waypoints/" + waypointKey;
+                        
                         var putXhr = new XMLHttpRequest();
-                        putXhr.open("POST", deltaUrl);
+                        putXhr.open("PUT", updateUrl);
                         putXhr.setRequestHeader("Content-Type", "application/json");
                         putXhr.onload = function() {
                             processedMarks++;
@@ -128,7 +121,8 @@ function displayMarksInfo() {
                                 updateCount++;
                                 console.log("  - Successfully updated waypoint");
                             } else {
-                                console.error("  - Failed to update. Status: " + putXhr.status + ", Response: " + putXhr.responseText);
+                                console.error("  - Failed to update. Status: " + putXhr.status);
+                                console.error("  - Response: " + putXhr.responseText);
                             }
                             
                             if (processedMarks === totalMarks) {
@@ -142,7 +136,7 @@ function displayMarksInfo() {
                                 console.log("=== Update Complete: " + updateCount + " of " + totalMarks + " waypoints updated ===");
                             }
                         };
-                        putXhr.send(JSON.stringify(delta));
+                        putXhr.send(JSON.stringify(waypoints[waypointKey]));
                     } else {
                         processedMarks++;
                         console.log("  - No matching waypoint found in SignalK for mark: " + mark.shortName);
