@@ -18,8 +18,9 @@ function createCourseButtons() {
     const courses = Wednesday.courses;
     
     // Filter out placeholder courses (those with waypoints containing "1", "2", "3")
+    // and the test route 000
     const validCourses = courses.filter(course => {
-        return !course.waypoints.some(wp => wp === "1" || wp === "2" || wp === "3");
+        return course.number !== "000" && !course.waypoints.some(wp => wp === "1" || wp === "2" || wp === "3");
     });
     
     // Create a button for each valid course
