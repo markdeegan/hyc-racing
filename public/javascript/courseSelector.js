@@ -401,14 +401,8 @@ function fetchActiveRoute(apiUrl) {
                 console.log('No active route found in SignalK (empty response)');
             }
         } else if (xhr.status === 404) {
-            // 404 might mean no active route or API version mismatch
-            // Try v1 API if we haven't already
-            if (apiUrl.includes('/v2/')) {
-                console.log('v2 API returned 404, trying v1 API');
-                fetchActiveRoute("/signalk/v1/api/vessels/self/navigation/course/activeRoute/value");
-            } else {
-                console.log('No active route set in SignalK (404)');
-            }
+            // 404 simply means no active route is set - this is normal
+            console.log('No active route currently set in SignalK');
         } else {
             console.log("Unexpected response when fetching active route:", xhr.status);
         }
