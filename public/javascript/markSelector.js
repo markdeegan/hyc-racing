@@ -69,6 +69,7 @@ function setMark(letter) {
                 setDestinationFromHREF(key);
                 displayMarkInfo(letter);
                 highlightMarkButton(letter);
+                updateClearWaypointButton(true);
             } else {
                 console.error("Waypoint not found for letter: " + letter);
                 document.getElementById('infoLabel').textContent = "Waypoint not found: " + letter;
