@@ -247,10 +247,122 @@ window.addEventListener('load', () => {
     
     // Check for active course in SignalK and highlight it
     checkAndHighlightActiveCourse();
+    
+    // Subscribe to active route changes via WebSocket
+    subscribeToActiveRoute();
 });
 
 // Re-run on window resize
 window.addEventListener('resize', resizeButtonText);
+
+////////// ////////// ////////// //////////
+// WebSocket connection for real-time updates
+////////// ////////// ////////// //////////
+let signalKWebSocket = null;
+
+////////// ////////// ////////// //////////
+// Function to subscribe to active route changes via WebSocket
+////////// ////////// ////////// //////////
+function subscribeToActiveRoute() {
+    // Determine WebSocket URL (ws:// or wss:// based on current page protocol)
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/signalk/v1/stream?subscribe=none`;
+    
+    console.log('Connecting to SignalK WebSocket:', wsUrl);
+    
+    try {
+        signalKWebSocket = new WebSocket(wsUrl);
+        
+        signalKWebSocket.onopen = function() {
+            console.log('WebSocket connected to SignalK');
+            
+            // Subscribe to active route updates
+            const subscription = {
+                context: 'vessels.self',
+                subscribe: [
+                    {
+                        path: 'navigation.course.activeRoute',
+                        period: 1000  // Update every second if changes
+                    }
+                ]
+            };
+            
+            signalKWebSocket.send(JSON.stringify(subscription));
+            console.log('Subscribed to navigation.course.activeRoute');
+        };
+        
+        signalKWebSocket.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+                handleSignalKUpdate(data);
+            } catch (e) {
+                console.log('Error parsing WebSocket message:', e);
+            }
+        };
+        
+        signalKWebSocket.onerror = function(error) {
+            console.log('WebSocket error:', error);
+        };
+        
+        signalKWebSocket.onclose = function() {
+            console.log('WebSocket connection closed, reconnecting in 5 seconds...');
+            // Attempt to reconnect after 5 seconds
+            setTimeout(subscribeToActiveRoute, 5000);
+        };
+        
+    } catch (e) {
+        console.log('Failed to create WebSocket connection:', e);
+    }
+}
+
+////////// ////////// ////////// //////////
+// Function to handle SignalK updates from WebSocket
+////////// ////////// ////////// //////////
+function handleSignalKUpdate(data) {
+    // Check if this is an update to the active route
+    if (data.updates) {
+        data.updates.forEach(update => {
+            if (update.values) {
+                update.values.forEach(value => {
+                    if (value.path === 'navigation.course.activeRoute') {
+                        console.log('Active route changed:', value.value);
+                        handleActiveRouteChange(value.value);
+                    }
+                });
+            }
+        });
+    }
+}
+
+////////// ////////// ////////// //////////
+// Function to handle active route changes
+////////// ////////// ////////// //////////
+function handleActiveRouteChange(activeRouteValue) {
+    if (activeRouteValue && activeRouteValue.href) {
+        const routeHref = activeRouteValue.href;
+        console.log('New active route href:', routeHref);
+        
+        // Extract the route key from href
+        const routeKey = routeHref.replace('/resources/routes/', '');
+        
+        // Fetch the route details and highlight
+        fetchRouteNameAndHighlight(routeKey);
+    } else {
+        // Active route was cleared
+        console.log('Active route cleared');
+        
+        // Remove all highlights
+        const allButtons = document.querySelectorAll('button[data-course-number]');
+        allButtons.forEach(btn => {
+            btn.style.backgroundColor = '';
+            btn.style.border = '';
+        });
+        
+        // Update info label
+        document.getElementById('infoLabel').textContent = 'Select a course';
+        resizeInfoLabel();
+    }
+}
 
 ////////// ////////// ////////// //////////
 // Function to check URL parameters for courseNumber
