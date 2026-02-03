@@ -269,6 +269,24 @@ function updateFinishLocation() {
 }
 
 function setupButtonClickHandlers() {
+    // Create Clear Waypoint button
+    const clearCell = document.getElementById('clearWaypointCell');
+    if (clearCell) {
+        const clearButton = document.createElement('button');
+        clearButton.id = 'clearWaypointButton';
+        clearButton.className = 'clear-waypoint-button';
+        clearButton.disabled = true;
+        clearButton.innerHTML = '<span class="name">CLEAR<br>WAYPOINT</span>';
+        clearButton.addEventListener('click', clearWaypoint);
+        clearCell.appendChild(clearButton);
+    }
+    
+    // Set up Back button handler
+    const backButton = document.querySelector('.back-button');
+    if (backButton) {
+        backButton.addEventListener('click', () => window.location.href = 'index.html');
+    }
+    
     const buttons = document.querySelectorAll('button');
     
     buttons.forEach(button => {
@@ -332,7 +350,188 @@ window.addEventListener('load', () => {
     setTimeout(resizeButtonText, 50);
     setupButtonClickHandlers();
     applyMarkColors();
+    checkActiveWaypoint();
+    subscribeToActiveWaypoint();
 });
 
 // Re-run on window resize
 window.addEventListener('resize', resizeButtonText);
+
+////////// ////////// ////////// //////////
+// Function to update Clear Waypoint button state
+////////// ////////// ////////// //////////
+function updateClearWaypointButton(hasActiveWaypoint) {
+    const clearButton = document.getElementById('clearWaypointButton');
+    if (clearButton) {
+        clearButton.disabled = !hasActiveWaypoint;
+        console.log('Clear Waypoint button', hasActiveWaypoint ? 'enabled' : 'disabled');
+    }
+}
+
+////////// ////////// ////////// //////////
+// Function to clear the active waypoint in SignalK
+////////// ////////// ////////// //////////
+function clearWaypoint() {
+    console.log('Clearing active waypoint...');
+    
+    const url = "/signalk/v2/api/vessels/self/navigation/course";
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", url);
+    xhr.setRequestHeader("Accept", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200 || xhr.status === 204) {
+            console.log('Active waypoint cleared successfully');
+            
+            // Update UI
+            document.getElementById('infoLabel').textContent = 'Waypoint cleared';
+            resizeInfoLabel();
+            
+            // Disable the clear button
+            updateClearWaypointButton(false);
+        } else {
+            console.error('Error clearing active waypoint:', xhr.status, xhr.responseText);
+            document.getElementById('infoLabel').textContent = 'Error clearing waypoint';
+            resizeInfoLabel();
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error('Network error when clearing active waypoint');
+        document.getElementById('infoLabel').textContent = 'Network error: Unable to clear waypoint';
+        resizeInfoLabel();
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to check if there is an active waypoint
+////////// ////////// ////////// //////////
+function checkActiveWaypoint() {
+    const url = "/signalk/v2/api/vessels/self/navigation/course/destination";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                const destination = JSON.parse(xhr.responseText);
+                const hasActiveWaypoint = destination && destination.href;
+                updateClearWaypointButton(hasActiveWaypoint);
+                
+                if (hasActiveWaypoint) {
+                    console.log('Active waypoint found on load:', destination.href);
+                } else {
+                    console.log('No active waypoint on load');
+                }
+            } catch (e) {
+                console.log('Error parsing destination response:', e);
+                updateClearWaypointButton(false);
+            }
+        } else if (xhr.status === 404) {
+            // No active waypoint
+            console.log('No active waypoint (404)');
+            updateClearWaypointButton(false);
+        } else {
+            console.log('Error checking active waypoint:', xhr.status);
+            updateClearWaypointButton(false);
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.log('Network error when checking active waypoint');
+        updateClearWaypointButton(false);
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// WebSocket connection for real-time updates
+////////// ////////// ////////// //////////
+let signalKWebSocket = null;
+
+////////// ////////// ////////// //////////
+// Function to subscribe to active waypoint changes via WebSocket
+////////// ////////// ////////// //////////
+function subscribeToActiveWaypoint() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/signalk/v1/stream?subscribe=none`;
+    
+    console.log('Connecting to SignalK WebSocket:', wsUrl);
+    
+    try {
+        signalKWebSocket = new WebSocket(wsUrl);
+        
+        signalKWebSocket.onopen = function() {
+            console.log('WebSocket connected to SignalK');
+            
+            const subscription = {
+                context: 'vessels.self',
+                subscribe: [
+                    {
+                        path: 'navigation.course.destination',
+                        period: 1000
+                    }
+                ]
+            };
+            
+            signalKWebSocket.send(JSON.stringify(subscription));
+            console.log('Subscribed to navigation.course.destination');
+        };
+        
+        signalKWebSocket.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+                handleSignalKUpdate(data);
+            } catch (e) {
+                console.log('Error parsing WebSocket message:', e);
+            }
+        };
+        
+        signalKWebSocket.onerror = function(error) {
+            console.log('WebSocket error:', error);
+        };
+        
+        signalKWebSocket.onclose = function() {
+            console.log('WebSocket connection closed, reconnecting in 5 seconds...');
+            setTimeout(subscribeToActiveWaypoint, 5000);
+        };
+        
+    } catch (e) {
+        console.log('Failed to create WebSocket connection:', e);
+    }
+}
+
+////////// ////////// ////////// //////////
+// Function to handle SignalK updates from WebSocket
+////////// ////////// ////////// //////////
+function handleSignalKUpdate(data) {
+    if (data.updates) {
+        data.updates.forEach(update => {
+            if (update.values) {
+                update.values.forEach(value => {
+                    if (value.path === 'navigation.course.destination') {
+                        console.log('Active waypoint changed:', value.value);
+                        handleActiveWaypointChange(value.value);
+                    }
+                });
+            }
+        });
+    }
+}
+
+////////// ////////// ////////// //////////
+// Function to handle active waypoint changes
+////////// ////////// ////////// //////////
+function handleActiveWaypointChange(destinationValue) {
+    if (destinationValue && destinationValue.href) {
+        console.log('New active waypoint href:', destinationValue.href);
+        updateClearWaypointButton(true);
+    } else {
+        console.log('Active waypoint cleared');
+        updateClearWaypointButton(false);
+    }
+}

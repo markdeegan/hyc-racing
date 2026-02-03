@@ -45,3 +45,50 @@ button {
 #infoDisplay {
     flex: 1;
 }
+
+/* 
+ * Clear Waypoint Button
+ * Similar styling to other buttons but with red color scheme
+ */
+button.clear-waypoint-button {
+    font-size: var(--font-size-medium);
+    background-color: var(--color-red-primary);
+}
+
+button.clear-waypoint-button:hover:not(:disabled) {
+    background-color: var(--color-red-hover);
+}
+
+button.clear-waypoint-button:active:not(:disabled) {
+    background-color: var(--color-red-active);
+}
+
+button.clear-waypoint-button:disabled {
+    background-color: var(--color-bg-disabled);
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+button.clear-waypoint-button .name {
+    position: static;
+    transform: none;
+    line-height: 1.2;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-medium);
+}
+
+/* 
+ * Back Button
+ * Similar styling to ensure consistency
+ */
+button.back-button {
+    font-size: var(--font-size-medium);
+}
+
+button.back-button .name {
+    position: static;
+    transform: none;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-medium);
+}
