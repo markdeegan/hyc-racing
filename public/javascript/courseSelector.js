@@ -241,6 +241,9 @@ window.addEventListener('load', () => {
     
     // Check for courseNumber URL parameter
     checkURLCourseParameter();
+    
+    // Check for active course in SignalK and highlight it
+    checkAndHighlightActiveCourse();
 });
 
 // Re-run on window resize
@@ -352,4 +355,129 @@ function highlightCourseButton(courseNumber) {
         
         console.log("Course button highlighted:", courseNumber);
     }
+}
+
+////////// ////////// ////////// //////////
+// Function to check for active course in SignalK
+// and highlight the corresponding button
+////////// ////////// ////////// //////////
+function checkAndHighlightActiveCourse() {
+    console.log('Checking for active course in SignalK');
+    
+    // Fetch the active route from SignalK
+    const activeRouteUrl = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", activeRouteUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var activeRouteData = JSON.parse(xhr.responseText);
+            
+            if (activeRouteData && activeRouteData.value && activeRouteData.value.href) {
+                const routeHref = activeRouteData.value.href;
+                console.log('Active route found:', routeHref);
+                
+                // Extract the route key from href (e.g., "/resources/routes/abc-123" -> "abc-123")
+                const routeKey = routeHref.replace('/resources/routes/', '');
+                
+                // Now fetch all routes to get the name of this route
+                fetchRouteNameAndHighlight(routeKey);
+            } else {
+                console.log('No active route found in SignalK');
+            }
+        } else if (xhr.status === 404) {
+            console.log('No active route set in SignalK');
+        } else {
+            console.error("Error fetching active route:", xhr.status);
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error("Network error when fetching active route from SignalK");
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to fetch route name and highlight button
+////////// ////////// ////////// //////////
+function fetchRouteNameAndHighlight(routeKey) {
+    const routesUrl = "/signalk/v2/api/resources/routes";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", routesUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var signalKRoutes = JSON.parse(xhr.responseText);
+            
+            // Find the route with the matching key
+            const route = signalKRoutes[routeKey];
+            
+            if (route && route.name) {
+                console.log('Active route name:', route.name);
+                
+                // Extract course number from route name
+                const courseNumber = extractCourseNumber(route.name);
+                
+                if (courseNumber) {
+                    console.log('Extracted course number:', courseNumber);
+                    
+                    // Check if this course exists in our course list
+                    const courseDetails = Wednesday.getCourseByNumber(courseNumber);
+                    
+                    if (courseDetails) {
+                        // Highlight the button
+                        highlightCourseButton(courseNumber);
+                        
+                        // Update the info label
+                        document.getElementById('infoLabel').textContent = `Active course: ${courseNumber}`;
+                        resizeInfoLabel();
+                    } else {
+                        console.log('Active course not found in course list:', courseNumber);
+                    }
+                } else {
+                    console.log('Could not extract course number from route name:', route.name);
+                }
+            }
+        } else {
+            console.error("Error fetching routes:", xhr.status);
+        }
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to extract course number from route name
+// Handles various naming formats:
+// - "hyc-Wednesday-241" -> "241"
+// - "HYC-Wed-241" -> "241"
+// - "241" -> "241"
+// - "Course 241" -> "241"
+////////// ////////// ////////// //////////
+function extractCourseNumber(routeName) {
+    // Try to match "hyc-Wednesday-XXX" format
+    let match = routeName.match(/hyc-Wednesday-(\d{3})/i);
+    if (match) return match[1];
+    
+    // Try to match "HYC-Wed-XXX" format
+    match = routeName.match(/HYC-Wed-(\d{3})/i);
+    if (match) return match[1];
+    
+    // Try to match "Course XXX" format
+    match = routeName.match(/Course\s+(\d{3})/i);
+    if (match) return match[1];
+    
+    // Try to match just a 3-digit number
+    match = routeName.match(/^(\d{3})$/);
+    if (match) return match[1];
+    
+    // Try to match any 3-digit number in the name
+    match = routeName.match(/(\d{3})/);
+    if (match) return match[1];
+    
+    return null;
 }
