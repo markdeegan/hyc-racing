@@ -248,6 +248,9 @@ window.addEventListener('load', () => {
     // Subscribe to active route changes via WebSocket
     // This will automatically highlight the active course when connection is established
     subscribeToActiveRoute();
+    
+    // Initialize the Clear Course button
+    initializeClearCourseButton();
 });
 
 // Re-run on window resize
@@ -345,6 +348,9 @@ function handleActiveRouteChange(activeRouteValue) {
         
         // Fetch the route details and highlight
         fetchRouteNameAndHighlight(routeKey);
+        
+        // Enable the clear course button
+        updateClearCourseButton(true);
     } else {
         // Active route was cleared
         console.log('Active route cleared');
@@ -359,6 +365,9 @@ function handleActiveRouteChange(activeRouteValue) {
         // Update info label
         document.getElementById('infoLabel').textContent = 'Select a course';
         resizeInfoLabel();
+        
+        // Disable the clear course button
+        updateClearCourseButton(false);
     }
 }
 
@@ -582,4 +591,115 @@ function extractCourseNumber(routeName) {
     
     console.log('No course number pattern matched');
     return null;
+}
+
+////////// ////////// ////////// //////////
+// Function to update Clear Course button state
+////////// ////////// ////////// //////////
+function updateClearCourseButton(hasActiveRoute) {
+    const clearButton = document.getElementById('clearCourseButton');
+    if (clearButton) {
+        clearButton.disabled = !hasActiveRoute;
+        console.log('Clear Course button', hasActiveRoute ? 'enabled' : 'disabled');
+    }
+}
+
+////////// ////////// ////////// //////////
+// Function to clear the active route in SignalK
+////////// ////////// ////////// //////////
+function clearActiveRoute() {
+    console.log('Clearing active route...');
+    
+    const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200 || xhr.status === 204) {
+            console.log('Active route cleared successfully');
+            
+            // Update UI
+            document.getElementById('infoLabel').textContent = 'Course cleared';
+            resizeInfoLabel();
+            
+            // Remove all button highlights
+            const allButtons = document.querySelectorAll('button[data-course-number]');
+            allButtons.forEach(btn => {
+                btn.style.backgroundColor = '';
+                btn.style.border = '';
+            });
+            
+            // Disable the clear button
+            updateClearCourseButton(false);
+        } else {
+            console.error('Error clearing active route:', xhr.status);
+            document.getElementById('infoLabel').textContent = 'Error clearing course';
+            resizeInfoLabel();
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error('Network error when clearing active route');
+        document.getElementById('infoLabel').textContent = 'Network error: Unable to clear course';
+        resizeInfoLabel();
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Initialize Clear Course button
+////////// ////////// ////////// //////////
+function initializeClearCourseButton() {
+    const clearButton = document.getElementById('clearCourseButton');
+    if (clearButton) {
+        clearButton.addEventListener('click', clearActiveRoute);
+        
+        // Check if there's an active route on page load
+        checkActiveRoute();
+    }
+}
+
+////////// ////////// ////////// //////////
+// Function to check if there is an active route
+////////// ////////// ////////// //////////
+function checkActiveRoute() {
+    const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                const activeRoute = JSON.parse(xhr.responseText);
+                const hasActiveRoute = activeRoute && activeRoute.href;
+                updateClearCourseButton(hasActiveRoute);
+                
+                if (hasActiveRoute) {
+                    console.log('Active route found on load:', activeRoute.href);
+                } else {
+                    console.log('No active route on load');
+                }
+            } catch (e) {
+                console.log('Error parsing active route response:', e);
+                updateClearCourseButton(false);
+            }
+        } else if (xhr.status === 404) {
+            // No active route
+            console.log('No active route (404)');
+            updateClearCourseButton(false);
+        } else {
+            console.log('Error checking active route:', xhr.status);
+            updateClearCourseButton(false);
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.log('Network error when checking active route');
+        updateClearCourseButton(false);
+    };
+    
+    xhr.send();
 }
