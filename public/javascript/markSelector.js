@@ -68,6 +68,7 @@ function setMark(letter) {
             if (key) {
                 setDestinationFromHREF(key);
                 displayMarkInfo(letter);
+                highlightMarkButton(letter);
             } else {
                 console.error("Waypoint not found for letter: " + letter);
                 document.getElementById('infoLabel').textContent = "Waypoint not found: " + letter;
@@ -387,6 +388,9 @@ function clearWaypoint() {
             document.getElementById('infoLabel').textContent = 'Waypoint cleared';
             resizeInfoLabel();
             
+            // Remove all button highlights
+            removeAllMarkHighlights();
+            
             // Disable the clear button
             updateClearWaypointButton(false);
         } else {
@@ -530,8 +534,72 @@ function handleActiveWaypointChange(destinationValue) {
     if (destinationValue && destinationValue.href) {
         console.log('New active waypoint href:', destinationValue.href);
         updateClearWaypointButton(true);
+        
+        // Try to extract and highlight the mark from the href
+        fetchWaypointAndHighlight(destinationValue.href);
     } else {
         console.log('Active waypoint cleared');
         updateClearWaypointButton(false);
+        removeAllMarkHighlights();
     }
+}
+
+////////// ////////// ////////// //////////
+// Function to highlight the selected mark button
+////////// ////////// ////////// //////////
+function highlightMarkButton(markLetter) {
+    // First, remove highlight from all buttons
+    removeAllMarkHighlights();
+    
+    // Find the button with matching letter
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        const letterElement = button.querySelector('.letter');
+        const letter = letterElement ? letterElement.textContent : null;
+        
+        if (letter === markLetter) {
+            // Add a visual highlight to the button
+            button.style.border = '5px solid #2E7D32';
+            button.style.boxShadow = '0 0 20px rgba(46, 125, 50, 0.8)';
+            
+            console.log('Mark button highlighted:', markLetter);
+        }
+    });
+}
+
+////////// ////////// ////////// //////////
+// Function to remove all mark highlights
+////////// ////////// ////////// //////////
+function removeAllMarkHighlights() {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.style.border = '';
+        button.style.boxShadow = '';
+    });
+}
+
+////////// ////////// ////////// //////////
+// Function to fetch waypoint details and highlight the corresponding mark
+////////// ////////// ////////// //////////
+function fetchWaypointAndHighlight(waypointHref) {
+    const waypointKey = waypointHref.replace('/resources/waypoints/', '');
+    const url = "/signalk/v2/api/resources/waypoints";
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var waypoints = JSON.parse(xhr.responseText);
+            const waypoint = waypoints[waypointKey];
+            
+            if (waypoint && waypoint.name) {
+                console.log('Active waypoint name:', waypoint.name);
+                highlightMarkButton(waypoint.name);
+            }
+        }
+    };
+    
+    xhr.send();
 }
