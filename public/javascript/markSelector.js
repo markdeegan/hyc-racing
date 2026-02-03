@@ -277,7 +277,7 @@ function setupButtonClickHandlers() {
         clearButton.id = 'clearWaypointButton';
         clearButton.className = 'clear-waypoint-button';
         clearButton.disabled = true;
-        clearButton.innerHTML = '<span class="name">CLEAR<br>WAYPOINT</span>';
+        clearButton.innerHTML = '<span class="name">CLEAR<br>MARK</span>';
         clearButton.addEventListener('click', clearWaypoint);
         clearCell.appendChild(clearButton);
     }
@@ -351,7 +351,9 @@ window.addEventListener('load', () => {
     setTimeout(resizeButtonText, 50);
     setupButtonClickHandlers();
     applyMarkColors();
-    checkActiveWaypoint();
+    
+    // Check active waypoint after button is created
+    setTimeout(checkActiveWaypoint, 100);
     subscribeToActiveWaypoint();
 });
 
@@ -385,7 +387,7 @@ function clearWaypoint() {
             console.log('Active waypoint cleared successfully');
             
             // Update UI
-            document.getElementById('infoLabel').textContent = 'Waypoint cleared';
+            document.getElementById('infoLabel').textContent = 'Mark cleared';
             resizeInfoLabel();
             
             // Remove all button highlights
@@ -395,14 +397,14 @@ function clearWaypoint() {
             updateClearWaypointButton(false);
         } else {
             console.error('Error clearing active waypoint:', xhr.status, xhr.responseText);
-            document.getElementById('infoLabel').textContent = 'Error clearing waypoint';
+            document.getElementById('infoLabel').textContent = 'Error clearing mark';
             resizeInfoLabel();
         }
     };
     
     xhr.onerror = function() {
         console.error('Network error when clearing active waypoint');
-        document.getElementById('infoLabel').textContent = 'Network error: Unable to clear waypoint';
+        document.getElementById('infoLabel').textContent = 'Network error: Unable to clear mark';
         resizeInfoLabel();
     };
     
@@ -559,8 +561,14 @@ function highlightMarkButton(markLetter) {
         
         if (letter === markLetter) {
             // Add a visual highlight to the button
-            button.style.border = '5px solid #2E7D32';
+            button.style.border = '10px solid #2E7D32';
             button.style.boxShadow = '0 0 20px rgba(46, 125, 50, 0.8)';
+            
+            // Make the letter larger
+            if (letterElement) {
+                letterElement.style.fontSize = '18vh';
+                letterElement.style.fontWeight = '900';
+            }
             
             console.log('Mark button highlighted:', markLetter);
         }
@@ -575,6 +583,13 @@ function removeAllMarkHighlights() {
     buttons.forEach(button => {
         button.style.border = '';
         button.style.boxShadow = '';
+        
+        // Reset letter size
+        const letterElement = button.querySelector('.letter');
+        if (letterElement) {
+            letterElement.style.fontSize = '';
+            letterElement.style.fontWeight = '';
+        }
     });
 }
 
