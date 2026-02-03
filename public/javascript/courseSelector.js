@@ -622,13 +622,10 @@ function updateClearCourseButton(hasActiveRoute) {
 function clearActiveRoute() {
     console.log('Clearing active route...');
     
-    const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
-    var data = {
-        href: null
-    };
+    const url = "/signalk/v2/api/vessels/self/navigation/course";
     var xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.open("DELETE", url);
+    xhr.setRequestHeader("Accept", "application/json");
     
     xhr.onload = function() {
         if (xhr.status === 200 || xhr.status === 204) {
@@ -660,8 +657,7 @@ function clearActiveRoute() {
         resizeInfoLabel();
     };
     
-    // Send object with href: null to clear the active route
-    xhr.send(JSON.stringify(data));
+    xhr.send();
 }
 
 ////////// ////////// ////////// //////////
