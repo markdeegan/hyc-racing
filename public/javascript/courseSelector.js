@@ -121,6 +121,9 @@ function setCourse(courseNumber, waypoints) {
                 // Activate the route in SignalK
                 setActiveRoute(routeKey);
                 displayCourseInfo(courseNumber, waypoints);
+                
+                // Highlight the selected button
+                highlightCourseButton(courseNumber);
             } else {
                 console.error("Route not found for course: " + courseNumber);
                 document.getElementById('infoLabel').textContent = "Error: Route " + courseNumber + " not found in SignalK";
@@ -342,6 +345,13 @@ function validateAndActivateCourse(courseNumber, courseDetails) {
 // Function to highlight the selected course button
 ////////// ////////// ////////// //////////
 function highlightCourseButton(courseNumber) {
+    // First, remove highlight from all buttons
+    const allButtons = document.querySelectorAll('button[data-course-number]');
+    allButtons.forEach(btn => {
+        btn.style.backgroundColor = '';
+        btn.style.border = '';
+    });
+    
     // Find the button with matching course number
     const button = document.querySelector(`button[data-course-number="${courseNumber}"]`);
     
@@ -354,6 +364,8 @@ function highlightCourseButton(courseNumber) {
         button.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
         console.log("Course button highlighted:", courseNumber);
+    } else {
+        console.log("Button not found for course number:", courseNumber);
     }
 }
 
