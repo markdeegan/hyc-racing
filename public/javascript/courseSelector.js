@@ -364,37 +364,58 @@ function highlightCourseButton(courseNumber) {
 function checkAndHighlightActiveCourse() {
     console.log('Checking for active course in SignalK');
     
-    // Fetch the active route from SignalK
-    const activeRouteUrl = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
+    // Try v2 API first, then fall back to v1 if needed
+    fetchActiveRoute("/signalk/v2/api/vessels/self/navigation/course/activeRoute");
+}
+
+////////// ////////// ////////// //////////
+// Function to fetch active route from SignalK
+////////// ////////// ////////// //////////
+function fetchActiveRoute(apiUrl) {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", activeRouteUrl);
+    xhr.open("GET", apiUrl);
     xhr.setRequestHeader("Content-Type", "application/json");
     
     xhr.onload = function() {
         if (xhr.status === 200) {
             var activeRouteData = JSON.parse(xhr.responseText);
             
+            // Handle v2 API response format
             if (activeRouteData && activeRouteData.value && activeRouteData.value.href) {
                 const routeHref = activeRouteData.value.href;
-                console.log('Active route found:', routeHref);
+                console.log('Active route found (v2):', routeHref);
                 
-                // Extract the route key from href (e.g., "/resources/routes/abc-123" -> "abc-123")
+                // Extract the route key from href
                 const routeKey = routeHref.replace('/resources/routes/', '');
-                
-                // Now fetch all routes to get the name of this route
                 fetchRouteNameAndHighlight(routeKey);
-            } else {
-                console.log('No active route found in SignalK');
+            } 
+            // Handle v1 API response format
+            else if (activeRouteData && activeRouteData.href) {
+                const routeHref = activeRouteData.href;
+                console.log('Active route found (v1):', routeHref);
+                
+                const routeKey = routeHref.replace('/resources/routes/', '');
+                fetchRouteNameAndHighlight(routeKey);
+            } 
+            else {
+                console.log('No active route found in SignalK (empty response)');
             }
         } else if (xhr.status === 404) {
-            console.log('No active route set in SignalK');
+            // 404 might mean no active route or API version mismatch
+            // Try v1 API if we haven't already
+            if (apiUrl.includes('/v2/')) {
+                console.log('v2 API returned 404, trying v1 API');
+                fetchActiveRoute("/signalk/v1/api/vessels/self/navigation/course/activeRoute/value");
+            } else {
+                console.log('No active route set in SignalK (404)');
+            }
         } else {
-            console.error("Error fetching active route:", xhr.status);
+            console.log("Unexpected response when fetching active route:", xhr.status);
         }
     };
     
     xhr.onerror = function() {
-        console.error("Network error when fetching active route from SignalK");
+        console.log("Could not connect to SignalK to check active route");
     };
     
     xhr.send();
