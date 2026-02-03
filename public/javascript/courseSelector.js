@@ -419,6 +419,8 @@ function fetchActiveRoute(apiUrl) {
 // Function to fetch route name and highlight button
 ////////// ////////// ////////// //////////
 function fetchRouteNameAndHighlight(routeKey) {
+    console.log('Fetching route details for key:', routeKey);
+    
     const routesUrl = "/signalk/v2/api/resources/routes";
     var xhr = new XMLHttpRequest();
     xhr.open("GET", routesUrl);
@@ -444,6 +446,7 @@ function fetchRouteNameAndHighlight(routeKey) {
                     const courseDetails = Wednesday.getCourseByNumber(courseNumber);
                     
                     if (courseDetails) {
+                        console.log('Course found in Wednesday courses, highlighting button');
                         // Highlight the button
                         highlightCourseButton(courseNumber);
                         
@@ -451,14 +454,16 @@ function fetchRouteNameAndHighlight(routeKey) {
                         document.getElementById('infoLabel').textContent = `Active course: ${courseNumber}`;
                         resizeInfoLabel();
                     } else {
-                        console.log('Active course not found in course list:', courseNumber);
+                        console.log('Active course number not found in course list:', courseNumber);
                     }
                 } else {
                     console.log('Could not extract course number from route name:', route.name);
                 }
+            } else {
+                console.log('Route not found for key:', routeKey);
             }
         } else {
-            console.error("Error fetching routes:", xhr.status);
+            console.log("Error fetching routes:", xhr.status);
         }
     };
     
@@ -469,30 +474,48 @@ function fetchRouteNameAndHighlight(routeKey) {
 // Function to extract course number from route name
 // Handles various naming formats:
 // - "hyc-Wednesday-241" -> "241"
-// - "HYC-Wed-241" -> "241"
+// - "HYC-Wed-021" -> "021"
 // - "241" -> "241"
 // - "Course 241" -> "241"
 ////////// ////////// ////////// //////////
 function extractCourseNumber(routeName) {
-    // Try to match "hyc-Wednesday-XXX" format
-    let match = routeName.match(/hyc-Wednesday-(\d{3})/i);
-    if (match) return match[1];
+    console.log('Attempting to extract course number from:', routeName);
     
-    // Try to match "HYC-Wed-XXX" format
-    match = routeName.match(/HYC-Wed-(\d{3})/i);
-    if (match) return match[1];
+    // Try to match "hyc-Wednesday-XXX" format (case insensitive)
+    let match = routeName.match(/hyc-wednesday-(\d{3})/i);
+    if (match) {
+        console.log('Matched hyc-Wednesday pattern:', match[1]);
+        return match[1];
+    }
+    
+    // Try to match "HYC-Wed-XXX" format (case insensitive)
+    match = routeName.match(/hyc-wed-(\d{3})/i);
+    if (match) {
+        console.log('Matched HYC-Wed pattern:', match[1]);
+        return match[1];
+    }
     
     // Try to match "Course XXX" format
-    match = routeName.match(/Course\s+(\d{3})/i);
-    if (match) return match[1];
+    match = routeName.match(/course\s+(\d{3})/i);
+    if (match) {
+        console.log('Matched Course pattern:', match[1]);
+        return match[1];
+    }
     
     // Try to match just a 3-digit number
     match = routeName.match(/^(\d{3})$/);
-    if (match) return match[1];
+    if (match) {
+        console.log('Matched exact 3-digit pattern:', match[1]);
+        return match[1];
+    }
     
     // Try to match any 3-digit number in the name
     match = routeName.match(/(\d{3})/);
-    if (match) return match[1];
+    if (match) {
+        console.log('Matched any 3-digit pattern:', match[1]);
+        return match[1];
+    }
     
+    console.log('No course number pattern matched');
     return null;
 }
