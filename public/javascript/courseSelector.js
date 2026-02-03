@@ -60,6 +60,18 @@ function createCourseButtons() {
         gridContainer.appendChild(gridCell);
     });
     
+    // Add a clear course button
+    const clearCell = document.createElement('div');
+    clearCell.className = 'grid-cell';
+    const clearButton = document.createElement('button');
+    clearButton.id = 'clearCourseButton';
+    clearButton.className = 'clear-course-button';
+    clearButton.disabled = true;
+    clearButton.innerHTML = '<div class="course-number">CLEAR<br>COURSE</div>';
+    clearButton.addEventListener('click', clearActiveRoute);
+    clearCell.appendChild(clearButton);
+    gridContainer.appendChild(clearCell);
+    
     // Add a back button at the end
     const backCell = document.createElement('div');
     backCell.className = 'grid-cell';
@@ -249,8 +261,8 @@ window.addEventListener('load', () => {
     // This will automatically highlight the active course when connection is established
     subscribeToActiveRoute();
     
-    // Initialize the Clear Course button
-    initializeClearCourseButton();
+    // Check initial active route state for Clear Course button
+    checkActiveRoute();
 });
 
 // Re-run on window resize
@@ -612,7 +624,7 @@ function clearActiveRoute() {
     
     const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
     var xhr = new XMLHttpRequest();
-    xhr.open("DELETE", url);
+    xhr.open("PUT", url);
     xhr.setRequestHeader("Content-Type", "application/json");
     
     xhr.onload = function() {
@@ -633,7 +645,7 @@ function clearActiveRoute() {
             // Disable the clear button
             updateClearCourseButton(false);
         } else {
-            console.error('Error clearing active route:', xhr.status);
+            console.error('Error clearing active route:', xhr.status, xhr.responseText);
             document.getElementById('infoLabel').textContent = 'Error clearing course';
             resizeInfoLabel();
         }
@@ -645,20 +657,8 @@ function clearActiveRoute() {
         resizeInfoLabel();
     };
     
-    xhr.send();
-}
-
-////////// ////////// ////////// //////////
-// Initialize Clear Course button
-////////// ////////// ////////// //////////
-function initializeClearCourseButton() {
-    const clearButton = document.getElementById('clearCourseButton');
-    if (clearButton) {
-        clearButton.addEventListener('click', clearActiveRoute);
-        
-        // Check if there's an active route on page load
-        checkActiveRoute();
-    }
+    // Send null to clear the active route
+    xhr.send(JSON.stringify(null));
 }
 
 ////////// ////////// ////////// //////////
