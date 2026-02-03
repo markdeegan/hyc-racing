@@ -623,6 +623,9 @@ function clearActiveRoute() {
     console.log('Clearing active route...');
     
     const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
+    var data = {
+        href: null
+    };
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", url);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -657,8 +660,8 @@ function clearActiveRoute() {
         resizeInfoLabel();
     };
     
-    // Send null to clear the active route
-    xhr.send(JSON.stringify(null));
+    // Send object with href: null to clear the active route
+    xhr.send(JSON.stringify(data));
 }
 
 ////////// ////////// ////////// //////////
