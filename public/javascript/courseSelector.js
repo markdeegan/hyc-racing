@@ -238,7 +238,118 @@ function resizeInfoLabel() {
 window.addEventListener('load', () => {
     createCourseButtons();
     setTimeout(resizeButtonText, 50);
+    
+    // Check for courseNumber URL parameter
+    checkURLCourseParameter();
 });
 
 // Re-run on window resize
 window.addEventListener('resize', resizeButtonText);
+
+////////// ////////// ////////// //////////
+// Function to check URL parameters for courseNumber
+// If a valid courseNumber is provided in the URL,
+// it will be validated and activated automatically
+////////// ////////// ////////// //////////
+function checkURLCourseParameter() {
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseNumberParam = urlParams.get('courseNumber');
+    
+    if (!courseNumberParam) {
+        console.log("No courseNumber parameter found in URL");
+        return; // No parameter provided
+    }
+    
+    console.log("Found courseNumber parameter:", courseNumberParam);
+    
+    // Validate that it's a 3-digit number
+    if (!/^\d{3}$/.test(courseNumberParam)) {
+        console.error("Invalid courseNumber parameter - must be 3 digits:", courseNumberParam);
+        document.getElementById('infoLabel').textContent = "Invalid course number in URL: " + courseNumberParam + ". Must be a 3-digit number.";
+        resizeInfoLabel();
+        return;
+    }
+    
+    // Check if this course exists in Wednesday courses
+    const courseDetails = Wednesday.getCourseByNumber(courseNumberParam);
+    
+    if (!courseDetails) {
+        console.error("Course not found in Wednesday courses:", courseNumberParam);
+        document.getElementById('infoLabel').textContent = "Course " + courseNumberParam + " not found in course list";
+        resizeInfoLabel();
+        return;
+    }
+    
+    console.log("Valid course found:", courseDetails);
+    
+    // Verify the course exists in SignalK and activate it
+    validateAndActivateCourse(courseNumberParam, courseDetails);
+}
+
+////////// ////////// ////////// //////////
+// Function to validate course exists in SignalK and activate it
+////////// ////////// ////////// //////////
+function validateAndActivateCourse(courseNumber, courseDetails) {
+    console.log('Validating course in SignalK: ' + courseNumber);
+    
+    // Fetch all routes from SignalK to find the matching course
+    const routesUrl = "/signalk/v2/api/resources/routes";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", routesUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var signalKRoutes = JSON.parse(xhr.responseText);
+            
+            // Find the route with matching course number
+            const routeKey = getKeyForNamedRoute(signalKRoutes, courseNumber);
+            
+            if (routeKey) {
+                console.log("Course found in SignalK, activating:", courseNumber);
+                
+                // Highlight the selected course button
+                highlightCourseButton(courseNumber);
+                
+                // Set the course as active route in SignalK
+                setCourse(courseNumber, courseDetails.waypoints);
+            } else {
+                console.error("Route not found in SignalK for course:", courseNumber);
+                document.getElementById('infoLabel').textContent = "Error: Course " + courseNumber + " exists locally but not found in SignalK. Please check SignalK route configuration.";
+                resizeInfoLabel();
+            }
+        } else {
+            console.error("Error fetching routes from SignalK:", xhr.status);
+            document.getElementById('infoLabel').textContent = "Error connecting to SignalK (status " + xhr.status + ")";
+            resizeInfoLabel();
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error("Network error when connecting to SignalK");
+        document.getElementById('infoLabel').textContent = "Network error: Unable to connect to SignalK";
+        resizeInfoLabel();
+    };
+    
+    xhr.send();
+}
+
+////////// ////////// ////////// //////////
+// Function to highlight the selected course button
+////////// ////////// ////////// //////////
+function highlightCourseButton(courseNumber) {
+    // Find the button with matching course number
+    const button = document.querySelector(`button[data-course-number="${courseNumber}"]`);
+    
+    if (button) {
+        // Add a visual highlight to the button
+        button.style.backgroundColor = '#4CAF50';
+        button.style.border = '3px solid #2E7D32';
+        
+        // Scroll the button into view
+        button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        console.log("Course button highlighted:", courseNumber);
+    }
+}
