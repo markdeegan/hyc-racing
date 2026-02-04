@@ -229,19 +229,49 @@ function displayCourseInfo(courseNumber, waypoints) {
 // Function to resize info label text to fit
 ////////// ////////// ////////// //////////
 function resizeInfoLabel() {
+    startInfoMarquee();
+}
+
+////////// ////////// ////////// //////////
+// Function to animate info label marquee
+////////// ////////// ////////// //////////
+let infoMarqueeAnimation = null;
+
+function startInfoMarquee() {
+    const infoDisplay = document.getElementById('infoDisplay');
     const infoLabel = document.getElementById('infoLabel');
-    if (!infoLabel || !infoLabel.textContent) return;
-    
-    let fontSize = 200;
-    const containerWidth = infoLabel.clientWidth - 40;
-    
-    infoLabel.style.fontSize = fontSize + 'px';
-    infoLabel.style.whiteSpace = 'nowrap';
-    
-    while (infoLabel.scrollWidth > containerWidth && fontSize > 5) {
-        fontSize -= 1;
-        infoLabel.style.fontSize = fontSize + 'px';
+
+    if (!infoDisplay || !infoLabel || !infoLabel.textContent) return;
+
+    if (infoMarqueeAnimation) {
+        infoMarqueeAnimation.cancel();
+        infoMarqueeAnimation = null;
     }
+
+    const containerWidth = infoDisplay.clientWidth;
+    const textWidth = infoLabel.scrollWidth;
+    const startX = containerWidth;
+    const endX = -textWidth;
+    const distance = startX - endX;
+    const speed = 80; // pixels per second
+    const duration = (distance / speed) * 1000;
+
+    infoMarqueeAnimation = infoLabel.animate(
+        [
+            { transform: `translateX(${startX}px)` },
+            { transform: `translateX(${endX}px)` }
+        ],
+        {
+            duration,
+            iterations: 1,
+            easing: 'linear',
+            fill: 'forwards'
+        }
+    );
+
+    infoMarqueeAnimation.onfinish = () => {
+        setTimeout(startInfoMarquee, 3000);
+    };
 }
 
 ////////// ////////// ////////// //////////
@@ -281,7 +311,10 @@ window.addEventListener('load', () => {
 });
 
 // Re-run on window resize
-window.addEventListener('resize', resizeButtonText);
+window.addEventListener('resize', () => {
+    resizeButtonText();
+    resizeInfoLabel();
+});
 
 ////////// ////////// ////////// //////////
 // WebSocket connection for real-time updates

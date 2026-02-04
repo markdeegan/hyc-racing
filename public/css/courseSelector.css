@@ -124,6 +124,7 @@ button.clear-course-button .course-number {
     min-height: 12vh;    /* Match course-number scale for large text */
     position: sticky;    /* Stick to bottom when scrolling */
     bottom: 0;
+    justify-content: flex-start;
 }
 
 /*
@@ -150,4 +151,7 @@ button.clear-course-button .course-number {
 #infoDisplay #infoLabel {
     font-size: var(--font-size-xlarge);
     line-height: 1;
+    display: inline-block;
+    white-space: nowrap;
+    will-change: transform;
 }
