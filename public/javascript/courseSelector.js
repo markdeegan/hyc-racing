@@ -191,7 +191,8 @@ function getKeyForNamedWaypoint(obj, waypointName) {
 }
 
 ////////// ////////// ////////// //////////
-            setInfoDisplayState(false, 'No Active Course');
+// Function to set active route in SignalK
+////////// ////////// ////////// //////////
 function setActiveRoute(routeHref) {
     const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
     var data = {
@@ -217,8 +218,7 @@ function displayCourseInfo(courseNumber, waypoints) {
         }).join(' → ');
         
         const infoText = `Course ${courseNumber} set: ${waypointsList} (${course.length_nm} nm)`;
-        document.getElementById('infoLabel').textContent = infoText;
-        resizeInfoLabel();
+        setInfoDisplayState(true, infoText);
     } else {
         document.getElementById('infoLabel').textContent = "Course information not found: " + courseNumber;
         resizeInfoLabel();
@@ -241,6 +241,24 @@ function resizeInfoLabel() {
     while (infoLabel.scrollWidth > containerWidth && fontSize > 5) {
         fontSize -= 1;
         infoLabel.style.fontSize = fontSize + 'px';
+    }
+}
+
+////////// ////////// ////////// //////////
+// Function to update info display state
+////////// ////////// ////////// //////////
+function setInfoDisplayState(isActiveCourse, text) {
+    const infoDisplay = document.getElementById('infoDisplay');
+    const infoLabel = document.getElementById('infoLabel');
+
+    if (infoDisplay) {
+        infoDisplay.classList.toggle('info-active', Boolean(isActiveCourse));
+        infoDisplay.classList.toggle('info-inactive', !isActiveCourse);
+    }
+
+    if (infoLabel && typeof text === 'string') {
+        infoLabel.textContent = text;
+        resizeInfoLabel();
     }
 }
 
