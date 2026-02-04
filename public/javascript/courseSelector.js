@@ -217,7 +217,7 @@ function displayCourseInfo(courseNumber, waypoints) {
             return wp;
         }).join(' → ');
         
-        const infoText = `Course ${courseNumber} set: ${waypointsList} (${course.length_nm} nm)`;
+        const infoText = `Course ${courseNumber}: ${waypointsList}`;
         setInfoDisplayState(true, infoText);
     } else {
         document.getElementById('infoLabel').textContent = "Course information not found: " + courseNumber;
