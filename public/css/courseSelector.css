@@ -155,3 +155,20 @@ button.clear-course-button .course-number {
     white-space: nowrap;
     will-change: transform;
 }
+
+/* Marquee layout inside info label */
+#infoDisplay #infoLabel .marquee-track {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    will-change: transform;
+}
+
+#infoDisplay #infoLabel .marquee-text {
+    display: inline-block;
+}
+
+#infoDisplay #infoLabel .marquee-spacer {
+    display: inline-block;
+    width: 4vw;
+}

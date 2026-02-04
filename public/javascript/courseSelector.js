@@ -241,37 +241,62 @@ function startInfoMarquee() {
     const infoDisplay = document.getElementById('infoDisplay');
     const infoLabel = document.getElementById('infoLabel');
 
-    if (!infoDisplay || !infoLabel || !infoLabel.textContent) return;
+    if (!infoDisplay || !infoLabel) return;
+
+    const rawText = infoLabel.dataset.rawText || infoLabel.textContent;
+    if (!rawText) return;
 
     if (infoMarqueeAnimation) {
         infoMarqueeAnimation.cancel();
         infoMarqueeAnimation = null;
     }
 
+    infoLabel.innerHTML = '';
+    const track = document.createElement('span');
+    track.className = 'marquee-track';
+
+    const text1 = document.createElement('span');
+    text1.className = 'marquee-text';
+    text1.textContent = rawText;
+
+    const spacer = document.createElement('span');
+    spacer.className = 'marquee-spacer';
+    spacer.textContent = ' ';
+
+    const text2 = document.createElement('span');
+    text2.className = 'marquee-text';
+    text2.textContent = rawText;
+
+    track.appendChild(text1);
+    track.appendChild(spacer);
+    track.appendChild(text2);
+    infoLabel.appendChild(track);
+
     const containerWidth = infoDisplay.clientWidth;
-    const textWidth = infoLabel.scrollWidth;
-    const startX = containerWidth;
+    const textWidth = text1.scrollWidth + spacer.scrollWidth;
+    if (textWidth <= containerWidth) {
+        track.style.transform = 'translateX(0)';
+        return;
+    }
+
+    const startX = 0;
     const endX = -textWidth;
-    const distance = startX - endX;
+    const distance = Math.abs(endX - startX);
     const speed = 80; // pixels per second
     const duration = (distance / speed) * 1000;
 
-    infoMarqueeAnimation = infoLabel.animate(
+    infoMarqueeAnimation = track.animate(
         [
             { transform: `translateX(${startX}px)` },
             { transform: `translateX(${endX}px)` }
         ],
         {
             duration,
-            iterations: 1,
+            iterations: Infinity,
             easing: 'linear',
             fill: 'forwards'
         }
     );
-
-    infoMarqueeAnimation.onfinish = () => {
-        setTimeout(startInfoMarquee, 3000);
-    };
 }
 
 ////////// ////////// ////////// //////////
@@ -287,7 +312,7 @@ function setInfoDisplayState(isActiveCourse, text) {
     }
 
     if (infoLabel && typeof text === 'string') {
-        infoLabel.textContent = text;
+        infoLabel.dataset.rawText = text;
         resizeInfoLabel();
     }
 }
