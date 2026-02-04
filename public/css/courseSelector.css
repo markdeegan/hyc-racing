@@ -121,7 +121,16 @@ button.clear-course-button .course-number {
  */
 #infoDisplay {
     flex: 0 0 auto;      /* Don't grow or shrink, use content size */
-    min-height: 60px;    /* Ensure minimum height for readability */
+    min-height: 12vh;    /* Match course-number scale for large text */
     position: sticky;    /* Stick to bottom when scrolling */
     bottom: 0;
+}
+
+/*
+ * Info Display Text
+ * Increase size to match course numbers on buttons.
+ */
+#infoDisplay #infoLabel {
+    font-size: var(--font-size-xlarge);
+    line-height: 1;
 }
