@@ -235,7 +235,8 @@ function resizeInfoLabel() {
 ////////// ////////// ////////// //////////
 // Function to animate info label marquee
 ////////// ////////// ////////// //////////
-let infoMarqueeAnimation = null;
+let infoMarqueeFrame = null;
+let infoMarqueeState = null;
 
 function startInfoMarquee() {
     const infoDisplay = document.getElementById('infoDisplay');
@@ -246,9 +247,9 @@ function startInfoMarquee() {
     const rawText = infoLabel.dataset.rawText || infoLabel.textContent;
     if (!rawText) return;
 
-    if (infoMarqueeAnimation) {
-        infoMarqueeAnimation.cancel();
-        infoMarqueeAnimation = null;
+    if (infoMarqueeFrame) {
+        cancelAnimationFrame(infoMarqueeFrame);
+        infoMarqueeFrame = null;
     }
 
     infoLabel.innerHTML = '';
@@ -274,30 +275,48 @@ function startInfoMarquee() {
 
     requestAnimationFrame(() => {
         const containerWidth = infoDisplay.clientWidth;
-        const textWidth = text1.scrollWidth + spacer.scrollWidth;
+        const textWidth = text1.getBoundingClientRect().width + spacer.getBoundingClientRect().width;
+        const speed = 80; // pixels per second
+        const pauseMs = 3000;
+
         if (textWidth <= containerWidth) {
             track.style.transform = 'translateX(0)';
             return;
         }
 
-        const startX = 0;
-        const endX = -textWidth;
-        const distance = Math.abs(endX - startX);
-        const speed = 80; // pixels per second
-        const duration = (distance / speed) * 1000;
+        infoMarqueeState = {
+            offset: 0,
+            lastTime: null,
+            pausedUntil: performance.now() + pauseMs
+        };
 
-        infoMarqueeAnimation = track.animate(
-            [
-                { transform: `translateX(${startX}px)` },
-                { transform: `translateX(${endX}px)` }
-            ],
-            {
-                duration,
-                iterations: Infinity,
-                easing: 'linear',
-                fill: 'forwards'
+        const step = (now) => {
+            if (!infoMarqueeState) return;
+
+            if (infoMarqueeState.lastTime === null) {
+                infoMarqueeState.lastTime = now;
             }
-        );
+
+            if (now < infoMarqueeState.pausedUntil) {
+                track.style.transform = 'translateX(0)';
+                infoMarqueeFrame = requestAnimationFrame(step);
+                return;
+            }
+
+            const deltaSeconds = (now - infoMarqueeState.lastTime) / 1000;
+            infoMarqueeState.lastTime = now;
+            infoMarqueeState.offset += speed * deltaSeconds;
+
+            if (infoMarqueeState.offset >= textWidth) {
+                infoMarqueeState.offset = 0;
+                infoMarqueeState.pausedUntil = now + pauseMs;
+            }
+
+            track.style.transform = `translateX(${-infoMarqueeState.offset}px)`;
+            infoMarqueeFrame = requestAnimationFrame(step);
+        };
+
+        infoMarqueeFrame = requestAnimationFrame(step);
     });
 }
 
