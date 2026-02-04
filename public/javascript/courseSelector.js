@@ -272,31 +272,33 @@ function startInfoMarquee() {
     track.appendChild(text2);
     infoLabel.appendChild(track);
 
-    const containerWidth = infoDisplay.clientWidth;
-    const textWidth = text1.scrollWidth + spacer.scrollWidth;
-    if (textWidth <= containerWidth) {
-        track.style.transform = 'translateX(0)';
-        return;
-    }
-
-    const startX = 0;
-    const endX = -textWidth;
-    const distance = Math.abs(endX - startX);
-    const speed = 80; // pixels per second
-    const duration = (distance / speed) * 1000;
-
-    infoMarqueeAnimation = track.animate(
-        [
-            { transform: `translateX(${startX}px)` },
-            { transform: `translateX(${endX}px)` }
-        ],
-        {
-            duration,
-            iterations: Infinity,
-            easing: 'linear',
-            fill: 'forwards'
+    requestAnimationFrame(() => {
+        const containerWidth = infoDisplay.clientWidth;
+        const textWidth = text1.scrollWidth + spacer.scrollWidth;
+        if (textWidth <= containerWidth) {
+            track.style.transform = 'translateX(0)';
+            return;
         }
-    );
+
+        const startX = 0;
+        const endX = -textWidth;
+        const distance = Math.abs(endX - startX);
+        const speed = 80; // pixels per second
+        const duration = (distance / speed) * 1000;
+
+        infoMarqueeAnimation = track.animate(
+            [
+                { transform: `translateX(${startX}px)` },
+                { transform: `translateX(${endX}px)` }
+            ],
+            {
+                duration,
+                iterations: Infinity,
+                easing: 'linear',
+                fill: 'forwards'
+            }
+        );
+    });
 }
 
 ////////// ////////// ////////// //////////
