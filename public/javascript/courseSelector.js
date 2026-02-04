@@ -77,9 +77,8 @@ function createCourseButtons() {
     backCell.className = 'grid-cell';
     const backButton = document.createElement('button');
     backButton.className = 'back-button';
-    backButton.onclick = () => window.location.href = 'index.html';
-    backButton.innerHTML = '<div class="course-number">BACK</div>';
-    backCell.appendChild(backButton);
+            const infoText = `Course ${courseNumber} set: ${waypointsList} (${course.length_nm} nm)`;
+            setInfoDisplayState(true, infoText);
     gridContainer.appendChild(backCell);
 }
 
@@ -137,8 +136,7 @@ function setCourse(courseNumber, waypoints) {
                 // Highlight the selected button
                 highlightCourseButton(courseNumber);
             } else {
-                console.error("Route not found for course: " + courseNumber);
-                document.getElementById('infoLabel').textContent = "Error: Route " + courseNumber + " not found in SignalK";
+                setInfoDisplayState(false, 'No Active Course');
                 resizeInfoLabel();
             }
         } else {
@@ -193,8 +191,7 @@ function getKeyForNamedWaypoint(obj, waypointName) {
 }
 
 ////////// ////////// ////////// //////////
-// Function to set active route in SignalK
-////////// ////////// ////////// //////////
+            setInfoDisplayState(false, 'No Active Course');
 function setActiveRoute(routeHref) {
     const url = "/signalk/v2/api/vessels/self/navigation/course/activeRoute";
     var data = {
@@ -363,6 +360,9 @@ function handleActiveRouteChange(activeRouteValue) {
         
         // Enable the clear course button
         updateClearCourseButton(true);
+
+        // Ensure info display shows active state
+        setInfoDisplayState(true);
     } else {
         // Active route was cleared
         console.log('Active route cleared');
@@ -375,8 +375,7 @@ function handleActiveRouteChange(activeRouteValue) {
         });
         
         // Update info label
-        document.getElementById('infoLabel').textContent = 'Select a course';
-        resizeInfoLabel();
+        setInfoDisplayState(false, 'No Active Course');
         
         // Disable the clear course button
         updateClearCourseButton(false);
@@ -536,8 +535,7 @@ function fetchRouteNameAndHighlight(routeKey) {
                         highlightCourseButton(courseNumber);
                         
                         // Update the info label
-                        document.getElementById('infoLabel').textContent = `Active course: ${courseNumber}`;
-                        resizeInfoLabel();
+                        setInfoDisplayState(true, `Active course: ${courseNumber}`);
                     } else {
                         console.log('Active course number not found in course list:', courseNumber);
                     }
@@ -632,8 +630,7 @@ function clearActiveRoute() {
             console.log('Active route cleared successfully');
             
             // Update UI
-            document.getElementById('infoLabel').textContent = 'Course cleared';
-            resizeInfoLabel();
+            setInfoDisplayState(false, 'No Active Course');
             
             // Remove all button highlights
             const allButtons = document.querySelectorAll('button[data-course-number]');
@@ -678,8 +675,10 @@ function checkActiveRoute() {
                 
                 if (hasActiveRoute) {
                     console.log('Active route found on load:', activeRoute.href);
+                    setInfoDisplayState(true);
                 } else {
                     console.log('No active route on load');
+                    setInfoDisplayState(false, 'No Active Course');
                 }
             } catch (e) {
                 console.log('Error parsing active route response:', e);
@@ -689,6 +688,7 @@ function checkActiveRoute() {
             // No active route
             console.log('No active route (404)');
             updateClearCourseButton(false);
+            setInfoDisplayState(false, 'No Active Course');
         } else {
             console.log('Error checking active route:', xhr.status);
             updateClearCourseButton(false);

@@ -127,6 +127,23 @@ button.clear-course-button .course-number {
 }
 
 /*
+ * Info Display State Colors
+ * Active matches highlighted course button color.
+ * Inactive uses a muted red.
+ */
+#infoDisplay.info-active {
+    background-color: #4CAF50;
+    border-top: 3px solid #2E7D32;
+    color: var(--color-text-white);
+}
+
+#infoDisplay.info-inactive {
+    background-color: #f4bcbc;
+    border-top: 3px solid #d88f8f;
+    color: #4a0000;
+}
+
+/*
  * Info Display Text
  * Increase size to match course numbers on buttons.
  */
