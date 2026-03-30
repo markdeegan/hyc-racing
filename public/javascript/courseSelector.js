@@ -1,7 +1,12 @@
 ////////// ////////// ////////// //////////
 // Mark Deegan
 // Sun Feb  2 2026
+// Copyright (c) 2026 Mark Deegan        
 ////////// ////////// ////////// //////////
+/**
+ *  @author Mark Deegan
+ *  @version 1.0
+ */
 // Course Selector Script
 // Accompanies courseSelector.html
 // and is used to set courses in SignalK from buttons

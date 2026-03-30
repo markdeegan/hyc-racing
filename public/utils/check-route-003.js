@@ -1,4 +1,12 @@
 ////////// ////////// ////////// //////////
+// Mark Deegan
+// Mon Mar 30 17:12:08 IST 2026
+// Copyright (c) 2026 Mark Deegan
+////////// ////////// ////////// //////////
+/**
+ *  @author Mark Deegan
+ *  @version 1.0
+ */
 // Check if specific route exists in SignalK
 ////////// ////////// ////////// //////////
 

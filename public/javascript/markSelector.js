@@ -1,7 +1,12 @@
 ////////// ////////// ////////// //////////
 // Mark Deegan
 // Mon Feb  2 01:29:27 GMT 2026
+// Copyright (c) 2026 Mark Deegan        
 ////////// ////////// ////////// //////////
+/**
+ *  @author Mark Deegan
+ *  @version 1.0
+ */
 // Mark Selector Script
 // Accompanies index.html
 // and is used to set waypoints in SignalK from buttons

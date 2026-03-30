@@ -1,3 +1,15 @@
+//////////// ////////// ////////// //////////
+// Mark Deegan
+// Mon Mar 30 17:12:08 IST 2026
+// Copyright (c) 2026 Mark Deegan
+////////// ////////// ////////// //////////
+/**
+ *  @author Mark Deegan
+ *  @version 1.0
+ */
+////////// ////////// ////////// //////////
+// Paste this into the browser console to verify HYC-Wed routes match wednesday.js
+// Make sure you're on a page that has access to SignalK API (like courseSelector.html)
 // Paste this into the browser console to verify HYC-Wed routes match wednesday.js
 // Make sure you're on a page that has access to SignalK API (like courseSelector.html)
 

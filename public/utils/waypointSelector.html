@@ -1,9 +1,12 @@
 <!DOCTYPE html>
+<!-- wayPoint Selector page for HYC-Racing -->
 <html lang="en">
     <head>  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Waypoint Selector</title>
+    <!-- Styles for the waypoint selector page -->
+    <!-- I should move these to a separate .css file -->
     <style>
         * {
             box-sizing: border-box;
@@ -60,6 +63,8 @@
     </head>
     <body>
         <div class="grid-container">
+            <!-- Each grid cell contains a button with a letter and a name -->
+            <!-- The letter is the waypoint code, and the name is the full name of the waypoint -->
             <div class="grid-cell"><button><span class="letter">A</span><span class="name">APEX</span></button></div>
             <div class="grid-cell"><button><span class="letter">B</span><span class="name">BALSCADDEN</span></button></div>
             <div class="grid-cell"><button><span class="letter">C</span><span class="name">CUSH</span></button></div>
@@ -85,6 +90,7 @@
         </div>
 
         <script>
+            // Function to resize button text to fit within the button width
             function resizeButtonText() {
                 const buttons = document.querySelectorAll('button');
                 
@@ -93,7 +99,7 @@
                     if (!name) return;
                     
                     // Start with a reasonable size
-                    let fontSize = 50;
+                    let fontSize = 80;
                     name.style.fontSize = fontSize + 'px';
                     
                     // Reduce font size until text fits within button width (accounting for padding)
